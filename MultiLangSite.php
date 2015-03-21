@@ -29,11 +29,12 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
     }
 }
 
-register_deactivation_hook( __FILE__, 'deactivation__MLSS');	function deactivation__MLSS() { flush_rewrite_rules(); }
-register_activation_hook( __FILE__, 'activation__MLSS');		function activation__MLSS() { $opt=get_option('optnameLngs__MLSS');
-	if ($opt==false || $opt=='' || empty($opt) ) {
-		update_option('optnameLngs__MLSS',				'English(eng),Русский(rus),Spanish(spa),');
-		update_option('optnameDefForOthers__MLSS',		'drd');
+register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { flush_rewrite_rules(); }
+register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() {
+	if (!get_option('optnameLngs__MLSS')) {
+		update_option('optnameLngs__MLSS','English(eng),Русский(rus),Spanish(spa),');
+		update_option('optnameHiddenLangs__MLSS',		'Japan(jpn),Dutch(nld),');
+		update_option('optnameDefForOthers__MLSS',		'dropdownn');
 		//
 		update_option('optnameTarget__MLSS_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optnameTarget__MLSS_'.'spa',		'Spain,Brazil,Argentina,');
@@ -156,14 +157,12 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 					include( __DIR__ ."/flags/ip_country_detect/sample_test.php");   //gets $country_name
 					if (!empty($country_name)){ 
 						foreach (LANGS__MLSS() as $name=>$value){
-							$x=get_option('optnameTarget__MLSS_'.$value);
-							if (stripos(','.$x.',', ','.$country_name.',') != false ) {$xLang=$value; break; }
+							if (stripos(','.get_option('optnameTarget__MLSS_'.$value).',', ','.$country_name.',') != false ) {$xLang=$value; break; }
 						}
 					}
 					if (isset($xLang)) { define('LNG',$xLang); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, '/'); }
 					else{
-							$x=get_option('optnameDefForOthers__MLSS');
-						if ($x=='fxd'){
+						if (get_option('optnameDefForOthers__MLSS')=='fixedd'){
 							define('LNG',get_option('optnameTarget__MLSS_'.'default')); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, '/'); }
 						else{
 							define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;	}
@@ -176,9 +175,8 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 				
 				//if unknown situation happens, set default...   better not to set cookie at this time
 				if (!defined('LNG')) { 
-							   $x=get_option('optnameTarget__MLSS_'.'default');
-					if (!empty($x))	{ define('LNG', get_option('optnameTarget__MLSS_'.'default') ); } 
-					else														{ define('LNG', $GLOBALS['SiteLangs__MLSS'][0] ); }
+					if (get_option('optnameTarget__MLSS_'.'default'))	{ define('LNG', get_option('optnameTarget__MLSS_'.'default') ); } 
+					else												{ define('LNG', $GLOBALS['SiteLangs__MLSS'][0] ); }
 				}	
 			}
 			else{									//if cookie was set already 
@@ -294,8 +292,7 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 
 //Display dropdown on every page 
 add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){
-		$x=get_option('optnameDropdHeader__MLSS');
-	if ($x == 'y') {
+	if ('y' == get_option('optnameDropdHeader__MLSS') ) {
 	global $odd;?> 
 	<style>#languageSelectDropdown1__MLSS {top:<?php echo get_option('optnameDropdDistanceTop__MLSS');?>px; <?php echo (('left'==get_option('optnameDropdSidePos__MLSS')) ? "left:" : "right:"); echo get_option('optnameDropdDistanceSide__MLSS');?>px;</style>
 	<div id="languageSelectDropdown1__MLSS" >
@@ -313,8 +310,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 						$targt_lnk=homeURL__MLSS.'/'.$key_value;
 						//if language is not included in "HIDDEN LANGS" option
-									$x=get_option('optnameHiddenLangs__MLSS');
-						if (stripos(','.$x.',',     ",$key_value," ) === false) {
+						if (stripos(','.get_option('optnameHiddenLangs__MLSS').',',     ",$key_value," ) === false) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
 								'<a class="ImgHolder1__MLSS" href="'.$targt_lnk.'">'.
 									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_WITHOUT_DOMAIN__MLSS .'flags/'. $key_value .'.png" />'.
