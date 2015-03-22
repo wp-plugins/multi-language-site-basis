@@ -229,15 +229,21 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 	foreach (LANGS__MLSS() as $name=>$value) {
 		$args = array(  # http://codex.wordpress.org/Function_Reference/register_post_type
-				'label'=>$value,	 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
-				'public' => true,				//'exclude_from_search' => false,
+				'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
+				'public' => true,
+				'query_var'=> true,
+				//'exclude_from_search' => false,
 				'publicly_queryable'=> true, 'show_ui'=>true,	//'show_in_nav_menus' => true,'show_in_admin_bar'	=> true,
 				//'show_in_menu' => 'edit.php?post_type=page',//true,
 				'menu_position' => "65.888562" ,
 				'menu_icon'   => 'dashicons-editor-spellcheck', // https://developer.wordpress.org/resource/dashicons/#editor-spellcheck
-				'capability_type' => 'post', 'hierarchical' => true,		'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes'), //'taxonomies' => array('category','my_taxonomyy_'.$value),
-				'has_archive' => true,		//'permalink_epmask'=>EP_PERMALINK, 
-				'rewrite' => array('with_front'=>true),	'query_var'=> true,		'can_export' => true,	
+				'hierarchical' => true,		
+				'has_archive' => true,	
+				'capability_type' => 'post',
+				'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes', 'revisions','comments', ),
+				//'taxonomies' => array('category','my_taxonomyy_'.$value),	
+				'rewrite' => array('with_front'=>true),			'can_export' => true,	
+				//'permalink_epmask'=>EP_PERMALINK, 
 			);
 			register_post_type( $value, $args );
 			register_taxonomy( $value.'_'.TypePrefix__MLSS, array( $value ),  array(
@@ -254,9 +260,6 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 //================================= ##### POST TYPES =============================== //
 //================================================================================== //		
 
-
-			
-	
 add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS' );
 //difference between [$query->is_XXX=true    and   $query->set('is_XXX', true)]   : http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
 function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS( $query ) {
@@ -267,10 +270,11 @@ function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS( $query ) {
 			if ($optValue){
 				//new query
 				$query->init();
-				$query->parse_query(   array('post_type' =>array(LNG), 'ignore_sticky_posts' => true)   ) ;	
+				$query->parse_query(   array('post_type' =>array(LNG))   ) ;	
 				//others
 				$query->is_home = false;
 				$query->is_single = true;
+				$query->is_singular = true;
 				$query->is_page = false;
 				$query->queried_object_id = $optValue; //get_post(get_option('page_on_front') ); 
 					$query->set( 'page_id', $optValue );
