@@ -15,10 +15,6 @@ if (!defined('ABSPATH')) exit;
 function validate_Nonce__MLSS($value, $action_name){
 	if ( !isset($value) || !wp_verify_nonce($value, $action_name) ) { die("not allowed due to interal_error_151");}
 }	
-function iss_admiiiiiin__MLSS()	{if (is_admin()) {require_once(ABSPATH . 'wp-includes/pluggable.php');}	
-		if (current_user_can('create_users')){return true;}
-		else {return false;}
-}
 // =================================== ##### USEFUL functions #### =============================
  
 // START 
@@ -37,23 +33,23 @@ if ( is_admin() ){
 			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 			validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			//update optionsss	
-			update_option('optnameFirstMethod__MLSS',		$_POST['inp_FirstMethod']	); 
-			update_option('optnameFixedLang__MLSS',			$_POST['inp_FirsttimeFixed']); 
-			update_option('optnameHiddenLangs__MLSS',		$_POST['inp_HiddenLangs']	); 
-						if(get_option('optnameLngs__MLSS') 	!= $_POST['inp_Langs']) {
-							update_option('optnameLngs__MLSS', $_POST['inp_Langs']);
+			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
+			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
+			update_option('optMLSS__HiddenLangs',		$_POST['inp_HiddenLangs']	); 
+						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
+							update_option('optMLSS__Lngs', $_POST['inp_Langs']);
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
-			update_option('optnameDefForOthers__MLSS',		$_POST['other_defaulter']);
-			foreach (LANGS__MLSS() as $name=>$value){	update_option('optnameTarget__MLSS_'. $value,	$_POST['titlee22_'.$value] ); }
-														update_option('optnameTarget__MLSS_'.'default', $_POST['titlee22_default'] );
-			update_option('optnameDropdHeader__MLSS',		$_POST['drp_in_header']);
-			update_option('optnameDropdSidePos__MLSS',		$_POST['drdn_aside']);
-			update_option('optnameDropdDistanceTop__MLSS',	$_POST['fromtop']);
-			update_option('optnameDropdDistanceSide__MLSS',	$_POST['fromside']);
+			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
+			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
+														update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
+			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
+			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
+			update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
+			update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
 			
 		}
-		$chosen_method = get_option('optnameFirstMethod__MLSS');
+		$chosen_method = get_option('optMLSS__FirstMethod');
 		?> 
 		<style>
 		input.langs{width:100%;} 
@@ -77,13 +73,13 @@ if ( is_admin() ){
 			This <B>MLSS</b> plugin is mainly intended as a helpful functionality for them, who want to have Multi-Language website (The plugin doest provide the "alternate" pages for 1 typical page, instead, it builds the separate language home site). But this can be used by skillful developer, who is able to integrate the functionalities with his theme. (Also, if you wish, you can modify the functionality&codes of this plugin. Just rename the plugin-name to your custom name, modify it and then re-activate).
 	<form action="" method="POST">
 		<br/>You can add/remove the languages using this field. Insert Language title, and it's official abbreviation  (Needs to be 3 characters... View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
-		<br/><input name="inp_Langs" type="text" class="inpt langs" value="<?php echo get_option('optnameLngs__MLSS');?>" />
+		<br/><input name="inp_Langs" type="text" class="inpt langs" value="<?php echo get_option('optMLSS__Lngs');?>" />
 		<br/>(p.s. Using FTP or etc, you may need to upload your desired language's <a href="https://sites.google.com/site/thecsmag/file-cabinet/200%2BCountryFlags-MassiveFreebieIconPack.zip" target="_blank">flag</a> image (i.e.: <b>eng.</b>png [approx: 150x100pixels]) in <span class="codee"><?php echo plugin_dir_url(__FILE__);?>flags/</span> )
 		<br/>
 		<div class="hiddenlngs">
 			(later,if you will need to disable any above language, it's better to put its name (3symbol!) here, rather than removing from the above list. Thus, that language will be just hidden from site(instead of REMOVING),because "REMOVING" might also remove indexed pages from GOOGLE too..) 
 			<br/>
-			<input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optnameHiddenLangs__MLSS');?>" placeholder="jap,fre," />
+			<input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="jap,fre," />
 		</div>
 		After "SAVE", open your website, to see the language dropdown menu in the upper corner.. Also, please, on the left side, under <b>MLSS</b> menu, open "TRANSLATION WORDS" page, where you will see the translation examples.  
 		
@@ -104,14 +100,14 @@ if ( is_admin() ){
 				<div id="langset_flds">
 				<?php
 				global $wpdb;
-				//$country_lang_sets = $wpdb->get_results("SELECT * from `".$wpdb->options."` WHERE `option_name` LIKE '".'optnameTarget__MLSS_'."%'");
+				//$country_lang_sets = $wpdb->get_results("SELECT * from `".$wpdb->options."` WHERE `option_name` LIKE '".'optMLSS__Target_'."%'");
 				//foreach ($country_lang_sets as $each_group){	
-				//$abbrev = str_ireplace('optnameTarget__MLSS_','',$each_group->option_name);	 $ItsValue = $each_group->option_value;
+				//$abbrev = str_ireplace('optMLSS__Target_','',$each_group->option_name);	 $ItsValue = $each_group->option_value;
 				foreach (LANGS__MLSS() as $name=>$value) {
 					$abbrev=$value; 
-					//$ItsValues=$wpdb->get_results("SELECT * from `".$wpdb->options."` WHERE `option_name` = '".'optnameTarget__MLSS_'.$abbrev."'");
+					//$ItsValues=$wpdb->get_results("SELECT * from `".$wpdb->options."` WHERE `option_name` = '".'optMLSS__Target_'.$abbrev."'");
 					//$OptValue=$ItsValue[0]->option_value;
-					$OptValue= get_option('optnameTarget__MLSS_'.$abbrev);
+					$OptValue= get_option('optMLSS__Target_'.$abbrev);
 					echo '<div class="eachColumn22" id="coulang_'.$abbrev.'"> 
 							<div class="delete22"><a href="javascript:deleteThisBlock22(\'coulang_'.$abbrev.'\');">DELETE</a></div>
 							<div class="eachLngWORD22">
@@ -123,7 +119,7 @@ if ( is_admin() ){
 				?>		<div class="eachColumn22" id="coulang_default" style="background-color:pink;"> 
 							<div class="eachLngWORD22">
 								<span class="lng_NAME22"  style="width:auto;color:green;">default lang for all other countries:</span>
-								<input type="radio" name="other_defaulter" value="dropdownn" <?php if("dropdownn"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> /> a) display them dropdown 	&nbsp;&nbsp;&nbsp;<input type="radio" name="other_defaulter" value="fixedd" <?php if("fixedd"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> />b) forced language: <span class="lng_VALUE22"><input class="inpVALUES22"  style="width:50px;" type="text" name="titlee22_default" value="<?php echo get_option('optnameTarget__MLSS_'.'default');?>" placeholder="eng" /></span>
+								<input type="radio" name="other_defaulter" value="dropdownn" <?php if("dropdownn"==get_option('optMLSS__DefForOthers')){echo 'checked="checked"';}?> /> a) display them dropdown 	&nbsp;&nbsp;&nbsp;<input type="radio" name="other_defaulter" value="fixedd" <?php if("fixedd"==get_option('optMLSS__DefForOthers')){echo 'checked="checked"';}?> />b) forced language: <span class="lng_VALUE22"><input class="inpVALUES22"  style="width:50px;" type="text" name="titlee22_default" value="<?php echo get_option('optMLSS__Target_'.'default');?>" placeholder="eng" /></span>
 							</div>
 						</div>
 				</div>
@@ -150,7 +146,7 @@ if ( is_admin() ){
 				</script>
 				 
 		<br/> <input type="radio" name="inp_FirstMethod" value="fixeddd" <?php echo (($chosen_method=='fixeddd')? 'checked="checked"':'');?> /> 
-		<b>C)</b> redirect all visitors to this fixed language <input style="width:50px;" type="text" name="inp_FirsttimeFixed" value="<?php echo get_option('optnameFixedLang__MLSS');?>" placeholder="eng" />
+		<b>C)</b> redirect all visitors to this fixed language <input style="width:50px;" type="text" name="inp_FirsttimeFixed" value="<?php echo get_option('optMLSS__FixedLang');?>" placeholder="eng" />
 				
 		<h2 class="tiitl"> 3) Publish posts</h2>
 		You can see, that on the left menu, there was added special "Language" pages, and you can add new posts...They will be published under the new url : <?php echo homeURL__MLSS;?>/LANG_NAME . 
@@ -163,10 +159,11 @@ if ( is_admin() ){
 		
 		
 		<h2 class="tiitl"> 5) Settings </b></h2>
-		*Display Dropdown in header: &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="y" <?php if ('y'==get_option('optnameDropdHeader__MLSS')) {echo 'checked="checked"';}?> />Show &nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="n" <?php if ('n'==get_option('optnameDropdHeader__MLSS')) {echo 'checked="checked"';}?> />Hide
-		<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optnameDropdSidePos__MLSS')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optnameDropdSidePos__MLSS')) {echo 'checked="checked"';}?> />RIGHT side
-		<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optnameDropdDistanceTop__MLSS');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optnameDropdDistanceSide__MLSS');?>" />px 
-		<br/>
+		<br/>=================================
+		<br/>*Display Dropdown in header: &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="y" <?php if ('y'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Show &nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="n" <?php if ('n'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Hide
+		<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
+		<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optMLSS__DropdDistanceTop');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optMLSS__DropdDistanceSide');?>" />px 
+		<br/>=================================
 		
 			<br/><span class="save_div_lng22"><a class="lng_SUBMIT22" href="javascript:document.forms[0].submit();">SAVE</a></span>
 				<input type="submit" value="SAVE" style="display:none;" />
@@ -274,31 +271,76 @@ if ( is_admin() ){
 	}
 }
 
-add_action('init','verify_saved_words__MLSS'); function verify_saved_words__MLSS(){
-	if (isset($_POST['mlss_update1'])){		
-		validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
-		global $wpdb;
-		foreach($_POST['titlee'] as $name1=>$Value1){
-			foreach($Value1 as $name2=>$Value2){
-				UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss", 
-											array('translation'=>$Value2),
-											array('title_indx'=>$name1, 'lang'=> $name2) );
+	add_action('init','verify_saved_words__MLSS'); function verify_saved_words__MLSS(){
+		if (isset($_POST['mlss_update1']) && iss_admiiiiiin__MLSS()){		
+			validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+			global $wpdb;
+			foreach($_POST['titlee'] as $name1=>$Value1){
+				foreach($Value1 as $name2=>$Value2){
+					UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss", 
+												array('translation'=>$Value2),
+												array('title_indx'=>$name1, 'lang'=> $name2) );
+				}
+			}
+			die("successfully updated");
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+//===================================Show STARTPAGE ID input notice in the top of custom post's admin page ============================
+add_action( 'admin_notices', 'func948__MLSS' );	function func948__MLSS() {
+	if (iss_admiiiiiin__MLSS()){
+		foreach(LANGS__MLSS() as $each){ if(stripos(currentURL__MLSS, admin_url('edit.php?post_type='.$each)) !== false){
+				$optValue=get_option('optMLSS__HomeID_'.$_GET['post_type']);
+				$posttt = get_post($optValue);
+				echo '<div style="margin:30px 0 0 0;padding:10px;background-color:pink;font-size:1.4em;">
+						<div style="float:left;">
+							STARTPAGE ID <span style="font-size:0.8em;position:relative;top:-5px;">(<a href="javascript:alert(\'To set any post as the MainPage for this particular Language, then enter the ID of that post.\r\n\r\nTo make STARTPAGE as typical category, then empty the field..\');" style="color:green;">read this!!</a>)</span>:<input type="text" style="width:50px;" id="nw_startid_value" value="'.$optValue.'" /> '
+								.(($optValue) ? '(<a href="'.get_edit_post_link( $posttt->ID).'" target="_blank" style="font-size:0.8em;font-style:italic;">preview</b></a>)' : '')
+							. '<a style="border-radius: 20px; margin: 0px 0px 0px 50px; background-color: #808080; padding: 5px;" href="javascript:change_starpage_id__MLSS();">Save</a>
+							<script type="text/javascript">function change_starpage_id__MLSS()	{
+								window.open("'.currentURL__MLSS.'&MLSS_spID=" + document.getElementById("nw_startid_value").value + "&langg='.$_GET['post_type'].'","_blank");
+								}
+							</script>
+
+							
+						</div>
+						<div style="clear:both;"></div>
+					</div>';
+				break;
 			}
 		}
-		die("successfully updated");
 	}
 }
+	//================= FIELD on each post, to set that post as HomePage	================================
+	add_action( 'add_meta_boxes', 'mtbx11__MMLSS' ); function mtbx11__MMLSS() {add_meta_box('htmlId_54_setHome', 'MLSS startpage', 'hmg__MLSS', null, 'normal');} function hmg__MLSS($post) {
+		//only if the page is already published and now it's EDITOR PAGE
+		if ( stripos(currentURL__MLSS, admin_url('post.php')) !== false && !empty($_GET['post']))	{
+			echo 'To make this page as STARTPAGE for <b style="color:red;">'.constant($post->post_type.'_title__MLSS') .'</b> <a href="'.$_SERVER['REQUEST_URI'].'&MLSS_spID='.$post->ID.'&langT='.$post->post_type.'" target="_blank">Click here</a> 
+			<br/>(To undo it, enter <a href="'.admin_url('edit.php?post_type='.$post->post_type).'" target="_blank">dashboard</a>)';
+		}
+	}
+	
+	//When SAVED//
+	add_action( 'admin_init', 'save_homeChang__MLSS' );	function save_homeChang__MLSS($post_id) { 
+		if (isset($_GET['MLSS_spID']) && iss_admiiiiiin__MLSS()) {
+			update_option('optMLSS__HomeID_'.$_GET['langg'], $_GET['MLSS_spID']);		die("updated");
+		}
+	}
 
+// ============================= ###Show STARTPAGE ID ..........========================================	
+//======================================================================================================			
+			
+			
 
-//https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php
-function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
-	  //convert array to STRING
-	  $o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key." = '".$value."'";   if(count($WhereArray)!=$i){$o .=' AND ';$i++;} }
-	  $CheckIfExists = $wpdb->get_results("SELECT * from `".$tablename."` WHERE ".$o);
-	//check if already exist
-	if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray );}
-	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
-}	
 //================================================================================== //
 //===================================== END# DASHBOARD ============================= //
 //================================================================================== //	

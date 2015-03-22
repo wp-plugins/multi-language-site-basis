@@ -19,7 +19,7 @@ define('PLUGIN_URL_WITHOUT_DOMAIN__MLSS',str_replace(domainURL__MLSS, '', plugin
 //option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
-
+define('TypePrefix__MLSS','categ');
 
 
 //==================================================== ACTIVATION command ===============================
@@ -31,19 +31,20 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 
 register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { flush_rewrite_rules(); }
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() {
-	if (!get_option('optnameLngs__MLSS')) {
-		update_option('optnameLngs__MLSS','English(eng),Русский(rus),Spanish(spa),');
-		update_option('optnameHiddenLangs__MLSS',		'Japan(jpn),Dutch(nld),');
-		update_option('optnameDefForOthers__MLSS',		'dropdownn');
+	if (!get_option('optMLSS__Lngs')) {
+		update_option('optMLSS__Lngs','English(eng),Русский(rus),Spanish(spa),');
+		update_option('optMLSS__HiddenLangs',		'Japan(jpn),Dutch(nld),');
+		update_option('optMLSS__DefForOthers',		'dropdownn');
+		update_option('optMLSS__FirstMethod',		'dropddd');
 		//
-		update_option('optnameTarget__MLSS_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
-		update_option('optnameTarget__MLSS_'.'spa',		'Spain,Brazil,Argentina,');
-		update_option('optnameTarget__MLSS_'.'default',	'eng');
+		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
+		update_option('optMLSS__Target_'.'spa',		'Spain,Brazil,Argentina,');
+		update_option('optMLSS__Target_'.'default',	'eng');
 		//
-		update_option('optnameDropdHeader__MLSS',		'y');
-		update_option('optnameDropdSidePos__MLSS',		'left');
-		update_option('optnameDropdDistanceTop__MLSS',	'70');
-		update_option('optnameDropdDistanceSide__MLSS',	'50');
+		update_option('optMLSS__DropdHeader',		'y');
+		update_option('optMLSS__DropdSidePos',		'left');
+		update_option('optMLSS__DropdDistanceTop',	'70');
+		update_option('optMLSS__DropdDistanceSide',	'50');
 	}
 	global $wpdb;
 	$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
@@ -68,7 +69,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 add_action('init','DetermineLanguages__MLSS',1); 
 function DetermineLanguages__MLSS(){
 	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
-	$temp_contents = explode(',',  get_option('optnameLngs__MLSS') ); 
+	$temp_contents = explode(',',  get_option('optMLSS__Lngs') ); 
 	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
 		if (!empty($value))	{	preg_match('/(.*?)\((.*)\)/si',$value,$nnn); 	//var_dump($nnn);exit;
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
@@ -97,6 +98,19 @@ add_action( 'wp_head', 'noindex_pagesss__MLSS' );	function noindex_pagesss__MLSS
 	if ( !is_404() && !is_page() && !is_single() && !is_search() && !is_archive() && !is_admin() && !is_attachment() && !is_author() && !is_category() && !is_front_page() && !is_home() && !is_preview() && !is_tag()) 
 	{	echo '<meta name="robots" content="noindex, nofollow">';	}
 }		
+function iss_admiiiiiin__MLSS()	{if (is_admin()) {require_once(ABSPATH . 'wp-includes/pluggable.php');}	
+		if (current_user_can('create_users')){return true;}
+		else {return false;}
+}
+//https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php
+function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
+	  //convert array to STRING
+	  $o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key." = '".$value."'";   if(count($WhereArray)!=$i){$o .=' AND ';$i++;} }
+	  $CheckIfExists = $wpdb->get_results("SELECT * from `".$tablename."` WHERE ".$o);
+	//check if already exist
+	if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray );}
+	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
+}	
 
 function errorrrr_404__MLSS(){
 	if (is_404() && WP_USE_THEMES === true )	{NOTFOUNDDD_REDIRECT2__MLSS(homURL,'problemm_702');}   
@@ -123,19 +137,21 @@ function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
-add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__MLSS(){
+add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__MLSS(){
 	//if preview
 	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
 				
-	$homPATTERN=str_replace('/','\/', homeFOLD__MLSS); 
-	preg_match('/'.$homPATTERN.'\/(.*?)\//si',   $_SERVER['REQUEST_URI'].'/',   $found_matches); 		//var_dump($n);exit;
-	
+	$hom=str_replace('/','\/', homeFOLD__MLSS); 
+	preg_match('/'.$hom.'\/(.*?)\//si',   						$_SERVER['REQUEST_URI'].'/',  $found_A_matches);       //var_dump($n);exit;
+	preg_match('/'.$hom.'\/(.*?)_'.TypePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_B_matches);
 	// ======= IF LANGUAGE HAS BEEN SET USING:
 	//1) URL PARAMTER
 	if		(!empty($_GET['lng']))						{ $found = $_GET['lng'];}
 	//2) STRUCTURED URL (i.e. http://site.com/LANG/my-page
-	elseif	(!empty($found_matches[1]))					{ $found = $found_matches[1];}
-	//3) COOKIE
+	elseif	(!empty($found_A_matches[1]))				{ $found = $found_A_matches[1];}
+	//3) STRUCTURED URL2 [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
+	elseif	(!empty($found_B_matches[1]))				{ $found = $found_B_matches[1];}
+	//4) COOKIE
 	elseif	(!empty($_COOKIE[cookienameLngs__MLSS]))	{ $found = $_COOKIE[cookienameLngs__MLSS];}
 	//FINAL SET
 	define('found_lang__MLSS', ((!empty($found) && in_array($found, LANGS__MLSS() )) ?  $found :'')  ); 
@@ -148,7 +164,7 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 	
 	// ================= ONCE ago, this below  block was separately in another "ADD_ACTION" ........ ==================
 	//check if language is set for user.. priority language is not given to saved cookie's language, but to the current URL's parameter ($found_lang)
-	global $wpdb; $FIRST_TIME_METHOD=get_option('optnameFirstMethod__MLSS');
+	global $wpdb; $FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
 	if (found_lang__MLSS==''){  						//if url doesnt containt any LANGUAGE component
 		if (isHomeURI__MLSS){								//only check, when it's home URL
 			if (empty($_COOKIE[cookienameLngs__MLSS])){ 	//if cookie not set, it may be the first-time visit
@@ -157,13 +173,13 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 					include( __DIR__ ."/flags/ip_country_detect/sample_test.php");   //gets $country_name
 					if (!empty($country_name)){ 
 						foreach (LANGS__MLSS() as $name=>$value){
-							if (stripos(','.get_option('optnameTarget__MLSS_'.$value).',', ','.$country_name.',') != false ) {$xLang=$value; break; }
+							if (stripos(','.get_option('optMLSS__Target_'.$value).',', ','.$country_name.',') != false ) {$xLang=$value; break; }
 						}
 					}
 					if (isset($xLang)) { define('LNG',$xLang); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
 					else{
-						if (get_option('optnameDefForOthers__MLSS')=='fixedd'){
-							define('LNG',get_option('optnameTarget__MLSS_'.'default')); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
+						if (get_option('optMLSS__DefForOthers')=='fixedd'){
+							define('LNG',get_option('optMLSS__Target_'.'default')); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
 						else{
 							define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;	}
 					}
@@ -171,11 +187,11 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 					//set chosen lang (+REDIRECT IS NEEDED AFTER COOKIE SET)
 					PERMANENTTT_REDIRECT2__MLSS( homeURL__MLSS.'/'.LNG, 'problemm_708' );
 				}
-				if ($FIRST_TIME_METHOD=='fixeddd') {define('LNG',get_option('optnameFixedLang__MLSS')); }					//dont need "SET COOKIE"
+				if ($FIRST_TIME_METHOD=='fixeddd') {define('LNG',get_option('optMLSS__FixedLang')); }					//dont need "SET COOKIE"
 				
 				//if unknown situation happens, set default...   better not to set cookie at this time
 				if (!defined('LNG')) { 
-					if (get_option('optnameTarget__MLSS_'.'default'))	{ define('LNG', get_option('optnameTarget__MLSS_'.'default') ); } 
+					if (get_option('optMLSS__Target_'.'default'))	{ define('LNG', get_option('optMLSS__Target_'.'default') ); } 
 					else												{ define('LNG', $GLOBALS['SiteLangs__MLSS'][0] ); }
 				}	
 			}
@@ -205,45 +221,11 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 //=================================== ##### SET LANGUAGE for visitor ========================== //	
 //============================================================================================= //	
 
-add_action('init','myin',1);
-function myin(){
-	$GLOBALS['showonfront']=get_option( 'show_on_front');
-	update_option('show_on_front','posts');
-	global $wp_query;
-	$wp_query->is_front_page = true;
-	$wp_query->is_single = false; 
-}
-add_action('wp_footer','myin2',1);function myin2(){update_option('show_on_front',$GLOBALS['showonfront']);}
 
-
-
-
-add_action( 'pre_get_posts', 'themeslug_force_static_front_page' );
-//http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
-function themeslug_force_static_front_page( $query ) {
-    if ( $query->is_main_query() ) {
-        //if ( 'page' == get_option( 'show_on_front' ) ) {
-            //if ( '' != get_query_var( 'foobar' ) ) { // Registered custom query var
-				$query->is_page = false;	
-					//$query->set( 'is_page', true );
-				
-				$query->is_home = true;	
-					$query->set( 'is_home', true ); 
-					$query->set( 'is_front_page', true ); 
-				
-				$query->queried_object = get_post(get_option('page_on_front') ); 
-					//$query->set( 'page_id', get_option( 'page_on_front' ) );
-            //}
-        //}
-    }
-}
-
-//https://github.com/WordPress/WordPress/blob/master/wp-includes/query.php
 
 
 //==================================== POST TYPES ================================== //
 //================================================================================== //		
-Define('TypePrefix__MLSS','categ');
 add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 	foreach (LANGS__MLSS() as $name=>$value) {
 		$args = array(  # http://codex.wordpress.org/Function_Reference/register_post_type
@@ -268,9 +250,47 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 			//register_taxonomy_for_object_type('category',$value);
 			//register_taxonomy_for_object_type('my_custom_taxonomyy_1',$value);
 	}
-}			
+}
 //================================= ##### POST TYPES =============================== //
 //================================================================================== //		
+
+
+			
+	
+add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS' );
+//difference between [$query->is_XXX=true    and   $query->set('is_XXX', true)]   : http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
+function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS( $query ) {
+    if ( $query->is_main_query() ) {
+		if(is_post_type_archive()){
+			//if static ID is set for the language's STARTPAGE
+			$optValue=get_option('optMLSS__HomeID_'.LNG);
+			if ($optValue){
+				//new query
+				$query->init();
+				$query->parse_query(   array('post_type' =>array(LNG), 'ignore_sticky_posts' => true)   ) ;	
+				//others
+				$query->is_home = false;
+				$query->is_single = true;
+				$query->is_page = false;
+				$query->queried_object_id = $optValue; //get_post(get_option('page_on_front') ); 
+					$query->set( 'page_id', $optValue );
+				//add some links
+				add_action('shutdown','showw_EDIT_LINK__MLSS',99);
+			}
+			else{
+				$query->is_home = true;	
+				$query->is_page = false;	
+			}
+		}
+    }
+}
+	function showw_EDIT_LINK__MLSS(){ ?>
+		<script>var adminbar__MLSS= document.getElementById("wp-admin-bar-root-default");if (adminbar__MLSS) {
+			adminbar__MLSS.innerHTML += '<li id="wp-admin-bar-editMlssHome"><a class="ab-item" href="<?php echo get_edit_post_link($GLOBALS['post']->ID);?>" ><span class="ab-icon"></span><span class="ab-label">*EDIT*</span></li>'; 
+		}
+		</script>
+		<?php
+	}
 
 
 	
@@ -300,7 +320,7 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 		<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-		$SITE_LANGUAGES=LANGS__MLSS(); $HIDDEN_LANGS = get_option('optnameHiddenLangs__MLSS');
+		$SITE_LANGUAGES=LANGS__MLSS(); $HIDDEN_LANGS = get_option('optMLSS__HiddenLangs');
 		
 		$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
@@ -324,9 +344,9 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 
 //Display dropdown on every page 
 add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){
-	if ('y' == get_option('optnameDropdHeader__MLSS') ) {
+	if ('y' == get_option('optMLSS__DropdHeader') ) {
 	global $odd;?> 
-	<style>#languageSelectDropdown1__MLSS {top:<?php echo get_option('optnameDropdDistanceTop__MLSS');?>px; <?php echo (('left'==get_option('optnameDropdSidePos__MLSS')) ? "left:" : "right:"); echo get_option('optnameDropdDistanceSide__MLSS');?>px;</style>
+	<style>#languageSelectDropdown1__MLSS {top:<?php echo get_option('optMLSS__DropdDistanceTop');?>px; <?php echo (('left'==get_option('optMLSS__DropdSidePos')) ? "left:" : "right:"); echo get_option('optMLSS__DropdDistanceSide');?>px;</style>
 	<div id="languageSelectDropdown1__MLSS" >
 	<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations =======
@@ -342,7 +362,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 						$targt_lnk=homeURL__MLSS.'/'.$key_value;
 						//if language is not included in "HIDDEN LANGS" option
-						if (stripos(','.get_option('optnameHiddenLangs__MLSS').',',     ",$key_value," ) === false) {
+						if (stripos(','.get_option('optMLSS__HiddenLangs').',',     ",$key_value," ) === false) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
 								'<a class="ImgHolder1__MLSS" href="'.$targt_lnk.'">'.
 									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_WITHOUT_DOMAIN__MLSS .'flags/'. $key_value .'.png" />'.
@@ -449,63 +469,6 @@ add_shortcode( 'MLSS_navigation', 'treemenuOutp_MLSS' ); function treemenuOutp_M
 		'walker'          => ''
 	));
 }
-
-
-
-
-
-
-
-
-
-
-
-//add_action('pre_get_posts','search_filterr');
-function search_filterr($query) {
-	global $odd,$lang; 
-	$arrs= array(LNG);
-	//var_dump(LANGS__MLSS());die();
-	//$arrs= array_merge($odd['post_Typess'], array());
-	if ( !is_admin() && $query->is_main_query() ) 	{
-		if ( $query->is_search ) {
-			//$arrs[]='post';
-			//$arrs[]='page';
-			$query->set('post_type',  $arrs );
-
-				//SET language CATEGORY PARENT ID
-				global $odd,$lang;
-				$cat_parent_lang_cat_id= get_category_by_slug($odd['category_main_SYMBOL'].LnG)->term_id;
-				$query->set('cat', $cat_parent_lang_cat_id );
-		}
-		elseif (  $query->is_category )	{
-			//$arrs[]='post';
-			//$arrs[]='page';
-			$query->set('post_type', $arrs );
-			//add_filter( 'posts_where' , 'MyFilterFunction_1' );
-		}
-		//for "IS_PAGE" conditions, this doesnt work (it's WORDPRESS behaviour)
-		//so: use "add_filter(posts_where....." in "add_action('wp...."  OR  modify  "PAGE" query directly into  template file
-		else{
-			//$arrs[]='post';
-			//$arrs[]='page';
-			$query->set('post_type', $arrs  );
-			//add_filter( 'posts_where' , 'MyFilterFunction_1' );
-		}
-	//return $query;
-	}
-}
-function MyFilterFunction_1( $where ) { global $wpdb,$odd; 
-	$cat_id = get_query_var('cat');
-	$this_cat = get_category($cat_id);
-	if (!in_array($cat_id,$odd['question_answers_cats']) && !in_array($this_cat->parent,$odd['question_answers_cats']) ){
-		$where .= " AND ({$wpdb->posts}.post_excerpt NOT LIKE '%myCutYout')";
-	}
-	return $where;
-}
-
-
-
-
 
 
 
