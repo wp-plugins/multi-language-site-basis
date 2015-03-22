@@ -123,7 +123,7 @@ if ( is_admin() ){
 				?>		<div class="eachColumn22" id="coulang_default" style="background-color:pink;"> 
 							<div class="eachLngWORD22">
 								<span class="lng_NAME22"  style="width:auto;color:green;">default lang for all other countries:</span>
-								<input type="radio" name="other_defaulter" value="drd" <?php if("drd"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> /> a) display them dropdown 	&nbsp;&nbsp;&nbsp;<input type="radio" name="other_defaulter" value="fxd" <?php if("fxd"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> />b) forced language: <span class="lng_VALUE22"><input class="inpVALUES22"  style="width:50px;" type="text" name="titlee22_default" value="<?php echo get_option('optnameTarget__MLSS_'.'default');?>" placeholder="eng" /></span>
+								<input type="radio" name="other_defaulter" value="dropdownn" <?php if("dropdownn"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> /> a) display them dropdown 	&nbsp;&nbsp;&nbsp;<input type="radio" name="other_defaulter" value="fixedd" <?php if("fixedd"==get_option('optnameDefForOthers__MLSS')){echo 'checked="checked"';}?> />b) forced language: <span class="lng_VALUE22"><input class="inpVALUES22"  style="width:50px;" type="text" name="titlee22_default" value="<?php echo get_option('optnameTarget__MLSS_'.'default');?>" placeholder="eng" /></span>
 							</div>
 						</div>
 				</div>

@@ -15,7 +15,7 @@
 
 
 .clerboth__MLSS{clear:both;}
-#languageSelectDropdown1__MLSS {position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
+#languageSelectDropdown1__MLSS {z-index: 9044; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
   #LangDropMenu1__MLSS{	height:24px;}
 	#AllLines1__MLSS		{overflow:hidden;	height:105%;}
 	#AllLines1__MLSS:hover	{overflow:visible;	height:auto;}

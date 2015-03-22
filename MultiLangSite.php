@@ -109,8 +109,8 @@ function NOTFOUNDDD_REDIRECT2__MLSS($urll,$myHINT){
 	header("location:" . $urll ) or die('File:'.dirname(__file__).'['.$myHINT.'] (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$urll .')');
 }
 	//fix for customize.php theme viewer:
-	if (stripos(currentURL__MLSS, '/customize.php?return=' ) !== false)	{setcookie('MLSS_cstRedirect', 'hii', time()+100000000, '/');}
-	else																{setcookie('MLSS_cstRedirect', 'hii', time()-100000000, '/');}
+	if (stripos(currentURL__MLSS, '/customize.php?return=' ) !== false)	{setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);}
+	else																{setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
 					if (!empty($_COOKIE['MLSS_cstRedirect'])) {return;}
 	header("HTTP/1.1 301 Moved Permanently");
@@ -160,10 +160,10 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 							if (stripos(','.get_option('optnameTarget__MLSS_'.$value).',', ','.$country_name.',') != false ) {$xLang=$value; break; }
 						}
 					}
-					if (isset($xLang)) { define('LNG',$xLang); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, '/'); }
+					if (isset($xLang)) { define('LNG',$xLang); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
 					else{
 						if (get_option('optnameDefForOthers__MLSS')=='fixedd'){
-							define('LNG',get_option('optnameTarget__MLSS_'.'default')); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, '/'); }
+							define('LNG',get_option('optnameTarget__MLSS_'.'default')); setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
 						else{
 							define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;	}
 					}
@@ -197,7 +197,7 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 	
 	//if CORRECT LANGUAGE was DETECTED for the visitor ...
 	else {
-		 define('LNG',found_lang__MLSS); setcookie(cookienameLngs__MLSS, found_lang__MLSS, time()+100000000, '/');
+		 define('LNG',found_lang__MLSS); setcookie(cookienameLngs__MLSS, found_lang__MLSS, time()+100000000, homeFOLD__MLSS);
 		 if (isHomeURI__MLSS) {PERMANENTTT_REDIRECT2__MLSS(homFOLD.'/'.found_lang__MLSS, 'error1048 .contact administrator');}
 	}
 }
@@ -205,8 +205,40 @@ add_action('init', 'DetectLangUsingUrl__MLSS',1); function DetectLangUsingUrl__M
 //=================================== ##### SET LANGUAGE for visitor ========================== //	
 //============================================================================================= //	
 
+add_action('init','myin',1);
+function myin(){
+	$GLOBALS['showonfront']=get_option( 'show_on_front');
+	update_option('show_on_front','posts');
+	global $wp_query;
+	$wp_query->is_front_page = true;
+	$wp_query->is_single = false; 
+}
+add_action('wp_footer','myin2',1);function myin2(){update_option('show_on_front',$GLOBALS['showonfront']);}
 
 
+
+
+add_action( 'pre_get_posts', 'themeslug_force_static_front_page' );
+//http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
+function themeslug_force_static_front_page( $query ) {
+    if ( $query->is_main_query() ) {
+        //if ( 'page' == get_option( 'show_on_front' ) ) {
+            //if ( '' != get_query_var( 'foobar' ) ) { // Registered custom query var
+				$query->is_page = false;	
+					//$query->set( 'is_page', true );
+				
+				$query->is_home = true;	
+					$query->set( 'is_home', true ); 
+					$query->set( 'is_front_page', true ); 
+				
+				$query->queried_object = get_post(get_option('page_on_front') ); 
+					//$query->set( 'page_id', get_option( 'page_on_front' ) );
+            //}
+        //}
+    }
+}
+
+//https://github.com/WordPress/WordPress/blob/master/wp-includes/query.php
 
 
 //==================================== POST TYPES ================================== //
@@ -388,6 +420,14 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 //================================= ##### SHOW FLAGS SELECTOR  ============================ //
 //========================================================================================= //	
 
+//add sample widget 
+add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() {
+	register_sidebar( array(
+		'name' => 'empty_sidebar1',								'id' => 'widget1__MLSS',
+		'before_widget' => '<div class="sidebar1__MLSS">',		'after_widget' => '</div>',	
+		'before_title' => '<h2 class="h2class__MLSS">',			'after_title' => '</h2>',
+	) );
+}
 
 //enable in widgets
 add_filter( 'widget_text', 'do_shortcode' );
@@ -409,6 +449,67 @@ add_shortcode( 'MLSS_navigation', 'treemenuOutp_MLSS' ); function treemenuOutp_M
 		'walker'          => ''
 	));
 }
+
+
+
+
+
+
+
+
+
+
+
+//add_action('pre_get_posts','search_filterr');
+function search_filterr($query) {
+	global $odd,$lang; 
+	$arrs= array(LNG);
+	//var_dump(LANGS__MLSS());die();
+	//$arrs= array_merge($odd['post_Typess'], array());
+	if ( !is_admin() && $query->is_main_query() ) 	{
+		if ( $query->is_search ) {
+			//$arrs[]='post';
+			//$arrs[]='page';
+			$query->set('post_type',  $arrs );
+
+				//SET language CATEGORY PARENT ID
+				global $odd,$lang;
+				$cat_parent_lang_cat_id= get_category_by_slug($odd['category_main_SYMBOL'].LnG)->term_id;
+				$query->set('cat', $cat_parent_lang_cat_id );
+		}
+		elseif (  $query->is_category )	{
+			//$arrs[]='post';
+			//$arrs[]='page';
+			$query->set('post_type', $arrs );
+			//add_filter( 'posts_where' , 'MyFilterFunction_1' );
+		}
+		//for "IS_PAGE" conditions, this doesnt work (it's WORDPRESS behaviour)
+		//so: use "add_filter(posts_where....." in "add_action('wp...."  OR  modify  "PAGE" query directly into  template file
+		else{
+			//$arrs[]='post';
+			//$arrs[]='page';
+			$query->set('post_type', $arrs  );
+			//add_filter( 'posts_where' , 'MyFilterFunction_1' );
+		}
+	//return $query;
+	}
+}
+function MyFilterFunction_1( $where ) { global $wpdb,$odd; 
+	$cat_id = get_query_var('cat');
+	$this_cat = get_category($cat_id);
+	if (!in_array($cat_id,$odd['question_answers_cats']) && !in_array($this_cat->parent,$odd['question_answers_cats']) ){
+		$where .= " AND ({$wpdb->posts}.post_excerpt NOT LIKE '%myCutYout')";
+	}
+	return $where;
+}
+
+
+
+
+
+
+
+
 
 
 
