@@ -19,7 +19,8 @@ define('PLUGIN_URL_WITHOUT_DOMAIN__MLSS',str_replace(domainURL__MLSS, '', plugin
 //option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
-define('TypePrefix__MLSS',				get_option('optMLSS__CategSlugname','mycategories'));
+define('CategPrefix__MLSS',				get_option('optMLSS__CategSlugname','mycategories'));
+define('PagePrefix__MLSS',				get_option('optMLSS__PageSlugname','parentpage'));
 
 
 //==================================================== ACTIVATION command ===============================
@@ -43,7 +44,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		//
 		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
-		update_option('optMLSS__CategSlugname',	'mycategories');
+		update_option('optMLSS__CategSlugname',	'mycategories');   update_option('optMLSS__PageSlugname', 'parentpage');
 		
 	}
 	global $wpdb;
@@ -144,16 +145,22 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
 				
 	$hom=str_replace('/','\/', homeFOLD__MLSS); 
-	preg_match('/'.$hom.'\/(.*?)_'.TypePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_B_matches);    //var_dump($n);exit;
-	preg_match('/'.$hom.'\/(.*?)\//si',   						$_SERVER['REQUEST_URI'].'/',  $found_A_matches);    //var_dump($n);exit;
+	
+	preg_match('/'.$hom.'\/(.*?)_'.PagePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_C_matches);    //var_dump($x);exit;
+	preg_match('/'.$hom.'\/(.*?)_'.CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_B_matches);    //var_dump($x);exit;
+	preg_match('/'.$hom.'\/(.*?)\//si',   						$_SERVER['REQUEST_URI'].'/',  $found_A_matches);    //var_dump($x);exit;
 	// ======= IF LANGUAGE HAS BEEN SET USING:
-	//1) URL PARAMTER
+	//URL PARAMTER
 	if		(!empty($_GET['lng']))						{ $found = $_GET['lng'];}
-	//2) STRUCTURED URL2 [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
+	
+	//STRUCTURED URL [with page prefix] (i.e. http://site.com/LANG_parentpage/my-page
+	elseif	(!empty($found_B_matches[1]))				{ $found = $found_C_matches[1];}
+	//STRUCTURED URL [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
 	elseif	(!empty($found_B_matches[1]))				{ $found = $found_B_matches[1];}
-	//3) STRUCTURED URL (i.e. http://site.com/LANG/my-page
+	//STRUCTURED URL (i.e. http://site.com/LANG/my-page
 	elseif	(!empty($found_A_matches[1]))				{ $found = $found_A_matches[1];}
-	//4) COOKIE
+	
+	//COOKIE
 	elseif	(!empty($_COOKIE[cookienameLngs__MLSS]))	{ $found = $_COOKIE[cookienameLngs__MLSS];}
 	//FINAL SET
 	define('found_lang__MLSS', ((!empty($found) && in_array($found, LANGS__MLSS() )) ?  $found :'')  ); 
@@ -248,10 +255,10 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 				//'permalink_epmask'=>EP_PERMALINK, 
 			);
 			register_post_type( $value, $args );
-			register_taxonomy( $value.'_'.TypePrefix__MLSS, array( $value ),  array(
+			register_taxonomy( $value.'_'.CategPrefix__MLSS, array( $value ),  array(
 				'public'	=> true,	'query_var'=>true,	'hierarchical'=>true, 'show_in_nav_menus'=>true, 'show_admin_column'=>true,
-				'labels'	=> array('name'=> $value.'_'.TypePrefix__MLSS.'s', 'singular_name' => $value.'_'.TypePrefix__MLSS,  ),
-				'rewrite'	=> array('slug' => $value.'_'.TypePrefix__MLSS)
+				'labels'	=> array('name'=> $value.'_'.CategPrefix__MLSS.'s', 'singular_name' => $value.'_'.CategPrefix__MLSS,  ),
+				'rewrite'	=> array('slug' => $value.'_'.CategPrefix__MLSS)
 																					)
 			);
 			flush_rewrite_rules();
