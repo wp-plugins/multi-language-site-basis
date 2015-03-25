@@ -88,7 +88,7 @@ function DetermineLanguages__MLSS(){
 	
 	function MLSS($variable){ global $wpdb; 
 		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".LNG."'");
-		return $res[0]->translation;
+		return stripslashes($res[0]->translation);
 	}
 
 
