@@ -19,7 +19,7 @@ define('PLUGIN_URL_WITHOUT_DOMAIN__MLSS',str_replace(domainURL__MLSS, '', plugin
 //option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
-define('TypePrefix__MLSS','categ');
+define('TypePrefix__MLSS',				get_option('optMLSS__CategSlugname','mycategories'));
 
 
 //==================================================== ACTIVATION command ===============================
@@ -41,10 +41,10 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__Target_'.'spa',		'Spain,Brazil,Argentina,');
 		update_option('optMLSS__Target_'.'default',	'eng');
 		//
-		update_option('optMLSS__DropdHeader',		'y');
-		update_option('optMLSS__DropdSidePos',		'left');
-		update_option('optMLSS__DropdDistanceTop',	'70');
-		update_option('optMLSS__DropdDistanceSide',	'50');
+		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
+		//
+		update_option('optMLSS__CategSlugname',	'mycategories');
+		
 	}
 	global $wpdb;
 	$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
