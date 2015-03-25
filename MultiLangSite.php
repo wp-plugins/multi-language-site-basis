@@ -317,9 +317,9 @@ function my_black_backgorund_output__MLSS(){	$scrpt=
 add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__MLSS(){
 	global $odd;
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
-	echo my_black_backgorund_output__MLSS();
-	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
-	<link rel='stylesheet' id='tipsy-css'  href='<?php echo plugin_dir_url(__FILE__).'flags/stylesheet.css';?>' type='text/css' media='all' />
+	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo plugin_dir_url(__FILE__).'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
+	<body>
+	<?php echo my_black_backgorund_output__MLSS(); ?>
 	<div id="languageSelectDropdown2__MLSS" >
 		<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
