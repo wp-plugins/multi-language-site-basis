@@ -154,7 +154,7 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 	if		(!empty($_GET['lng']))						{ $found = $_GET['lng'];}
 	
 	//STRUCTURED URL [with page prefix] (i.e. http://site.com/LANG_parentpage/my-page
-	elseif	(!empty($found_B_matches[1]))				{ $found = $found_C_matches[1];}
+	elseif	(!empty($found_C_matches[1]))				{ $found = $found_C_matches[1];}
 	//STRUCTURED URL [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
 	elseif	(!empty($found_B_matches[1]))				{ $found = $found_B_matches[1];}
 	//STRUCTURED URL (i.e. http://site.com/LANG/my-page
