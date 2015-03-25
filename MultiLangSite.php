@@ -49,17 +49,19 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	global $wpdb;
 	$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
 				`IDD` int(11) NOT NULL AUTO_INCREMENT,
-				`title_indx` varchar(150) NOT NULL,
-				`lang` varchar(150) NOT NULL,
-				`translation` LONGTEXT NOT NULL DEFAULT '',
+				`title_indx` varchar(150) SET utf8 NOT NULL,
+				`lang` varchar(150) SET utf8 NOT NULL,
+				`translation` LONGTEXT SET utf8 NOT NULL DEFAULT '',
 				`mycolumn3` LONGTEXT CHARACTER SET utf8 NOT NULL DEFAULT '',
 				PRIMARY KEY (`IDD`),
 				UNIQUE KEY `IDD` (`IDD`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=10; ");
-	
-	$x= $wpdb->query("INSERT INTO `".$wpdb->prefix."translatedwords__mlss` (title_indx, lang, translation) VALUES ('my_HeadingMessage', 'eng', 'Hii user!!!' )");
-	$x= $wpdb->query("INSERT INTO `".$wpdb->prefix."translatedwords__mlss` (title_indx, lang, translation) VALUES ('my_HeadingMessage', 'spa', 'holaaaa usuario!' )");
-	
+	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
+							array('translation'=>'Hii user!!!'),
+							array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
+	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
+							array('translation'=>'holaaaa usuario!'),
+							array('title_indx'=>'my_HeadingMessage', 'lang'=>'spa'));
 	//flush-update permalinks for CUSTOM POST TYPES 
 	DetermineLanguages__MLSS(); myf_63__MLSS();	flush_rewrite_rules();
 }
@@ -319,13 +321,13 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
 	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo plugin_dir_url(__FILE__).'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
 	<body>
-	<?php echo my_black_backgorund_output__MLSS(); ?>
+	<?php echo my_black_backgorund_output__MLSS();  ?>
 	<div id="languageSelectDropdown2__MLSS" >
 		<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
 		$SITE_LANGUAGES=LANGS__MLSS(); $HIDDEN_LANGS = get_option('optMLSS__HiddenLangs');
-		
+
 		$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 							$targt_lnk=homeURL__MLSS.'/'.$key_value;
@@ -334,7 +336,7 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 			$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
 								'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
 									'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_WITHOUT_DOMAIN__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
-									'<span class="lnmenuSpn2__MLSS">'. strtoupper($keyname).'</span>'.
+									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 								'</a>'.
 							'</div>';										}
 		}
