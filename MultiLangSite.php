@@ -144,15 +144,15 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
 				
 	$hom=str_replace('/','\/', homeFOLD__MLSS); 
-	preg_match('/'.$hom.'\/(.*?)\//si',   						$_SERVER['REQUEST_URI'].'/',  $found_A_matches);       //var_dump($n);exit;
-	preg_match('/'.$hom.'\/(.*?)_'.TypePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_B_matches);
+	preg_match('/'.$hom.'\/(.*?)_'.TypePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',  $found_B_matches);    //var_dump($n);exit;
+	preg_match('/'.$hom.'\/(.*?)\//si',   						$_SERVER['REQUEST_URI'].'/',  $found_A_matches);    //var_dump($n);exit;
 	// ======= IF LANGUAGE HAS BEEN SET USING:
 	//1) URL PARAMTER
 	if		(!empty($_GET['lng']))						{ $found = $_GET['lng'];}
-	//2) STRUCTURED URL (i.e. http://site.com/LANG/my-page
-	elseif	(!empty($found_A_matches[1]))				{ $found = $found_A_matches[1];}
-	//3) STRUCTURED URL2 [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
+	//2) STRUCTURED URL2 [with category prefix] (i.e. http://site.com/LANG_CATEG/my-page
 	elseif	(!empty($found_B_matches[1]))				{ $found = $found_B_matches[1];}
+	//3) STRUCTURED URL (i.e. http://site.com/LANG/my-page
+	elseif	(!empty($found_A_matches[1]))				{ $found = $found_A_matches[1];}
 	//4) COOKIE
 	elseif	(!empty($_COOKIE[cookienameLngs__MLSS]))	{ $found = $_COOKIE[cookienameLngs__MLSS];}
 	//FINAL SET
