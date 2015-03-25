@@ -160,15 +160,18 @@ if ( is_admin() ){
 		<br/> Then, inside your Sidebar TEXT Widget, place the shortcode <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span> (or if you wish in template .php file, use <span class="codee">do_shortcode([MLSS....]);</span>)
 		
 		
-		<h2 class="tiitl"> 5) Settings </b></h2>
-		<br/>=================================
+		<h2 class="tiitl"> 5) On-site Dropdown Settings </b></h2>
 		<br/>*Display Dropdown in header: &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="y" <?php if ('y'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Show &nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="n" <?php if ('n'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Hide
 		<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
 		<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optMLSS__DropdDistanceTop');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optMLSS__DropdDistanceSide');?>" />px 
-		<br/><br/>SUFFIXES: (NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
+		
+		<h2 class="tiitl"> 6) parameters </b></h2>
+		(NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
 		<br/>*<B>for Categories' links</B>: <input type="text" style="width:150px;" name="category_slugname" value="<?php echo get_option('optMLSS__CategSlugname');?>" />
-		<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, when you publish "eng" language posts, their link will be like: <?php echo homeURL__MLSS;?>/eng/<b>the-last-holidays-i-spent...</b>, but for categories: <?php echo homeURL__MLSS;?>/eng_<b><?php echo get_option('optMLSS__CategSlugname');?></b>/automobiles/mercedes
-		<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, when you publish "eng" language posts, their link will be like: 
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/eng/<b>the-last-holidays-i-spent...</b>, 
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; but for categories:
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/eng_<b><?php echo get_option('optMLSS__CategSlugname');?></b>/automobiles/mercedes
 		<br/>*<B>for Pages' links</B>: <input type="text" style="width:150px;" name="page_slugname" value="<?php echo get_option('optMLSS__PageSlugname');?>" />
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Like above, but with some specifics: For example, in WORDPRESS Default "PAGES" section, you can create several PARENT pages (i.e. "eng_<b>parentpage</b>","fre_<b>parentpage</b>") and then publish new sub-pages for them.. in this case, the language will be detected automatically on all those "pages", but insert the slug correctly.
 		<br/>=================================

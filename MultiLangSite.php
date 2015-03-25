@@ -19,8 +19,8 @@ define('PLUGIN_URL_WITHOUT_DOMAIN__MLSS',str_replace(domainURL__MLSS, '', plugin
 //option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
-define('CategPrefix__MLSS',				get_option('optMLSS__CategSlugname','mycategories'));
-define('PagePrefix__MLSS',				get_option('optMLSS__PageSlugname','parentpage'));
+define('CategPrefix__MLSS',				get_option('optMLSS__CategSlugname', 'mycategories'));
+define('PagePrefix__MLSS',				get_option('optMLSS__PageSlugnamed', 'parentpage'));
 
 
 //==================================================== ACTIVATION command ===============================
