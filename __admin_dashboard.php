@@ -332,7 +332,11 @@ add_action( 'admin_notices', 'func948__MLSS' );	function func948__MLSS() {
 	}
 }
 	//================= FIELD on each post, to set that post as HomePage	================================
-	add_action( 'add_meta_boxes', 'mtbx11__MMLSS' ); function mtbx11__MMLSS() {add_meta_box('htmlId_54_setHome', 'MLSS startpage', 'hmg__MLSS', null, 'normal');} function hmg__MLSS($post) {
+	add_action( 'add_meta_boxes', 'mtbx11__MMLSS' ); function mtbx11__MMLSS() {
+		global $post; if (in_array($post->post_type,LANGS__MLSS())){
+			add_meta_box('htmlId_54_setHome', 'MLSS startpage', 'hmg__MLSS', null, 'normal');
+		}
+	} function hmg__MLSS($post) {
 		//only if the page is already published and now it's EDITOR PAGE
 		if ( stripos(currentURL__MLSS, admin_url('post.php')) !== false && !empty($_GET['post']))	{
 			echo 'To make this page as STARTPAGE for <b style="color:red;">'.constant($post->post_type.'_title__MLSS') .'</b> <a href="'.$_SERVER['REQUEST_URI'].'&MLSS_spID='.$post->ID.'&langT='.$post->post_type.'" target="_blank">Click here</a> 
