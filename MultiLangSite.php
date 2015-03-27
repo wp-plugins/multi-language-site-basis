@@ -456,7 +456,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 //add sample widget 
 add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() {
 	register_sidebar( array(
-		'name' => 'empty_sidebar1',								'id' => 'widget1__MLSS',
+		'name' => 'sample_sidebar1__MLSS',						'id' => 'widget1__MLSS',
 		'before_widget' => '<div class="sidebar1__MLSS">',		'after_widget' => '</div>',	
 		'before_title' => '<h2 class="h2class__MLSS">',			'after_title' => '</h2>',
 	) );
@@ -466,7 +466,7 @@ add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() 
 add_filter( 'widget_text', 'do_shortcode' );
 
 //http://codex.wordpress.org/Function_Reference/shortcode_atts
-add_shortcode( 'MLSS_navigation', 'treemenuOutp_MLSS' ); function treemenuOutp_MLSS($atts){
+add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
 	//http://codex.wordpress.org/Function_Reference/wp_nav_menu
 	//http://codex.wordpress.org/Function_Reference/wp_get_nav_menu_items
 	echo wp_nav_menu( array(
@@ -482,7 +482,9 @@ add_shortcode( 'MLSS_navigation', 'treemenuOutp_MLSS' ); function treemenuOutp_M
 		'walker'          => ''
 	));
 }
-
+add_shortcode( 'MLSS', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts){
+	echo '<span class="mlss__WidgetText">'.MLSS($atts['name']).'</span>';
+}
 
 
 

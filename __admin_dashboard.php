@@ -157,7 +157,7 @@ if ( is_admin() ){
 		
 		<h2 class="tiitl"> 4) display navigation menus</b></h2>
 		In case, you want to display the "tree-like" menu of the pages & categories on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create custom menu for each language (i.e. name them: <span class="codee"><b>eng_</b><span style="color:red;">DESIRED_SLUG</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">DESIRED_SLUG</span></span>... ). Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.
-		<br/> Then, inside your Sidebar TEXT Widget, place the shortcode <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span> (or if you wish in template .php file, use <span class="codee">do_shortcode([MLSS....]);</span>)
+		<br/> Then, inside your Sidebar TEXT Widget, place the shortcode <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span> (or if you wish in template's .php file, use <span class="codee">do_shortcode([...]);</span>)
 		
 		
 		<h2 class="tiitl"> 5) On-site Dropdown Settings </b></h2>
@@ -169,9 +169,9 @@ if ( is_admin() ){
 		(NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
 		<br/>*<B>for Categories' links</B>: <input type="text" style="width:150px;" name="category_slugname" value="<?php echo get_option('optMLSS__CategSlugname');?>" />
 			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, when you publish "eng" language posts, their link will be like: 
-			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/eng/<b>the-last-holidays-i-spent...</b>, 
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/<b style="color:red;">eng</b>/the-last-holidays-i-spent..., 
 			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; but for categories:
-			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/eng_<b><?php echo get_option('optMLSS__CategSlugname');?></b>/automobiles/mercedes
+			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/<b style="color:red;">eng_<?php echo get_option('optMLSS__CategSlugname');?></b>/automobiles/mercedes
 		<br/>*<B>for Pages' links</B>: <input type="text" style="width:150px;" name="page_slugname" value="<?php echo get_option('optMLSS__PageSlugname');?>" />
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Like above, but with some specifics: For example, in WORDPRESS Default "PAGES" section, you can create several PARENT pages (i.e. "eng_<b>parentpage</b>","fre_<b>parentpage</b>") and then publish new sub-pages for them.. in this case, the language will be detected automatically on all those "pages", but insert the slug correctly.
 		<br/>=================================
@@ -216,7 +216,8 @@ if ( is_admin() ){
 		span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}
 		</style>
 		<form action="" method="POST" class="fmr_lxcn" id="lexiconnn">
-			Here are listed the variable names, which can be outputed anywhere in your theme, for example: <b><pre>echo MLSS('<span style="color:red;">my_HeadingMessage</span>');</pre></b>
+			<br/>Below are listed the variable keynames. To output any of them in your theme, use code (for example): 
+			<br/><b><span class="codee">echo MLSS('<span style="color:red;">my_HeadingMessage</span>');</span></b>
 			<br/><br/>
 			<?php 
 			foreach ($final_groups as $each_group){ $BlockTitle=$each_group[0]->title_indx;	$output = 
@@ -228,7 +229,7 @@ if ( is_admin() ){
 					$output.= 
 				'<div class="eachLngWORD">
 							<span class="lng_NAME">'.$value.'</span>
-							<span class="lng_VALUE"><input class="inpVALUES" type="text" name="titlee['.$BlockTitle.']['.$value.']" value="'.htmlentities($trnsl[0]->translation).'" /></span>
+							<span class="lng_VALUE"><input class="inpVALUES" type="text" name="titlee['.$BlockTitle.']['.$value.']" value="'.htmlentities(stripslashes($trnsl[0]->translation)).'" /></span>
 				</div>';
 																	}
 				$output .= '
@@ -246,7 +247,8 @@ if ( is_admin() ){
 				<input type="text" id="newBlockTitle" value="" /> <a style="background-color:#00D8E0;" href="javascript:add_new_Block();"> Add </a>
 			</div>
 			
-			
+			<br/><br/>
+			<div style="float:right;font-style:italic;">(p.s you can use them in text widgets too. for example: <b><span class="codee" style="font-style:normal;">[MLSS name="<span style="color:red;">my_HeadingMessage</span>"]</span></b></div>
 
 								
 			<script type="text/javascript">
