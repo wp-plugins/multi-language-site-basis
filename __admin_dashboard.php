@@ -180,6 +180,7 @@ if ( is_admin() ){
 				<input type="submit" value="SAVE" style="display:none;" />
 					<input type="hidden" name="formupdate__mlss" value="okk" />
 					<input type="hidden" name="inp_SecureNonce" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
+		<br/><br/>p.s. please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using "301 redirect plugin" or so..)
 	</form>
 		</div>
 		<?php
