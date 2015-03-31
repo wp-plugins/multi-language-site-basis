@@ -245,7 +245,8 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 				'publicly_queryable'=> true, 'show_ui'=>true,	//'show_in_nav_menus' => true,'show_in_admin_bar'	=> true,
 				//'show_in_menu' => 'edit.php?post_type=page',//true,
 				'menu_position' => "65.888562" ,
-				'menu_icon'   => 'dashicons-editor-spellcheck', // https://developer.wordpress.org/resource/dashicons/#editor-spellcheck
+				'menu_icon'   => plugin_dir_url(__FILE__).'flags/'.$value.'.png',  //below (using <style>) we also use CSS to resize these images
+								// 'dashicons-editor-spellcheck', // https://developer.wordpress.org/resource/dashicons/#editor-spellcheck
 				'hierarchical' => true,		
 				'has_archive' => true,	
 				'capability_type' => 'post',
@@ -265,6 +266,8 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 			//register_taxonomy_for_object_type('category',$value);
 			//register_taxonomy_for_object_type('my_custom_taxonomyy_1',$value);
 	}
+	//resize icon size within Dashboard sidebar
+	add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
 }
 //================================= ##### POST TYPES =============================== //
 //================================================================================== //		
