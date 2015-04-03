@@ -7,8 +7,8 @@
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 
  //define essentials
-define('domainURL__MLSS',				(((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off') || $_SERVER['SERVER_PORT']==443) ? 'https://':'http://')
-										.$_SERVER['HTTP_HOST']);
+define('domainURL__MLSS',				(((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off') || $_SERVER['SERVER_PORT']==443) ?
+										'https://':'http://' ).$_SERVER['HTTP_HOST']);
 define('homeURL__MLSS',					home_url());
 define('homeFOLD__MLSS',				str_replace(domainURL__MLSS,'',	home_url()));
 define('requestURI__MLSS',				$_SERVER["REQUEST_URI"]);
