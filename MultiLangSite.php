@@ -2,10 +2,11 @@
 /**
  * Plugin Name: Multi-Language Site (basis)
  * Description: Build a Multi-Language Site. Basic framework for people and developers.  After activation, read the explanation. 
- * Version: 1.1
+ * Version: 1.2
  */
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
-
+echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";
+return;
  //define essentials
 define('domainURL__MLSS',				(((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off') || $_SERVER['SERVER_PORT']==443) ?
 										'https://':'http://' ).$_SERVER['HTTP_HOST']);

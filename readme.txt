@@ -7,11 +7,11 @@ Stable tag: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Multi-Language Site (basis)
+Build a Multi-Language Site. This plugin gives you a framework. After activation, read the explanation.
 
 == Description ==
 
-Build a Multi-Language Site. Use the plugin,which gives you the framework of it. After activation, read the explanation.
+Build a Multi-Language Site. This plugin gives you a framework. After activation, read the explanation.
 
 == Installation ==
 
