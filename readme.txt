@@ -1,6 +1,6 @@
 === Multi-Language Site (basis) ===
 Contributors: selnomeria
-Tags: multi,language, multilingual,website,site
+Tags: multi,language,multilanguage,multi language, multilingual,website,site
 Requires at least: 3.7
 Tested up to: 4.1
 Stable tag: 4.1
