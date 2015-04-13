@@ -36,19 +36,27 @@ if ( is_admin() ){
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
 			update_option('optMLSS__HiddenLangs',		$_POST['inp_HiddenLangs']	); 
+			
 						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
 							update_option('optMLSS__Lngs', $_POST['inp_Langs']);
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
 			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
-			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
-														update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
+			foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
+			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
+
+						if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild']) {
+							update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
+							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
+						}
+			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
 			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
 			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
 			update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
 			update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
-			update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
-			update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
+			
+			//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
+			//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
 			
 		}
 		$chosen_method = get_option('optMLSS__FirstMethod');
@@ -150,21 +158,38 @@ if ( is_admin() ){
 		<br/> <input type="radio" name="inp_FirstMethod" value="fixeddd" <?php echo (($chosen_method=='fixeddd')? 'checked="checked"':'');?> /> 
 		<b>C)</b> redirect all visitors to this fixed language <input style="width:50px;" type="text" name="inp_FirsttimeFixed" value="<?php echo get_option('optMLSS__FixedLang');?>" placeholder="eng" />
 				
-		<h2 class="tiitl"> 3) Publish posts</h2>
-		You can see, that on the left menu, there was added special "Language" pages, and you can add new posts...They will be published under the new url : <?php echo homeURL__MLSS;?>/LANG_NAME . 
-		<br/>p.s. Also, under that menu, there is "Categories" too, and you can add categories.. NOTE!! instead of <span class="codee">is_home()</span>, now you have to use <span class="codee">is_post_type_archive()</span> in your theme's php files..otherwise, you will get 404 error pages..
-
 		
-		<h2 class="tiitl"> 4) display navigation menus</b></h2>
-		In case, you want to display the "tree-like" menu of the pages & categories on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create custom menu for each language (i.e. name them: <span class="codee"><b>eng_</b><span style="color:red;">DESIRED_SLUG</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">DESIRED_SLUG</span></span>... ). Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.
-		<br/> Then, inside your Sidebar TEXT Widget, place the shortcode <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span> (or if you wish in template's .php file, use <span class="codee">do_shortcode([...]);</span>)
-		
-		
-		<h2 class="tiitl"> 5) On-site Dropdown Settings </b></h2>
-		<br/>*Display Dropdown in header: &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="y" <?php if ('y'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Show &nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="n" <?php if ('n'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Hide
+		<h2 class="tiitl"> 3) On-site Dropdown Settings </b></h2>
+		*<B>Display Dropdown in header</B>: &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="y" <?php if ('y'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Show &nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="n" <?php if ('n'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Hide
 		<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
 		<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optMLSS__DropdDistanceTop');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optMLSS__DropdDistanceSide');?>" />px 
 		
+		
+		<h2 class="tiitl"> 4) STRUCTURE </h2>
+		<b>-Build Up website structure using</b>:  <input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Custom Post Types (<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenver i.e. YOURSITE.COM/eng/ is opened, all CUSTOM posts will be shown, which are published under that CUSTOM POST TYPE. \r\n\r\n\r\n[p.s. in case, you will need PROGRAMMING modifications, instead of is_home(), you'd better to use is_post_type_archive()]');">Read this!</a>) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Standard Posts (<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under ENG sub-category. \r\n\r\n\r\n(NOTE: CATEGORY BASE is set to . in PERMALINKS settings , so, if you want that your archive pages had URLs like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..) ');">Read this!</a>)
+		
+		<br/><br/>
+		<b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a START page. Just input the Post ID. (If you want to show the regular list of posts under that language, then leave empty.)');">Read this!</a>) :
+		<?php foreach(LANGS__MLSS() as $each){
+			echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		} ?>
+		
+		
+		
+	
+		<h2 class="tiitl"> 5) NAVIGATION MENUS</b></h2>
+		*In case, you want to display the "tree-like" menu of the pages & categories on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create custom menu for each language (i.e. name them: <span class="codee"><b>eng_</b><span style="color:red;">DESIRED_SLUG</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">DESIRED_SLUG</span></span>... ). Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.
+		<br/> Then, inside your Sidebar TEXT Widget, place the shortcode <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span> (or if you wish in template's .php file, use <span class="codee">do_shortcode([...]);</span>)
+		
+		<br/><br/>*<b>custom coding (output navigation menus,posts or etc...)</b> - you can use functions <span class="codee">wp_list_categories(),wp_list_pages(), get_posts()</span>, but use <span class="codee">LNG</span> constant to for target (post_type, root category or whatever)..
+		
+		
+		
+	
+		<h2 class="tiitl"> 6) Some tips</b></h2>
+		*please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using "301 redirect plugin" or so..)
+		
+		<!--
 		<h2 class="tiitl"> 6) parameters </b></h2>
 		(NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
 		<br/>*<B>for Categories' links</B>: <input type="text" style="width:150px;" name="category_slugname" value="<?php echo get_option('optMLSS__CategSlugname');?>" />
@@ -174,13 +199,14 @@ if ( is_admin() ){
 			<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo homeURL__MLSS;?>/<b style="color:red;">eng_<?php echo get_option('optMLSS__CategSlugname');?></b>/automobiles/mercedes
 		<br/>*<B>for Pages' links</B>: <input type="text" style="width:150px;" name="page_slugname" value="<?php echo get_option('optMLSS__PageSlugname');?>" />
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Like above, but with some specifics: For example, in WORDPRESS Default "PAGES" section, you can create several PARENT pages (i.e. "eng_<b>parentpage</b>","fre_<b>parentpage</b>") and then publish new sub-pages for them.. in this case, the language will be detected automatically on all those "pages", but insert the slug correctly.
-		<br/>=================================
+		-->
 		
+		<br/>=================================
 			<br/><span class="save_div_lng22"><a class="lng_SUBMIT22" href="javascript:document.forms[0].submit();">SAVE</a></span>
 				<input type="submit" value="SAVE" style="display:none;" />
 					<input type="hidden" name="formupdate__mlss" value="okk" />
 					<input type="hidden" name="inp_SecureNonce" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
-		<br/><br/>p.s. please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using "301 redirect plugin" or so..)
+		
 	</form>
 		</div>
 		<?php
@@ -301,61 +327,6 @@ if ( is_admin() ){
 	}
 
 
-
-
-
-
-
-
-
-
-//===================================Show STARTPAGE ID input notice in the top of custom post's admin page ============================
-add_action( 'admin_notices', 'func948__MLSS' );	function func948__MLSS() {
-	if (iss_admiiiiiin__MLSS()){
-		foreach(LANGS__MLSS() as $each){ if(stripos(currentURL__MLSS, admin_url('edit.php?post_type='.$each)) !== false){
-				$optValue=get_option('optMLSS__HomeID_'.$_GET['post_type']);
-				$posttt = get_post($optValue);
-				echo '<div style="margin:30px 0 0 0;padding:10px;background-color:pink;font-size:1.4em;">
-						<div style="float:left;">
-							STARTPAGE ID <span style="font-size:0.8em;position:relative;top:-5px;">(<a href="javascript:alert(\'To set any post as the MainPage for this particular Language, then enter the ID of that post.\r\n\r\nTo make STARTPAGE as typical category, then empty the field..\');" style="color:green;">read this!!</a>)</span>:<input type="text" style="width:50px;" id="nw_startid_value" value="'.$optValue.'" /> '
-								.(($optValue) ? '(<a href="'.get_edit_post_link( $posttt->ID).'" target="_blank" style="font-size:0.8em;font-style:italic;">preview</b></a>)' : '')
-							. '<a style="border-radius: 20px; margin: 0px 0px 0px 50px; background-color: #808080; padding: 5px;" href="javascript:change_starpage_id__MLSS();">Save</a>
-							<script type="text/javascript">function change_starpage_id__MLSS()	{
-								window.open("'.currentURL__MLSS.'&MLSS_spID=" + document.getElementById("nw_startid_value").value + "&langg='.$_GET['post_type'].'","_blank");
-								}
-							</script>
-
-							
-						</div>
-						<div style="clear:both;"></div>
-					</div>';
-				break;
-			}
-		}
-	}
-}
-	//================= FIELD on each post, to set that post as HomePage	================================
-	add_action( 'add_meta_boxes', 'mtbx11__MMLSS' ); function mtbx11__MMLSS() {
-		global $post; if (in_array($post->post_type,LANGS__MLSS())){
-			add_meta_box('htmlId_54_setHome', 'MLSS startpage', 'hmg__MLSS', null, 'normal');
-		}
-	} function hmg__MLSS($post) {
-		//only if the page is already published and now it's EDITOR PAGE
-		if ( stripos(currentURL__MLSS, admin_url('post.php')) !== false && !empty($_GET['post']))	{
-			echo 'To make this page as STARTPAGE for <b style="color:red;">'.constant($post->post_type.'_title__MLSS') .'</b> <a href="'.$_SERVER['REQUEST_URI'].'&MLSS_spID='.$post->ID.'&langT='.$post->post_type.'" target="_blank">Click here</a> 
-			<br/>(To undo it, enter <a href="'.admin_url('edit.php?post_type='.$post->post_type).'" target="_blank">dashboard</a>)';
-		}
-	}
-	
-	//When SAVED//
-	add_action( 'admin_init', 'save_homeChang__MLSS' );	function save_homeChang__MLSS($post_id) { 
-		if (isset($_GET['MLSS_spID']) && iss_admiiiiiin__MLSS()) {
-			update_option('optMLSS__HomeID_'.$_GET['langg'], $_GET['MLSS_spID']);		die("updated");
-		}
-	}
-
-// ============================= ###Show STARTPAGE ID ..........========================================	
-//======================================================================================================			
 			
 			
 
