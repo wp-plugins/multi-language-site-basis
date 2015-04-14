@@ -477,12 +477,11 @@ function my_black_backgorund_output__MLSS(){	$scrpt=
 
 //first time visit POPUP
 add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__MLSS(){
-	global $odd;
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
 	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo plugin_dir_url(__FILE__).'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
 	<body>
 	<?php echo my_black_backgorund_output__MLSS();  ?>
-	<div id="languageSelectDropdown2__MLSS" >
+	<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">
 		<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
@@ -511,94 +510,73 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 //Display dropdown on every page 
 add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){
 	if ('y' == get_option('optMLSS__DropdHeader') ) {
-	global $odd;?> 
-	<style>#languageSelectDropdown1__MLSS {top:<?php echo get_option('optMLSS__DropdDistanceTop');?>px; <?php echo (('left'==get_option('optMLSS__DropdSidePos')) ? "left:" : "right:"); echo get_option('optMLSS__DropdDistanceSide');?>px;</style>
-	<div id="languageSelectDropdown1__MLSS" >
+	?> 
+	<style>#LanguageDropdown1__MLSS {<?php echo 'top:'.get_option('optMLSS__DropdDistanceTop').'px;'.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;';?></style>
+	<div id="LanguageDropdown1__MLSS" class="css_reset__MLSS">
 	<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations =======
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
+		$DisableCurrentLangClick = true;
 		$SITE_LANGUAGES=LANGS__MLSS();
 		//If language is set, then sort languages, as the first language FLAG should be the current language
 		if (defined('LNG')) {						function fix_1($i){return $i != LNG;}
 			$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);							//remove current language
 			$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 			//insert current language in first place
 		}
+			$hidden_langs = ','.get_option('optMLSS__HiddenLangs').',';
 		
-		$lng_Dropdown	='<div id="LangDropMenu1__MLSS"><div id="AllLines1__MLSS">     <a href="javascript:void(0);" id="LngSelector1__MLSS">&#8897;</a>';
+		$lng_Dropdown	='<div id="LangDropMenu1__MLSS"><div id="AllLines1__MLSS">     <a href="javascript:MyMobileFunc__MLSS();" id="LngSelector1__MLSS">&#8897;</a>';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 						$targt_lnk=homeURL__MLSS.'/'.$key_value;
 						//if language is not included in "HIDDEN LANGS" option
-						if (stripos(','.get_option('optMLSS__HiddenLangs').',',     ",$key_value," ) === false) {
+						if (stripos($hidden_langs,  ",$key_value," ) === false) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
-								'<a class="ImgHolder1__MLSS" href="'.$targt_lnk.'">'.
+								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.$targt_lnk.'"') .'>'.
 									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_WITHOUT_DOMAIN__MLSS .'flags/'. $key_value .'.png" />'.
 								'</a>'.
 							'</div>'
-							.'<div class="clerboth__MLSS"></div>'
+							.'<span class="clerboth2__MLSS"></span>'
 							;
 																												}
 		}
 		$lng_Dropdown .= '</div></div>';
 		echo $lng_Dropdown;
 		?>
-	</div><!-- languageSelectDropdown1__MLSS -->
+	</div><!-- LanguageDropdown1__MLSS -->
 	<script type="text/javascript">
 		//============styles========
 			//GETproperty >> http://stackoverflow.com/questions/324486/how-do-you-read-css-rule-values-with-javascript/29130215
-			function GETproperty(classOrId,property){ 
-				var FirstChar = classOrId.charAt(0);  var Remaining= classOrId.substring(1);
-				var elem = (FirstChar =='#') ?  document.getElementById(Remaining) : document.getElementsByClassName(Remaining)[0];
-				return window.getComputedStyle(elem,null).getPropertyValue(property);
-			}
+			//function GETproperty(classOrId,property){ 
+			//	var FirstChar = classOrId.charAt(0);  var Remaining= classOrId.substring(1);
+			//	var elem = (FirstChar =='#') ?  document.getElementById(Remaining) : document.getElementsByClassName(Remaining)[0];
+			//	return window.getComputedStyle(elem,null).getPropertyValue(property);
+			//}
 		//var ldrmen = document.getElementById("LangDropMenu1__MLSS");
 		//var flagHeight = GETproperty(".FlagImg1__MLSS","height"); 
 		//	ldrmen.style.height = parseInt(flagHeight.replace("px","")) + 0 + "px";
 		//===========## style========
-		
-		var langMenu = document.getElementById("languageSelectDropdown1__MLSS");
-		var BODYYY = document.body;	BODYYY.insertBefore(langMenu, BODYYY.childNodes[0]);
-
-		var langmnSelcr=document.getElementById("LngSelector1__MLSS");
+	
+		var langMenu__MLSS = document.getElementById("LanguageDropdown1__MLSS");
+				var BODYYY__MLSS = document.body;	BODYYY__MLSS.insertBefore(langMenu__MLSS, BODYYY__MLSS.childNodes[0]);
+		var langmnSelcr__MLSS=document.getElementById("LngSelector1__MLSS"); 
 		var AllLines1__MLSS=document.getElementById("AllLines1__MLSS");
-		var AllLines1__MLSSstartHEIGHT= AllLines1__MLSS.clientHeight; //overflow maybe  hidden white started
+		var AllLines1_startHEIGHT__MLSS= AllLines1__MLSS.clientHeight; //overflow maybe  hidden white started
 		
-		var shownOrHidden=false;
-		function ToggleShowAllLines1__MLSS(mystring)	{
-			if (shownOrHidden === true || mystring=="hide1"){ shownOrHidden = false;
-				AllLines1__MLSS.style.height=AllLines1__MLSSstartHEIGHT + "px";		AllLines1__MLSS.style.overflow="hidden";
-				
+		
+		//for language chooser for mobile devices (if mobile device..so, instead of hover, we need "onclick" action) to be triggered while clicked on the main div
+		var isMobile__MLSS=<?php include_once(__DIR__ .'/flags/detect_platform.php'); echo ( ($MLSS_VARS['isMobile']) ? "true":"false");?>;
+		function MyMobileFunc__MLSS(){	if (isMobile__MLSS){	HideShowAllLines1__MLSS("show1");	}	}
+																//langmnSelcr__MLSS.addEventListener('click', function(){...}, false);}
+		shownOrHidden__MLSS=false;
+		function HideShowAllLines1__MLSS(mystring)	{
+			if (shownOrHidden__MLSS === true){ shownOrHidden__MLSS = false;
+				AllLines1__MLSS.style.overflow="hidden";	AllLines1__MLSS.style.height=AllLines1_startHEIGHT__MLSS + "px";	
 			}
-			else{ shownOrHidden = true;
-				AllLines1__MLSS.style.height="auto";								AllLines1__MLSS.style.overflow="visible";
+			else{ shownOrHidden__MLSS = true;
+				AllLines1__MLSS.style.overflow="visible";	AllLines1__MLSS.style.height="auto";
 			}
 		}
-		langmnSelcr.addEventListener('click',	function(){	ToggleShowAllLines1__MLSS(); }				, false);
 
-	
-		//function clickedLANGLINE(elmnt)	{
-		//	//document.getElementById("the_id").getAttribute("original-title");
-		//	ToggleShowAllLines1__MLSS("hide1");
-		//	var linkk=elmnt.getAttribute("myyhref");
-		//	top.window.location =linkk;
-		//}
-		
-		//function showArrow()
-		//{
-		//	if(old_Arrow = document.getElementById('LngSelector1__MLSS'))	{	old_Arrow.parentNode.removeChild(old_Arrow); }
-		//	document.getElementsByClassName("LineHolder1__MLSS")[0].innerHTML += '<div id="downar" style="height:' + dlines.clientHeight + 'px;">&#8897;</div>';
-		//}
-		//showArrow();
-
-		//for language chooser for mobile devices (if mobile device..so, instead of hover, we need "onclick" action) to be triggered while clicked on the main div
-		//var isMobile = "<?php if ($odd['isMobile']) {echo "true";} else {echo "false";} ?>";
-		//if (isMobile)
-		//	{
-		//	ToggleShowAllLines1__MLSS.addEventListener('click', function() 
-		//		{
-		//		ToggleShowAllLines1__MLSS("show1");
-		//		ToggleShowAllLines1__MLSS.removeEventListener("click", myFunction);
-		//		}, false);
-		//	}
 	</script>
 	<?php 
 	}

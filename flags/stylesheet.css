@@ -1,40 +1,28 @@
-﻿/* RESET CSS  (from https://github.com/tazotodua/useful-javascript/ )
- 
-	WHENEVER you want to integrate element into external site, at first, you'd better to reset the css for your new element, because external site may had defined bad styles for elements globally. p.s. change languageSelectDropdown1__MLSS with your element's ID 
+﻿/* -------------------RESET CSS  (from https://github.com/tazotodua/useful-javascript/ )---------------------
+ 	WHENEVER you want to integrate element into external site, at first, you'd better to reset the css for your new element, because external site may had defined bad styles for elements globally. p.s. change css_reset__MLSS with your element's classname
 */ 
-
-@charset "UTF-8"; #languageSelectDropdown1__MLSS , #languageSelectDropdown1__MLSS div, #languageSelectDropdown1__MLSS span, #languageSelectDropdown1__MLSS applet, #languageSelectDropdown1__MLSS object, #languageSelectDropdown1__MLSS iframe, #languageSelectDropdown1__MLSS h1, #languageSelectDropdown1__MLSS h2, #languageSelectDropdown1__MLSS h3, #languageSelectDropdown1__MLSS h4, #languageSelectDropdown1__MLSS h5, #languageSelectDropdown1__MLSS h6, #languageSelectDropdown1__MLSS p, #languageSelectDropdown1__MLSS blockquote, #languageSelectDropdown1__MLSS pre, #languageSelectDropdown1__MLSS a, #languageSelectDropdown1__MLSS abbr, #languageSelectDropdown1__MLSS acronym, #languageSelectDropdown1__MLSS address, #languageSelectDropdown1__MLSS big, #languageSelectDropdown1__MLSS cite, #languageSelectDropdown1__MLSS code, #languageSelectDropdown1__MLSS del, #languageSelectDropdown1__MLSS dfn, #languageSelectDropdown1__MLSS em, #languageSelectDropdown1__MLSS img, #languageSelectDropdown1__MLSS ins, #languageSelectDropdown1__MLSS kbd, #languageSelectDropdown1__MLSS q, #languageSelectDropdown1__MLSS s, #languageSelectDropdown1__MLSS samp, #languageSelectDropdown1__MLSS small, #languageSelectDropdown1__MLSS strike, #languageSelectDropdown1__MLSS strong, #languageSelectDropdown1__MLSS sub, #languageSelectDropdown1__MLSS sup, #languageSelectDropdown1__MLSS tt, #languageSelectDropdown1__MLSS var, #languageSelectDropdown1__MLSS b, #languageSelectDropdown1__MLSS u, #languageSelectDropdown1__MLSS i, #languageSelectDropdown1__MLSS center, #languageSelectDropdown1__MLSS dl, #languageSelectDropdown1__MLSS dt, #languageSelectDropdown1__MLSS dd, #languageSelectDropdown1__MLSS ol, #languageSelectDropdown1__MLSS ul, #languageSelectDropdown1__MLSS li, #languageSelectDropdown1__MLSS fieldset, #languageSelectDropdown1__MLSS form, #languageSelectDropdown1__MLSS label, #languageSelectDropdown1__MLSS legend, #languageSelectDropdown1__MLSS table, #languageSelectDropdown1__MLSS caption, #languageSelectDropdown1__MLSS tbody, #languageSelectDropdown1__MLSS tfoot, #languageSelectDropdown1__MLSS thead, #languageSelectDropdown1__MLSS tr, #languageSelectDropdown1__MLSS th, #languageSelectDropdown1__MLSS td, #languageSelectDropdown1__MLSS article, #languageSelectDropdown1__MLSS aside, #languageSelectDropdown1__MLSS canvas, #languageSelectDropdown1__MLSS details, #languageSelectDropdown1__MLSS embed, #languageSelectDropdown1__MLSS figure, #languageSelectDropdown1__MLSS figcaption, #languageSelectDropdown1__MLSS footer, #languageSelectDropdown1__MLSS header, #languageSelectDropdown1__MLSS hgroup, #languageSelectDropdown1__MLSS menu, #languageSelectDropdown1__MLSS nav, #languageSelectDropdown1__MLSS output, #languageSelectDropdown1__MLSS ruby, #languageSelectDropdown1__MLSS section, #languageSelectDropdown1__MLSS summary, #languageSelectDropdown1__MLSS time, #languageSelectDropdown1__MLSS mark, #languageSelectDropdown1__MLSS audio, #languageSelectDropdown1__MLSS video {
+@charset "UTF-8"; .css_reset__MLSS , .css_reset__MLSS div, .css_reset__MLSS span, .css_reset__MLSS applet, .css_reset__MLSS object, .css_reset__MLSS iframe, .css_reset__MLSS h1, .css_reset__MLSS h2, .css_reset__MLSS h3, .css_reset__MLSS h4, .css_reset__MLSS h5, .css_reset__MLSS h6, .css_reset__MLSS p, .css_reset__MLSS blockquote, .css_reset__MLSS pre, .css_reset__MLSS a, .css_reset__MLSS abbr, .css_reset__MLSS acronym, .css_reset__MLSS address, .css_reset__MLSS big, .css_reset__MLSS cite, .css_reset__MLSS code, .css_reset__MLSS del, .css_reset__MLSS dfn, .css_reset__MLSS em, .css_reset__MLSS img, .css_reset__MLSS ins, .css_reset__MLSS kbd, .css_reset__MLSS q, .css_reset__MLSS s, .css_reset__MLSS samp, .css_reset__MLSS small, .css_reset__MLSS strike, .css_reset__MLSS strong, .css_reset__MLSS sub, .css_reset__MLSS sup, .css_reset__MLSS tt, .css_reset__MLSS var, .css_reset__MLSS b, .css_reset__MLSS u, .css_reset__MLSS i, .css_reset__MLSS center, .css_reset__MLSS dl, .css_reset__MLSS dt, .css_reset__MLSS dd, .css_reset__MLSS ol, .css_reset__MLSS ul, .css_reset__MLSS li, .css_reset__MLSS fieldset, .css_reset__MLSS form, .css_reset__MLSS label, .css_reset__MLSS legend, .css_reset__MLSS table, .css_reset__MLSS caption, .css_reset__MLSS tbody, .css_reset__MLSS tfoot, .css_reset__MLSS thead, .css_reset__MLSS tr, .css_reset__MLSS th, .css_reset__MLSS td, .css_reset__MLSS article, .css_reset__MLSS aside, .css_reset__MLSS canvas, .css_reset__MLSS details, .css_reset__MLSS embed, .css_reset__MLSS figure, .css_reset__MLSS figcaption, .css_reset__MLSS footer, .css_reset__MLSS header, .css_reset__MLSS hgroup, .css_reset__MLSS menu, .css_reset__MLSS nav, .css_reset__MLSS output, .css_reset__MLSS ruby, .css_reset__MLSS section, .css_reset__MLSS summary, .css_reset__MLSS time, .css_reset__MLSS mark, .css_reset__MLSS audio, .css_reset__MLSS video {
 	margin: 0; 	padding: 0;	border: 0;	font-size: 100%;	vertical-align: baseline; 
 }
-/* ##Reset Css## */
+/*--------------------## RESET CSS ##---------------------------------------*/
 
 
-
-
-
-
-
-.clerboth__MLSS{clear:both;}
-#languageSelectDropdown1__MLSS {z-index: 9044; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
-  #LangDropMenu1__MLSS{	height:24px;}
-	#AllLines1__MLSS		{overflow:hidden;	height:105%;}
-	#AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
-	 .LineHolder1__MLSS{ float:left; cursor:pointer;}		  a.ImgHolder1__MLSS{}
-	   img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000;}
-	 a#LngSelector1__MLSS{float: right; background-color: #B4E5E9; border-radius: 9px; cursor: default; font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
-	 a#LngSelector1__MLSS:hover{}
+#LanguageDropdown1__MLSS {z-index: 9044; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
+  #LanguageDropdown1__MLSS #LangDropMenu1__MLSS{	height:24px;}
+	#LanguageDropdown1__MLSS #AllLines1__MLSS		{overflow:hidden;	height:105%;}
+	#LanguageDropdown1__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
+	 #LanguageDropdown1__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default;}		
+	  #LanguageDropdown1__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
+	   #LanguageDropdown1__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000;}
+	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
+	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS:hover{}
 		 
-		 
-		 
-		 
-		 
-		 
-#languageSelectDropdown2__MLSS {z-index: 9600; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
-	#popup_CHOOSER2__MLSS{ }
-	 .LineHolder2__MLSS{background-color:grey;}
-	 a.ImgHolder2__MLSS {display:block; margin: 10px 0; }
-		img.FlagImg2__MLSS{height:50px; width:80px; vertical-align: middle; }
-		span.lnmenuSpn2__MLSS{font-size:25px; margin: 0 0 0 6px; }
-			.clerboth__MLSS{clear:both;}		 
+
+#FirstTimeLanguage1__MLSS {z-index: 9600; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
+	#FirstTimeLanguage1__MLSS #popup_CHOOSER2__MLSS{ }
+	 #FirstTimeLanguage1__MLSS .LineHolder2__MLSS{background-color:grey;}
+	 #FirstTimeLanguage1__MLSS a.ImgHolder2__MLSS {display:block; margin: 10px 0; }
+		#FirstTimeLanguage1__MLSS img.FlagImg2__MLSS{height:50px; width:80px; vertical-align: middle; }
+		#FirstTimeLanguage1__MLSS span.lnmenuSpn2__MLSS{font-size:25px; margin: 0 0 0 6px; } 
 		 
 		 

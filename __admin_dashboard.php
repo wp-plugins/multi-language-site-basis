@@ -35,7 +35,7 @@ if ( is_admin() ){
 			//update optionsss	
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
-			update_option('optMLSS__HiddenLangs',		$_POST['inp_HiddenLangs']	); 
+			update_option('optMLSS__HiddenLangs',		str_replace(' ','',$_POST['inp_HiddenLangs']) ); 
 			
 						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
 							update_option('optMLSS__Lngs', $_POST['inp_Langs']);

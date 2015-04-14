@@ -1,5 +1,5 @@
 <?php
-$odd= isset($odd) ? $odd : array();
+$MLSS_VARS= isset($MLSS_VARS) ? $MLSS_VARS : array();
 function get_user_browser(){	$b = $_SERVER['HTTP_USER_AGENT'];
 
 	if( //if mobile
@@ -27,7 +27,7 @@ function get_user_browser(){	$b = $_SERVER['HTTP_USER_AGENT'];
 	$final['is_new_browser']= in_array($k, array('Opera','Chrome','Firefox','Safari','Flock')) ?  true : false;
 	$final['full_namee']	= $b;
 	return $final;
-} $z = get_user_browser();  $odd=array_merge($odd,$z);
+} $z = get_user_browser();  $MLSS_VARS=array_merge($MLSS_VARS,$z);
 
 function get_user_OperatingSystem() { 
 	$user_agent=$_SERVER['HTTP_USER_AGENT']; $final['os_namee']="_Unknown_OS_";
@@ -36,8 +36,8 @@ function get_user_OperatingSystem() {
 					);
 	foreach ($os_array as $regex => $value) {	if(preg_match($regex, $user_agent)){$final['os_namee']=$value;}		}
 	return $final;
-} $z = get_user_OperatingSystem(); $odd=array_merge($odd,$z);
+} $z = get_user_OperatingSystem(); $MLSS_VARS=array_merge($MLSS_VARS,$z);
 
 
-$odd['is_pc_platform'] = (in_array($odd['os_namee'],array('_Unknown_OS_','iPhone','iPod','iPad','Android','BlackBerry','Mobile')) || $odd['brwsr'] == "Mobilee")  ?  false : true;
+$MLSS_VARS['is_pc_platform'] = (in_array($MLSS_VARS['os_namee'],array('_Unknown_OS_','iPhone','iPod','iPad','Android','BlackBerry','Mobile')) || $MLSS_VARS['brwsr'] == "Mobilee")  ?  false : true;
 ?>
