@@ -48,7 +48,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		//
 		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
-		update_option('optMLSS__CategSlugname',	'categories');   update_option('optMLSS__PageSlugname', '');
+		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
 		
 	}
 	
