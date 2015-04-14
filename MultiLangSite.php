@@ -22,7 +22,7 @@ define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
-define('PagePrefix__MLSS',				'_'.get_option('optMLSS__PageSlugname', 'pages'));
+define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
 
 
 //==================================================== ACTIVATION commands ===============================
@@ -48,7 +48,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		//
 		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
-		update_option('optMLSS__CategSlugname',	'categories');   update_option('optMLSS__PageSlugname', 'pages');
+		update_option('optMLSS__CategSlugname',	'categories');   update_option('optMLSS__PageSlugname', '');
 		
 	}
 	
@@ -85,7 +85,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		$subb= wp_insert_term('my-sub-categ',	'category', array('parent'=>$PT->term_id)); 
 	}
 	//pages
-	$slug= '_'.get_option('optMLSS__PageSlugname');
+	$slug= PagePrefix__MLSS;
 		$page =get_page_by_path('eng'.$slug, OBJECT, 'page');
 		//see, if exists,but trashed
 		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'draft'));}
@@ -154,6 +154,15 @@ function iss_admiiiiiin__MLSS()	{if (is_admin()) {require_once(ABSPATH . 'wp-inc
 		if (current_user_can('create_users')){return true;}
 		else {return false;}
 }
+function PostRootCatDetect__MLSS ($postid=false, $catid=false) { 
+	if (!$postid){$postid=$GLOBALS['post']->ID;}
+	if (!$catid) {$catid=get_the_category($postid)[0]->term_id ;}
+	// continue, untill a parent $catid will be null
+	while ($catid) 	{ $cat = get_category($catid);	$catid = $cat->category_parent;  $catParent=$cat->slug; }
+	return $catParent;
+}
+
+
 //https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php
 function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
 	  //convert array to STRING
@@ -199,21 +208,28 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 	
 	// ========================== if LANGUAGE was set using URL..===================//
 	//PARAMTERED URL 					(example.com/mypagee?lng=ENG)
-	if	(!$x && !empty($_GET['lng']))	{ $x = $_GET['lng'];} 		
-	//STANDARD PAGE with prefix 		(example.com/ENG-pages/my-page
-		preg_match("/$hom\/(.*?)".PagePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		if(!$x && !empty($n[1])){$x=$n[1];}
-	//STANDARD POST inside category		(example.com/ENG-categories1/my-post
-		preg_match("/$hom\/(.*?)".S_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		if(!$x && !empty($n[1])){$x=$n[1];}
-	//STANDARD CATEGORY with prefix 	(example.com/category/ENG-categories1/
-		preg_match("/$hom\/".get_option('category_base')."\/(.*?)".S_CategPrefix__MLSS.'\//si',$_SERVER['REQUEST_URI'].'/',$n);if(!$x && !empty($n[1])){$x=$n[1];}
+	if	(!$x && !empty($_GET['lng']) && in_array($_GET['lng'], LANGS__MLSS()) )	{ $x = $_GET['lng'];}
 	//CUSTOM POST inside category		(example.com/ENG-categories2/my-post
-		preg_match("/$hom\/(.*?)".C_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		if(!$x && !empty($n[1])){$x=$n[1];}
+		preg_match("/$hom\/(.*?)".C_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];} 		
+	//STANDARD CATEGORY with prefix 	(example.com/category/ENG-categories1/ [P.S. IT MAY NOT INCLUDE base phraze "/category/"] 
+				$addn= ( in_array(get_option('category_base'), array('.','/.','\.')) ? '' :  get_option('category_base').'\/');
+		preg_match("/$hom\/$addn(.*?)".S_CategPrefix__MLSS.'\//si',$_SERVER['REQUEST_URI'].'/',$n);
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
+	//STANDARD PAGE with prefix 		(example.com/ENG-pages/my-page
+		preg_match("/$hom\/(.*?)".PagePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
+	//STANDARD POST inside category		(example.com/ENG-categories1/my-post
+		preg_match("/$hom\/(.*?)".S_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
 	//ANYTHING ALL (CUSTOM POST or etc)..(example.com/ENG/my-page)
-		preg_match("/$hom\/(.*?)\//si",   						$_SERVER['REQUEST_URI'].'/',$n);		if(!$x && !empty($n[1])){$x=$n[1];}
+		preg_match("/$hom\/(.*?)\//si",   						$_SERVER['REQUEST_URI'].'/',$n);		
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
 	//COOKIEd URL 	
-	if	(!$x && !empty($_COOKIE[cookienameLngs__MLSS]))	{ $x = $_COOKIE[cookienameLngs__MLSS];} 
+	if	(!$x && !empty($_COOKIE[cookienameLngs__MLSS]) && in_array($_COOKIE[cookienameLngs__MLSS], LANGS__MLSS()))     {$x = $_COOKIE[cookienameLngs__MLSS];} 
 	// ==============================================================================//
-	
+
+					
 	//FINAL SET
 	define('found_lang__MLSS', ((!empty($x) && in_array($x, LANGS__MLSS() )) ?  $x :'')  );  //if incorrect language,do nothing..
 	define('isHomeURI__MLSS',		(in_array($_SERVER['REQUEST_URI'], array(homeFOLD__MLSS.'/', homeFOLD__MLSS))  ?  true :false)  ); 
@@ -224,6 +240,7 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 	//check if language is set for user.. priority language is given to URL parameter
 	global $wpdb; $FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
 	
+				
 	
 	//=========================================== INITIALIZE LANGUAGE ==================================
 	//LANGUAGE detected
@@ -232,7 +249,7 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 		 if (isHomeURI__MLSS) {PERMANENTTT_REDIRECT2__MLSS(homeFOLD__MLSS.'/'.found_lang__MLSS, 'error1048 .contact administrator');}
 	}
 	//LANGUAGE was NOT detected
-	else {  						
+	else { 
 		if (isHomeURI__MLSS){								//only check, when it's home URL
 			if (empty($_COOKIE[cookienameLngs__MLSS])){ 	//if cookie not set, it may be the first-time visit
 				if ($FIRST_TIME_METHOD=='dropddd')	{ define('ENABLED_FIRSTIME_POPUP_MLSS', true); return;}		
@@ -262,15 +279,29 @@ add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__M
 				//else {}  //when the page is unknown (for example, custom page or "wp-login.php" or etc... then we dont need redirection
 			}
 		}
-		//else{} //when the page is unknown (for example, custom page or "wp-login.php" or etc... then we dont need redirection
+		//IF it not home
+		else{}  //(if it's like: site.com/?p=123&search=abc, then COOKIES will help us!)
+			//when the page is unknown (for example, custom page or "wp-login.php" or etc... then we dont need redirection
 	}
+	
+	
+	
+	//--------------------------------------------------------------------------------------
+	//lets add one trick - if STANDARD POST is published under language category.. (i.e. site.com/my-post), then detect it's language
+	add_action('template_redirect','postrootCat__MLSS');function postrootCat__MLSS(){
+		$catslug=PostRootCatDetect__MLSS();	
+		if (in_array($catslug, LANGS__MLSS())){
+			if ( defined(LNG) && $catslug != LNG ){
+				setcookie(cookienameLngs__MLSS, $catslug, time()+100000000, homeFOLD__MLSS);	
+				PERMANENTTT_REDIRECT2__MLSS($_SERVER['REQUEST_URI'], 'problemm_714' );	
+			}
+		}
+	}
+	//-------------------------------------------------------------------------------------------
 }
 //============================================================================================= //	
 //=================================== ##### SET LANGUAGE for visitor ========================== //	
 //============================================================================================= //	
-
-
-
 
 
 
@@ -375,20 +406,25 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 				//check if CUSTOM_POSTS is chosen by administrator as the BUILDER-TYPE
 				if (get_option('optMLSS__BuildType') == 'custom_p'){
 					//set it to behave as homepage
-					$query->is_home = true;	$query->is_page = false;
+					$query->init();	$query->parse_query(array('post_type' =>LNG));
+					$query->is_home = true;
+					$query->is_page = false;
+					$query->is_archive = true;
+					$query->is_tax = true;
+					$query->is_post_type_archive = true;
 				}
 				else{
 					//set_query_var('cat',....	//$query->parse_query(
 					$cat = get_term_by('slug', LNG, 'category'); 
 					$query->set('cat', $cat->term_id);
-					$query->is_home = true;	$query->is_page = false; $query->is_category = true;
+					$query->is_home = true;
+					$query->is_page = false;
+					$query->is_category = true;
 				}
 			}
 		}
     }
 }
-
-
 
 //=======due WORDPRESS QUERY BUG, i have made this query,to correct all requests.... =====
 //example URL:    yoursite.com/eng/categ2/TORNADOO
@@ -396,36 +432,49 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
     if ( $query->is_main_query() ) {
 		//if NOT Language's MAINPAGE opened (yoursite.com/ENG/)
 		if(!isLangHomeURI__MLSS){
-			if (get_option('optMLSS__BuildType') == 'custom_p'){
 			//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
-				if (!url_to_postid(currentURL__MLSS)){  $activate_custquery=true; $activate_custTaxon=true;	}
-			}
-			else{  $activate_custquery=true;  }
+			if (get_option('optMLSS__BuildType')=='custom_p' && !url_to_postid(currentURL__MLSS))
+					{ $MakeCustomQuery=true; $CustTaxn=true;}
+			else	{ $MakeCustomQuery=true; }
 			
-			if (isset($activate_custquery)){
-				$link_array=explode('/',requestURIfromHome__MLSS);
-					$k=array_filter($link_array);	//remove empty values
-					$k=array_values($k);			//reset hierarchy
-					$all_nmb = count($k);
-				
-					
-							if (isset($activate_custTaxon)){
+			if (isset($MakeCustomQuery)){ $UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray)); 
+
+							if (isset($CustTaxn)){
 				//CUSTOM TAXONOMY FOUND!!!!!!!!! .... with the slug("TORNADOO").. lets check, if it's real taxonomy
 				$term=term_exists(basename(currentURL__MLSS), LNG);
 				if ($term){  
 					$tr = get_term_by('slug', basename(currentURL__MLSS) , LNG);
 					$query->init();	$query->parse_query(array('post_type' =>LNG ,
 										'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
+					
+					$query->is_home = false;
+					$query->is_single = false;
+					$query->is_archive = true;
+					$query->is_tax = true;
+					$query->is_post_type_archive=false;
 					//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
-					$query->is_home = false;	$query->is_single = false;	$query->is_archive = true;	$query->is_tax = true; $query->is_post_type_archive=false;
 					return;					
 				}
 							}
 				
+				//CUSTOM POST FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really cPOST..
+				$cpost=get_page_by_path(basename(currentURL__MLSS), OBJECT, LNG);
+				if ($cpost){
+					$query->init();	$query->parse_query(   array('post_type' =>array(LNG) )  ) ;	
+					$query->is_single = true;	
+					$query->is_page = false;	
+					$query->is_home = false;	
+					$query->is_singular = true;
+					$query->queried_object_id = $cpost->ID; 
+					$query->set('page_id', $cpost->ID );
+					//var_dump($cpost);exit;
+					return;
+				}
+				
 				//STANDARD POST FOUND!!!!!!!!!.... with the slug("TORNADOO"), lets check, if their parents are categories
 				$post=get_page_by_path(basename(currentURL__MLSS), OBJECT, 'post');
 				if ($post){ $passed=true;
-					for($i=0; $i<$all_nmb-1; $i++){
+					for($i=0; $i<count($k)-1; $i++){
 						$cat = get_term_by('slug', $k[$i], 'category'); 
 						if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){
 							$passed=false; break;
@@ -433,49 +482,36 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 					}
 								if ($passed){
 					//new query
-					$query->init();	$query->parse_query(   array('post_type' =>'post')  ) ;	
+					$query->init();	$query->parse_query(   array('post_type' =>array('post'))  ) ;	
 					//others
-					$query->is_home = false;$query->is_single = true;$query->is_singular = true;$query->is_page = false;
+					$query->is_home = false;	
+					$query->is_single = true;	
+					$query->is_singular = true;	
+					$query->is_page = false;
 					$query->queried_object_id = $post->ID; 
 					$query->set( 'page_id', $post->ID );
 					return;
 								}
 				}
+				
+				
 				//STANDARD PAGE FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really page..
 				$page=get_page_by_path(requestURIfromHome__MLSS, OBJECT, 'page');
 				if ($page){
-					$query->init();	$query->parse_query(   array('post_type' =>'page')  ) ;	
-					$query->is_home = false;	$query->is_single = false;	$query->is_singular = true;	$query->is_page = true;
+					$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
+					$query->is_home = false;	
+					$query->is_single = false;	
+					$query->is_singular = true;	
+					$query->is_page = true;
 					$query->queried_object_id = $page->ID; 
 					$query->set( 'page_id', $page->ID );
 					return;
-				}
-				
+				}	
 			}
+	
 		}
 	}
 }	
-		
-		
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if ( ! function_exists( 'post_is_in_descendant_category' ) ) { function post_is_in_descendant_category( $cats, $_post = null ) {
 			foreach ( (array) $cats as $cat ) {	$descendants = get_term_children( (int) $cat, 'category' );
 				if ( $descendants && in_category( $descendants, $_post ) ) {return true;}				
@@ -485,6 +521,70 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 	function showw_EDIT_LINK__MLSS(){ ?><script>var adminbar__MLSS= document.getElementById("wp-admin-bar-root-default"); if (adminbar__MLSS) {adminbar__MLSS.innerHTML += '<li id="wp-admin-bar-editMlssHome"><a class="ab-item" href="<?php echo get_edit_post_link($GLOBALS['post']->ID);?>" ><span class="ab-icon"></span><span class="ab-label">*EDIT*</span></li>';}</script>	<?php }
 
 
+//================== SEARCH FILTER ===================
+add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS($query) {
+	$arrs= array_merge(array(), array());
+	if ( !is_admin() && $query->is_main_query() ) 	{
+		if ( $query->is_search ) {
+			$RootCat	= get_term_by('slug', LNG, 'category');
+				$All_categories=get_categories('parent=0&hide_empty=0&taxonomy=category');
+				foreach ($All_categories as $category) { if ($category->slug != LNG){ $OtherCats[]=$category->term_id; }	}
+			//$RootPage= get_page_by_path(LNG, OBJECT, 'page');
+			
+			//var_dump($OtherCats);exit;
+			if (get_option('optMLSS__BuildType') == 'custom_p'){
+							//$arrs[]='page';  //pages are exluded -hard for me..
+				$arrs[]=LNG;
+				$arrs[]='post';	
+				$query->set('post_type',  $arrs );	$query->set('category__not_in', $OtherCats);
+			}
+			else {
+							//$arrs[]='page';  //pages are exluded -hard for me..
+				//$arrs[]=LNG;
+				$arrs[]='post';			
+				$query->set('post_type',  $arrs );	$query->set('category__in', $RootCat);
+				//add_filter( 'posts_where' , 'MyFilterFunction_1__MLSS' );
+			}
+		}
+	}
+}
+	function MyFilterFunction_1__MLSS( $where ) { global $wpdb; 
+		$cat_id = get_query_var('cat');
+		$this_cat = get_category($cat_id);
+		if (!in_array($cat_id,44444) && !in_array($this_cat->parent, 33333) ){
+			$where .= " AND ({$wpdb->posts}.post_excerpt NOT LIKE '%myCutYout')";
+		}
+		return $where;
+	}
+// ================================= ### QUERY MODIFY =============================== //
+// ================================================================================= //	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 //======================================= SHOW FLAGS SELECTOR  ============================ //
@@ -531,6 +631,8 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 	</div><?php
 	}
 }
+
+
 
 
 //Display dropdown on every page 
