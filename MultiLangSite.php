@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Multi-Language Site (basis)
- * Description: Build a Multi-Language Site. Basic framework for people and developers.  After activation, read the explanation. 
+ * Plugin Name: Multi-Language Site
+ * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.
  * Version: 1.21
  */
 

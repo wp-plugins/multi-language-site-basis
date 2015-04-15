@@ -1,4 +1,4 @@
-=== Multi-Language Site (basis) ===
+=== Multi-Language Site===
 Contributors: selnomeria
 Tags: multi,language,multilanguage,multi language, multilingual,website,site
 Requires at least: 3.7
@@ -7,11 +7,11 @@ Stable tag: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Build a Multi-Language Site. This plugin gives you a framework. After activation, read the explanation.
+Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.
 
 == Description ==
 
-Build a Multi-Language Site. This plugin gives you a framework. After activation, read the explanation.
+Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.
 
 == Installation ==
 
