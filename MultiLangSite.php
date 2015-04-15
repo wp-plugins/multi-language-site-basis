@@ -3,6 +3,7 @@
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
  * Version: 1.22
+ -- future to-do list: sticky posts query; tags; autors pages should contain only langs..
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -160,10 +161,10 @@ function NOTFOUNDDD_REDIRECT2__MLSS($urll,$myHINT){
 	header("location:" . $urll ) or die('File:'.dirname(__file__).'['.$myHINT.'] (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$urll .')');
 }
 	//fix for customize.php theme viewer:
-	if (stripos(currentURL__MLSS, '/customize.php?return=' ) !== false)	{setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);}
-	else																{setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
+	if (stripos(currentURL__MLSS, '/customize.php?' ) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);}
+	else															{define('MLSS_cstRedirect',false); setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
-					if (!empty($_COOKIE['MLSS_cstRedirect'])) {return;}
+					if (!empty($_COOKIE['MLSS_cstRedirect']) || MLSS_cstRedirect) {return;}
 	header("HTTP/1.1 301 Moved Permanently");header('Cache-Control: no-store, no-cache, must-revalidate');header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
 	header("location:" . $urll ) or die('File:'.dirname(__file__).'['.$myHINT.']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$urll .')');
 	// echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit;
@@ -388,11 +389,31 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 
 
 
-// ==================================== QUERY MODIFY =============================== //
-// ================================================================================= //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ===================================================== QUERY MODIFY ============================================== //
+// ================================================================================================================= //
 //difference between [$query->is_XXX=true    and   $query->set('is_XXX', true)   
 // http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
-//ALSO possible:  set_query_var()]
+//ALSO possible:  set_query_var()
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
 
 
@@ -401,7 +422,7 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
     if ( isLangHomeURI__MLSS && $query->is_main_query() ) { 	
 		//if static ID is set for the language's STARTPAGE
 		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){ 
-			$query->init();  
+			$query->init();
 					$post = get_post( $optValue, OBJECT);
 					if($post->post_type==LNG || is_post_type_archive() )	{
 						$query->parse_query( array('post_type' =>array(LNG)) );	
@@ -450,11 +471,11 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 					$query->is_category = false; //$query->set('cat', $tr->term_id);	//set_query_var('cat',...);	
 					$query->is_single = false;
 					//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
-					return;					
 				}
 			}
 		}
     }
+	return $query;
 }
 
 
@@ -474,14 +495,12 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$tr = get_term_by('slug', basename(currentURL__MLSS) , LNG);
 				$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
 									'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
-				
 				$query->is_home = false;
 				$query->is_single = false;
 				$query->is_archive = true;
 				$query->is_tax = true;
 				$query->is_post_type_archive=false;
-				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
-				return;					
+				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 		
 			}
 			
 			//CUSTOM POST FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really cPOST..
@@ -495,7 +514,6 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$query->queried_object_id = $cpost->ID; 
 				$query->set('page_id', $cpost->ID );
 				//var_dump($cpost);exit;
-				return;
 			}
 						
 			//STANDARD POST FOUND!!!!!!!!!.... with the slug("TORNADOO"), lets check, if their parents are categories
@@ -517,7 +535,6 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$query->is_page = false;
 				$query->queried_object_id = $post->ID; 
 				$query->set( 'page_id', $post->ID );
-				return;
 							}
 			}
 			
@@ -531,10 +548,13 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$query->is_page = true;
 				$query->queried_object_id = $page->ID; 
 				$query->set( 'page_id', $page->ID );
-				return;
 			}
 		}
-		
+			
+			
+			
+			
+			
 		//STANDARD CATEGORY FOUND!!!!!!!!!!... (because we use . as CATEGORY BASE, this check is needed..
 		$cat=term_exists(basename(currentURL__MLSS), 'category');
 		if ($cat){  
@@ -547,9 +567,9 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 			$query->is_tax = true;
 			$query->is_post_type_archive=false;
 			//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
-			return;					
 		}
 	}
+	return $query;
 }	
 	if ( ! function_exists( 'post_is_in_descendant_category' ) ) { function post_is_in_descendant_category( $cats, $_post = null ) {
 			foreach ( (array) $cats as $cat ) {	$descendants = get_term_children( (int) $cat, 'category' );
@@ -559,12 +579,13 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 	}	
 	function showw_EDIT_LINK__MLSS(){ ?><script>var adminbar__MLSS= document.getElementById("wp-admin-bar-root-default"); if (adminbar__MLSS) {adminbar__MLSS.innerHTML += '<li id="wp-admin-bar-editMlssHome"><a class="ab-item" href="<?php echo get_edit_post_link($GLOBALS['post']->ID);?>" ><span class="ab-icon"></span><span class="ab-label">*EDIT*</span></li>';}</script>	<?php }
 
-
+	
+	
 //================== SEARCH FILTER ===================
 add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS($query) {
-	$arrs= array_merge(array(), array());
 	if ( !is_admin() && $query->is_main_query() ) 	{
 		if ( $query->is_search ) {
+			$arrs= array_merge(array(), array());
 			$RootCat	= get_term_by('slug', LNG, 'category');
 				$All_categories=get_categories('parent=0&hide_empty=0&taxonomy=category');
 				foreach ($All_categories as $category) { if ($category->slug != LNG){ $OtherCats[]=$category->term_id; }	}
@@ -586,6 +607,7 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 			}
 		}
 	}
+	return $query;
 }
 	function MyFilterFunction_1__MLSS( $where ) { global $wpdb; 
 		$cat_id = get_query_var('cat');
@@ -595,8 +617,8 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 		}
 		return $where;
 	}
-// ================================= ### QUERY MODIFY =============================== //
-// ================================================================================= //	
+// ========================================== ### QUERY MODIFY ========================================== //
+// ====================================================================================================== //	
 	
 	
 	
@@ -613,6 +635,13 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 	
 	
 	
+	
+	
+	
+
+	
+	
+
 	
 	
 	
@@ -752,6 +781,71 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 //================================= ##### SHOW FLAGS SELECTOR  ============================ //
 //========================================================================================= //	
 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//======================================= HIDE/SHOW special WIDGETS  ============================ //
+//=============================================================================================== //		
+
+//ADD classname to widget ..  THANKS to AUTHOR of "SIMPLE WIDGET CLASSES" ( http://markwilkinson.me/saythanks )
+class Simple_Widget_Classes__MLSS {
+	public function __construct() {	add_filter( 'widget_form_callback', array( $this, 'Form' ), 9, 2 );
+		add_filter( 'widget_update_callback', array ($this, 'Update' ), 9, 2 ); 	add_filter( 'dynamic_sidebar_params', array( $this, 'Apply' ), 9 ); }
+	//add form into ADMIN SIDEBARS
+	function form( $instance, $widget ) {
+		if( !isset($instance['WidgetClass__MLSS']) ) { $instance['WidgetClass__MLSS'] = null; }	?>
+		<p><label for='widget-<?php echo $widget->id_base; ?>-<?php echo $widget->number; ?>-WidgetClass__MLSS'><?php echo apply_filters( 'wpmark_swc_input_label', 'Additional CSS Classes (space separated)' ); ?>:
+				<input class="widefat" id="<?php echo $instance[ 'WidgetClass__MLSS' ]; ?>" name="widget-<?php echo $widget->id_base; ?>[<?php echo $widget->number; ?>][WidgetClass__MLSS]" type="text" value="<?php echo $instance[ 'WidgetClass__MLSS' ]; ?>" />
+		</label></p> <?php return $instance;
+	}
+	function Update($instance,$new_instance) {$instance['WidgetClass__MLSS']=wp_strip_all_tags($new_instance['WidgetClass__MLSS']);return $instance;}
+	// implement on frontend or ??? add  input box to each widget in the ADMIN DASHBOARD
+	function Apply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
+		if ( !( $widgetlogicfix = $widget['callback'][0]->option_name ) )
+			// because the Widget Logic plugin changes this structure - how selfish of it!
+			$widgetlogicfix = $widget['callback_wl_redirect'][0]->option_name;	$option_name = get_option( $widgetlogicfix );	$number = $widget['params'][0]['number'];
+			
+		if( isset( $option_name[ $number ][ 'WidgetClass__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetClass__MLSS' ] ) ) {
+			// find the end of the class= part and replace with new class and the closing ">
+			$params[0]['before_widget'] = preg_replace('/">/', " {$option_name[$number]['WidgetClass__MLSS']}\"/>", $params[0]['before_widget'], 1);
+		} return $params;}	
+} $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
+
+
+//BASED ON CLASSNAME  -Hide Other Language Widgetssss
+add_filter( 'dynamic_sidebar_params', 'widget_visible__MLSS', 10); function widget_visible__MLSS($params) {	global $wp_registered_widgets;
+	$incl_clsnm= $params[0]['before_widget'];
+	if (stripos($incl_clsnm,'MLSS_widget_') !== false && stripos($incl_clsnm,'MLSS_widget_'.LNG) === false) { $params=array(); $params['blabla']=''; }  return $params;
+}
+		/*  add_action('wp_head','ShowHideWidgets1__MLSS'); function ShowHideWidgets1__MLSS(){
+		  $out=''; foreach (LANGS__MLSS() as $each) {	if ($each != LNG) { $out .= '.MLSS_widget_'.$each.'{display:none;}';}
+		  } echo '<style type="text/css">'.$out.'</style>';   $out=''; foreach (LANGS__MLSS() as $each) {
+			if ($each != LNG) { $out .= 'var obj = document.getElementsByClassName("MLSS_widget_'.$each.'");
+			for (var i = 0; i< obj.length; ++i) { output = output + obj[i];	obj[i].parentNode.removeChild(obj[i]);}'; }
+		  } echo '<script type="text/javascript">window.onload = function(){'.$out.'};</script>'; }  */
+		  
+
+//================================================================================================= //	
+//=====================================### HIDE/SHOW special WIDGETS  ============================= //
+//================================================================================================= //		
+	
+
+
+		
+	
+	
+
+
+
 //add sample widget 
 add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() {
 	register_sidebar( array(
@@ -761,8 +855,7 @@ add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() 
 	) );
 }
 
-//enable in widgets
-add_filter( 'widget_text', 'do_shortcode' );
+add_filter( 'widget_text', 'do_shortcode' ); //enable SHORTCODES in widgets
 
 //http://codex.wordpress.org/Function_Reference/shortcode_atts
 add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
@@ -774,20 +867,16 @@ add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp_
 		'container'       => 'div',			'container_class' => 'sideMyBox',			'container_id'    => 'my_SideTreeee',
 		'menu_class'      => 'menu',		'menu_id'         => '',
 		'echo'            => 0,				'fallback_cb'     => 'wp_page_menu',
-			'before'          => '',		'after'           => '',
-			'link_before'     => '',		'link_after'      => '',
+			'before'          => '',			'after'           => '',
+			'link_before'     => '',			'link_after'      => '',
 			'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
 		'depth'           => 0,
 		'walker'          => ''
 	));
 }
-add_shortcode( 'MLSS', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts){
-	echo '<span class="mlss__WidgetText">'.MLSS($atts['name']).'</span>';
+add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts){
+	echo '<span class="mlss__WidgetText">'.apply_filters("MLSS",$atts['name']).'</span>';
 }
-
-
-
-
 
 
 
