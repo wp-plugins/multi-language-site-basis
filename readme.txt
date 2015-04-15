@@ -11,7 +11,7 @@ Build a Multi-Language Site. This plugin gives you a good framework. After activ
 
 == Description ==
 
-Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.
+Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation. (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
 
 == Installation ==
 
