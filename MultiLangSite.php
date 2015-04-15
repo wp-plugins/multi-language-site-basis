@@ -312,8 +312,8 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
 		foreach (LANGS__MLSS() as $name=>$value) {
-			$args = array(  # http://codex.wordpress.org/Function_Reference/register_post_type
-					'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
+			// http://codex.wordpress.org/Function_Reference/register_post_type
+			register_post_type($value, array( 	'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
 					'public' => true,
 					'query_var'=> true,
 					//'exclude_from_search' => false,
@@ -325,25 +325,32 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 					'hierarchical' => true,
 					'has_archive' => true,
 					'capability_type' => 'post',
-					'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes', 'revisions','comments', ),
-					//'taxonomies' => array('category','my_taxonomyy_'.$value),	
+					'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes','post_tag', 'revisions','comments', ),
+					//'taxonomies' => array('category','post_tag','my_taxonomyy_'.$value),	
 					'rewrite' => array('with_front'=>true),			'can_export' => true,	
 					//'permalink_epmask'=>EP_PERMALINK, 
-				);
-				register_post_type( $value, $args );
-				register_taxonomy( $value.C_CategPrefix__MLSS, array( $value ),  array(
-					'public'	=> true,	'query_var'=>true,	'hierarchical'=>true, 'show_in_nav_menus'=>true, 'show_admin_column'=>true,
-					'labels'	=> array('name'=> $value.C_CategPrefix__MLSS.'s', 'singular_name' => $value.C_CategPrefix__MLSS,  ),
-					'rewrite'	=> array('slug' => $value.C_CategPrefix__MLSS)
-																						)
-				);
-				
-				//FLUSH RULES !!!  http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
-				if ( get_option( 'flush_rewrite_rules__MLSS' ) ) {
-					flush_rewrite_rules();	delete_option('flush_rewrite_rules__MLSS' );
+			));
+
+			// http://codex.wordpress.org/Function_Reference/register_taxonomy
+			register_taxonomy( $value.C_CategPrefix__MLSS, array(), array(
+				'public'	=> true,	'query_var'=>true,	'hierarchical'=>true, 'show_in_nav_menus'=>true, 'show_admin_column'=>true,
+				'labels'	=> array('name'=> "Custom Categories ($value)", 'singular_name' => $value.C_CategPrefix__MLSS,  ),
+				'rewrite'	=> array('slug' => $value.C_CategPrefix__MLSS)
+																			)
+			);
+			
+			//maybe better to register TAXONOMIES using this:
+			register_taxonomy_for_object_type( 'category', $value );
+			register_taxonomy_for_object_type( 'post_tag', $value );
+				if (get_option('optMLSS__EnableCustCat')) {
+			register_taxonomy_for_object_type(  $value.C_CategPrefix__MLSS, $value );
 				}
-				//register_taxonomy_for_object_type('category',$value);
-				//register_taxonomy_for_object_type('my_custom_taxonomyy_1',$value);
+			
+			
+			//FLUSH RULES !!! READ: http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
+			if ( get_option( 'flush_rewrite_rules__MLSS' ) ) {
+				flush_rewrite_rules();	delete_option('flush_rewrite_rules__MLSS' );
+			}
 		}
 		//resize icon size within Dashboard sidebar
 		add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
@@ -368,147 +375,159 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 //ALSO possible:  set_query_var()]
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
 
-					
+
+//QUERY FOR STARPAGE (i.e. yoursite.com/ENG,yoursite.com/CHN,..)
 add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS($query) {
-    if ( $query->is_main_query() ) {
-		//if Language's MAINPAGE opened (yoursite.com/ENG/)
-		if(isLangHomeURI__MLSS){
+    if ( isLangHomeURI__MLSS && $query->is_main_query() ) { 	
+		//if static ID is set for the language's STARTPAGE
+		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){ 
+			$query->init();  
+					$post = get_post( $optValue, OBJECT);
+					if($post->post_type==LNG || is_post_type_archive() )	{
+						$query->parse_query( array('post_type' =>array(LNG)) );	
+						$query->is_single = true;		
+						$query->is_page = false; 
+					} 
+					elseif($post->post_type=='post') 						{
+						$query->parse_query( array('post_type' =>array('post')) );	
+						$query->is_single = true;		
+						$query->is_page = false;
+					}
+					else 													{
+						$query->parse_query( array('post_type' =>array('page')) );	
+						$query->is_single = false;		
+						$query->is_page = true;
+					}
 			
-			//if static ID is set for the language's STARTPAGE
-			$optValue=get_option('optMLSS__HomeID_'.LNG);
-			if ($optValue){
-				$query->init();  
-						$post = get_post( $optValue, OBJECT);
-						if($post->post_type==LNG || is_post_type_archive() )	{
-							$query->parse_query( array('post_type' =>array(LNG)) );	
-							$query->is_single = true;		
-							$query->is_page = false;
-						} 
-						elseif($post->post_type=='post') 						{
-							$query->parse_query( array('post_type' =>array('post')) );	
-							$query->is_single = true;		
-							$query->is_page = false;
-						}
-						else 													{
-							$query->parse_query( array('post_type' =>array('page')) );	
-							$query->is_single = false;		
-							$query->is_page = true;
-						}
-				
-				$query->is_home = false;	
-				$query->is_singular = true;
-				$query->queried_object_id = $optValue; //get_post(get_option('page_on_front') ); 
-					$query->set( 'page_id', $optValue );
-				//add some links
-				add_action('shutdown','showw_EDIT_LINK__MLSS',99);
+			$query->is_home = false;	
+			$query->is_singular = true;
+			$query->queried_object_id = $optValue; //get_post(get_option('page_on_front') ); 
+				$query->set( 'page_id', $optValue );
+			//add some links
+			add_action('shutdown','showw_EDIT_LINK__MLSS',99);
+		}
+		else{
+			//check if CUSTOM_POSTS is chosen by administrator as the BUILDER-TYPE
+			if (get_option('optMLSS__BuildType') == 'custom_p'){
+				//set it to behave as homepage
+				$query->init();	$query->parse_query(array('post_type' => array(LNG) ));
+				$query->is_home = true;
+				$query->is_page = false;
+				$query->is_archive = true;
+				//$query->is_tax = false; $query->is_post_type_archive = true; 
 			}
 			else{
-				//check if CUSTOM_POSTS is chosen by administrator as the BUILDER-TYPE
-				if (get_option('optMLSS__BuildType') == 'custom_p'){
-					//set it to behave as homepage
-					$query->init();	$query->parse_query(array('post_type' =>LNG));
+				//STANDARD CATEGORY FOUND!!!!!!!!!!.
+				$cat=term_exists(basename(currentURL__MLSS), 'category');
+				if ($cat){  
+					$tr = get_term_by('slug', basename(currentURL__MLSS) , 'category');
+					$query->init();	$query->parse_query(array('post_type' => array('post',LNG) ,
+										'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
 					$query->is_home = true;
 					$query->is_page = false;
 					$query->is_archive = true;
-					$query->is_tax = true;
-					$query->is_post_type_archive = true;
-				}
-				else{
-					//set_query_var('cat',....	//$query->parse_query(
-					$cat = get_term_by('slug', LNG, 'category'); 
-					$query->set('cat', $cat->term_id);
-					$query->is_home = true;
-					$query->is_page = false;
-					$query->is_category = true;
+					
+					$query->is_category = false; //$query->set('cat', $tr->term_id);	//set_query_var('cat',...);	
+					$query->is_single = false;
+					//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
+					return;					
 				}
 			}
 		}
     }
 }
 
-//=======due WORDPRESS QUERY BUG, i have made this query,to correct all requests.... =====
-//example URL:    yoursite.com/eng/categ2/TORNADOO
-add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATED_QUERY__MLSS($query) {
-    if ( $query->is_main_query() ) {
-		//if NOT Language's MAINPAGE opened (yoursite.com/ENG/)
-		if(!isLangHomeURI__MLSS){
-			//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
-			if (get_option('optMLSS__BuildType')=='custom_p' && !url_to_postid(currentURL__MLSS))
-					{ $MakeCustomQuery=true; $CustTaxn=true;}
-			else	{ $MakeCustomQuery=true; }
-			
-			if (isset($MakeCustomQuery)){ $UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray)); 
 
-							if (isset($CustTaxn)){
-				//CUSTOM TAXONOMY FOUND!!!!!!!!! .... with the slug("TORNADOO").. lets check, if it's real taxonomy
-				$term=term_exists(basename(currentURL__MLSS), LNG);
-				if ($term){  
-					$tr = get_term_by('slug', basename(currentURL__MLSS) , LNG);
-					$query->init();	$query->parse_query(array('post_type' =>LNG ,
-										'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
-					
-					$query->is_home = false;
-					$query->is_single = false;
-					$query->is_archive = true;
-					$query->is_tax = true;
-					$query->is_post_type_archive=false;
-					//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
-					return;					
-				}
-							}
+
+//QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
+add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATED_QUERY__MLSS($query) {
+    if ( !isLangHomeURI__MLSS && $query->is_main_query() ) {
+		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
+		$CustEnabled =  get_option('optMLSS__BuildType')=='custom_p' ? true:false ;
+		$UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray));
+		
+		if (($CustEnabled && !url_to_postid(currentURL__MLSS))    )
+		{
+			//CUSTOM TAXONOMY FOUND!!!!!!!!! .... with the slug("TORNADOO").. lets check, if it's real taxonomy
+			$term=term_exists(basename(currentURL__MLSS), LNG);
+			if ($term){  
+				$tr = get_term_by('slug', basename(currentURL__MLSS) , LNG);
+				$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
+									'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
 				
-				//CUSTOM POST FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really cPOST..
-				$cpost=get_page_by_path(basename(currentURL__MLSS), OBJECT, LNG);
-				if ($cpost){
-					$query->init();	$query->parse_query(   array('post_type' =>array(LNG) )  ) ;	
-					$query->is_single = true;	
-					$query->is_page = false;	
-					$query->is_home = false;	
-					$query->is_singular = true;
-					$query->queried_object_id = $cpost->ID; 
-					$query->set('page_id', $cpost->ID );
-					//var_dump($cpost);exit;
-					return;
-				}
-				
-				//STANDARD POST FOUND!!!!!!!!!.... with the slug("TORNADOO"), lets check, if their parents are categories
-				$post=get_page_by_path(basename(currentURL__MLSS), OBJECT, 'post');
-				if ($post){ $passed=true;
-					for($i=0; $i<count($k)-1; $i++){
-						$cat = get_term_by('slug', $k[$i], 'category'); 
-						if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){
-							$passed=false; break;
-						}
-					}
-								if ($passed){
-					//new query
-					$query->init();	$query->parse_query(   array('post_type' =>array('post'))  ) ;	
-					//others
-					$query->is_home = false;	
-					$query->is_single = true;	
-					$query->is_singular = true;	
-					$query->is_page = false;
-					$query->queried_object_id = $post->ID; 
-					$query->set( 'page_id', $post->ID );
-					return;
-								}
-				}
-				
-				
-				//STANDARD PAGE FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really page..
-				$page=get_page_by_path(requestURIfromHome__MLSS, OBJECT, 'page');
-				if ($page){
-					$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
-					$query->is_home = false;	
-					$query->is_single = false;	
-					$query->is_singular = true;	
-					$query->is_page = true;
-					$query->queried_object_id = $page->ID; 
-					$query->set( 'page_id', $page->ID );
-					return;
-				}	
+				$query->is_home = false;
+				$query->is_single = false;
+				$query->is_archive = true;
+				$query->is_tax = true;
+				$query->is_post_type_archive=false;
+				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
+				return;					
 			}
-	
+			
+			//CUSTOM POST FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really cPOST..
+			$cpost=get_page_by_path(basename(currentURL__MLSS), OBJECT, LNG);
+			if ($cpost){
+				$query->init();	$query->parse_query(   array('post_type' =>array(LNG) )  ) ;	
+				$query->is_single = true;	
+				$query->is_page = false;	
+				$query->is_home = false;	
+				$query->is_singular = true;
+				$query->queried_object_id = $cpost->ID; 
+				$query->set('page_id', $cpost->ID );
+				//var_dump($cpost);exit;
+				return;
+			}
+						
+			//STANDARD POST FOUND!!!!!!!!!.... with the slug("TORNADOO"), lets check, if their parents are categories
+			$post=get_page_by_path(basename(currentURL__MLSS), OBJECT, 'post');
+			if ($post){ $passed=true;
+				for($i=0; $i<count($k)-1; $i++){
+					$cat = get_term_by('slug', $k[$i], 'category'); 
+					if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){
+						$passed=false; break;
+					}
+				}
+							if ($passed){
+				//new query
+				$query->init();	$query->parse_query(   array('post_type' =>array('post'))  ) ;	
+				//others
+				$query->is_home = false;	
+				$query->is_single = true;	
+				$query->is_singular = true;	
+				$query->is_page = false;
+				$query->queried_object_id = $post->ID; 
+				$query->set( 'page_id', $post->ID );
+				return;
+							}
+			}
+			
+			//STANDARD PAGE FOUND!!!!!!!!!!... with the slug("TORNADOO"), lets check if it's a really page..
+			$page=get_page_by_path(requestURIfromHome__MLSS, OBJECT, 'page');
+			if ($page){
+				$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
+				$query->is_home = false;	
+				$query->is_single = false;	
+				$query->is_singular = true;	
+				$query->is_page = true;
+				$query->queried_object_id = $page->ID; 
+				$query->set( 'page_id', $page->ID );
+				return;
+			}
+		}
+		
+		//STANDARD CATEGORY FOUND!!!!!!!!!!... (because we use . as CATEGORY BASE, this check is needed..
+		$cat=term_exists(basename(currentURL__MLSS), 'category');
+		if ($cat){  
+			$tr = get_term_by('slug', basename(currentURL__MLSS) , 'category');
+			$query->init();	$query->parse_query(array('post_type' => array('post',LNG) ,
+								'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
+			$query->is_home = false;
+			$query->is_single = false;
+			$query->is_archive = true;
+			$query->is_tax = true;
+			$query->is_post_type_archive=false;
+			//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
+			return;					
 		}
 	}
 }	
@@ -533,13 +552,13 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 			
 			//var_dump($OtherCats);exit;
 			if (get_option('optMLSS__BuildType') == 'custom_p'){
-							//$arrs[]='page';  //pages are exluded -hard for me..
+							//$arrs[]='page';  //pages are exluded -hard for me..  post_parent=> 
 				$arrs[]=LNG;
 				$arrs[]='post';	
 				$query->set('post_type',  $arrs );	$query->set('category__not_in', $OtherCats);
 			}
 			else {
-							//$arrs[]='page';  //pages are exluded -hard for me..
+							//$arrs[]='page';  //pages are exluded -hard for me..  post_parent=> 
 				//$arrs[]=LNG;
 				$arrs[]='post';			
 				$query->set('post_type',  $arrs );	$query->set('category__in', $RootCat);

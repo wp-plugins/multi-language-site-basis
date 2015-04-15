@@ -49,6 +49,7 @@ if ( is_admin() ){
 							update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
+						update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
 			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
 			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
@@ -80,6 +81,8 @@ if ( is_admin() ){
 		.eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;}
 		a.readpopp{color:#56CC18;}
 		</style>
+		<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
+		
 		<div class="multiLangSimpPage">
 			<form action="" method="POST">
 
@@ -104,8 +107,7 @@ if ( is_admin() ){
 			<br/> <input type="radio" name="inp_FirstMethod" value="dropddd" <?php echo (($chosen_method=='dropddd')? 'checked="checked"':'');?> />
 			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>)
 				<script type="text/javascript">
-				function previewww(){	
-					document.cookie = "<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; 
+				function previewww(){ document.cookie="<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; 
 					window.open("<?php echo homeURL__MLSS;?>?previewDropd__MLSS","_blank");	}
 				</script>
 			
@@ -148,7 +150,10 @@ if ( is_admin() ){
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 4) STRUCTURE</span>
-			<br/><b>-Build Up website structure using</b>:  <input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Custom Post Types (<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenever i.e. YOURSITE.COM/eng/ is opened, all CUSTOM POSTS will be shown, which are published under that CUSTOM POST TYPE. Also, when visitor makes a SEARCH, it also will be looped through \u0022STANDARD POSTS\u0022,which are published under the root language \u0022STANDARD CATEGORY\u0022). \r\n\r\n\r\n[p.s. in case, you are programmer and you will need CODING modifications, instead of is_home(), its better to use is_post_type_archive()]');" class="readpopp">Read this popup!</a>) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Standard Posts (<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: \u0022CATEGORY BASE\u0022 is set to .(dot) in PERMALINKS settings , so, if you want that your categories URLs were like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. Otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)\r\n\r\n\r\np.s. Just as an advice, is it better to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/?');" class="readpopp">Read this popup!</a>)
+			<br/><b>-Build Up website structure using</b>: 
+			<br/><input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Custom Post Types (<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenever i.e. YOURSITE.COM/eng/ is opened, all CUSTOM POSTS will be shown, which are published under that CUSTOM POST TYPE. Also, when visitor makes a SEARCH, it also will be looped through \u0022STANDARD POSTS\u0022,which are published under the root language \u0022STANDARD CATEGORY\u0022). \r\n\r\n\r\n[p.s. in case, you are programmer and you will need CODING modifications, instead of is_home(), its better to use is_post_type_archive()]');" class="readpopp">Read this popup!</a>) 
+				<span style="margin:0 0 0 20px;"></span>[ enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="0" /> <input type="checkbox" name="EnableCustCats" value="1" <?php if (get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> /> ]
+			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Standard Posts (<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: \u0022CATEGORY BASE\u0022 is set to .(dot) in PERMALINKS settings , so, if you want that your categories URLs were like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. Otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)\r\n\r\n\r\np.s. Just as an advice, is it better to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/?');" class="readpopp">Read this popup!</a>)
 			
 			<br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then leave empty.)');" class="readpopp">Read this popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
