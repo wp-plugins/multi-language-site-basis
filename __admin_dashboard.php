@@ -231,8 +231,9 @@ if ( is_admin() ){
 		span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}
 		</style>
 		<form action="" method="POST" class="fmr_lxcn" id="lexiconnn">
-			<br/>Below are listed the variable keynames. To output any of them in your theme, use code (for example): 
-			<br/><b><span class="codee">echo MLSS('<span style="color:red;">my_HeadingMessage</span>');</span></b>
+			<br/>Below are listed variable INDEXNAMES with their suitable translations. To output any phrase in your theme, use code (like this): 
+			<br/><b><span class="codee">echo apply_filters('MLSS','<span style="color:red;">my_HeadingMessage</span>');</span></b> 			&nbsp;&nbsp;&nbsp;<i>(<a href="javascript:alert('Even more, you can make this command more shorter -  in your functions.php, create function i.e. function Z($var){return apply_filters...} ')">Read this popup</a>!)</i>
+			<!-- <?php //include_once(__DIR__.'/flags/javascript_functions.php'); ?> (<a href="javascript:show_my_popup('#mlsNotice')"> Read this popup!</a>) <div id="mlsNotice">You can use this function anywhere (only after initialization of hooks). However,in case you deactivate this plugin, to avoid errors, you must insert this code in the top of your functions.php: <b><span class="codee">if(!function_exists('MLSS')) {function MLSS(){return 'PLUGIN NOT INSTALLED';}}</span></b></div> -->
 			<br/><br/>
 			<?php 
 			foreach ($final_groups as $each_group){ $BlockTitle=$each_group[0]->title_indx;	$output = 
@@ -258,7 +259,7 @@ if ( is_admin() ){
 
 		
 			<div class="addNEWlnBLOCK">
-				<span style="color:blue;text-decoration:none;">ADD NEW block (with unique index name. for example: <b style="color:red;">MyFooterHello</b>):</span> 
+				<span style="color:blue;text-decoration:none;">ADD NEW block (with unique INDEXNAME. for example: <b style="color:red;">MyFooterHello</b>):</span> 
 				<input type="text" id="newBlockTitle" value="" /> <a style="background-color:#00D8E0;" href="javascript:add_new_Block();"> Add </a>
 			</div>
 			

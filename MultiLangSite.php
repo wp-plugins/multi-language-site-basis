@@ -117,30 +117,6 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 
 
 
-//==================================================== pre-define languages ===============================
-add_action('init','DetermineLanguages__MLSS',1); 
-function DetermineLanguages__MLSS(){
-	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
-	$temp_contents = explode(',',  get_option('optMLSS__Lngs') ); 
-	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
-		if (!empty($value))	{	preg_match('/(.*?)\((.*)\)/si',$value,$nnn); 	//var_dump($nnn);exit;
-			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
-		}
-	}
-	$GLOBALS['SiteLangs__MLSS'] = $finall;
-}
-
-	function LANGS__MLSS(){return $GLOBALS['SiteLangs__MLSS'];}
-	add_action('init','Defines_MLSS'); function Defines_MLSS(){ 	
-		foreach (LANGS__MLSS() as $title=>$name) { define ($name.'__MLSS',$name);  define($name.'_title__MLSS',$title);} 
-	}
-	
-	function MLSS($variable){ global $wpdb; 
-		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".LNG."'");
-		return stripslashes($res[0]->translation);
-	}
-
-
 
 
 
@@ -195,11 +171,55 @@ function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
 //================================================= ##### SEVERAL USEFUL FUNCTIONS ===============================
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//==================================================== pre-define languages ===============================
+//add_action('muplugins_loaded','DetermineLanguages__MLSS',1); 
+DetermineLanguages__MLSS();
+function DetermineLanguages__MLSS(){
+	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
+	$temp_contents = explode(',',  get_option('optMLSS__Lngs') ); 
+	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
+		if (!empty($value))	{	preg_match('/(.*?)\((.*)\)/si',$value,$nnn); 	//var_dump($nnn);exit;
+			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
+		}
+	}
+	$GLOBALS['SiteLangs__MLSS'] = $finall;
+}
+	LANGS__MLSS(); //add_action('muplugins_loaded','LANGS__MLSS',1); 
+	function LANGS__MLSS(){return $GLOBALS['SiteLangs__MLSS'];}
+	
+	Defines_MLSS();	//add_action('muplugins_loaded','Defines_MLSS',1); 
+	function Defines_MLSS(){ foreach (LANGS__MLSS() as $n=>$v) { define ($v.'__MLSS',$v); define($v.'_title__MLSS',$n);} }
+	
+	//this function is loaded at this second
+	function MLSS_PHRAZE($variable){ global $wpdb; 
+		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".LNG."'");
+		return stripslashes($res[0]->translation);
+	}
+	add_filter('MLSS','MLSS_PHRAZE');
 	
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
-add_action('init', 'DetectLangUsingUrl__MLSS',2); function DetectLangUsingUrl__MLSS(){
+DetectLangUsingUrl__MLSS(); //add_action('mu_plugins_loaded', 'DetectLangUsingUrl__MLSS',1); 
+function DetectLangUsingUrl__MLSS(){
 	//if preview
 	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
 				
@@ -617,6 +637,7 @@ function my_black_backgorund_output__MLSS(){	$scrpt=
 	var BODYYY = document.body;	if (BODYYY)  {BODYYY.insertBefore(document.getElementById("my_black_backgr__MLSS").innerHTML, BODYYY.childNodes[0]);}
 	</script>'; 	return $scrpt;
 }
+
 
 
 
