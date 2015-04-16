@@ -360,7 +360,7 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 			//maybe better to register TAXONOMIES using this:
 			register_taxonomy_for_object_type( 'category', $value );
 			register_taxonomy_for_object_type( 'post_tag', $value );
-				if (get_option('optMLSS__EnableCustCat')) {
+				if (get_option('optMLSS__EnableCustCat')=='y') {
 			register_taxonomy_for_object_type(  $value.C_CategPrefix__MLSS, $value );
 				}
 			
@@ -494,7 +494,7 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 		{
 			//IF CUSTOM POSTS/TAXONOMIES ENABLED
 			if ($CustBuildEnabled){
-				if ($CustTaxonmEnabled){
+				if ($CustTaxonmEnabled=='y'){
 					//CUSTOM TAXONOMY
 					$term=term_exists($BaseSLUG, LNG);
 					if ($term){  
@@ -523,7 +523,6 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 					return $query;
 				}
 			}
-					
 					
 			//standard post
 			$post= ($x = get_page_by_path($AfterHomePath, OBJECT, 'post')) ?  $x : ''; //get_page_by_path($BaseSLUG...
