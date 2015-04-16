@@ -49,7 +49,10 @@ if ( is_admin() ){
 							update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
-						update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
+						if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) {
+							update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
+							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
+						}
 			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
 			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
 			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
