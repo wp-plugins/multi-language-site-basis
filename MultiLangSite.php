@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.23 
+ * Version: 1.24 
  -- future to-do list: sticky posts query; tags; autors pages should contain only langs..
  */
 
@@ -195,7 +195,7 @@ function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
 DetermineLanguages__MLSS();
 function DetermineLanguages__MLSS(){
 	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
-	$temp_contents = explode(',',  get_option('optMLSS__Lngs') ); 
+	$temp_contents = explode(',',  get_option('optMLSS__Lngs','None(none)') ); 
 	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
 		if (!empty($value))	{	preg_match('/(.*?)\((.*)\)/si',$value,$nnn); 	//var_dump($nnn);exit;
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
@@ -802,21 +802,25 @@ class Simple_Widget_Classes__MLSS {
 		add_filter( 'widget_update_callback', array ($this, 'Update' ), 9, 2 ); 	add_filter( 'dynamic_sidebar_params', array( $this, 'Apply' ), 9 ); }
 	//add form into ADMIN SIDEBARS
 	function form( $instance, $widget ) {
-		if( !isset($instance['WidgetClass__MLSS']) ) { $instance['WidgetClass__MLSS'] = null; }	?>
-		<p><label for='widget-<?php echo $widget->id_base; ?>-<?php echo $widget->number; ?>-WidgetClass__MLSS'><?php echo apply_filters( 'wpmark_swc_input_label', 'Additional CSS Classes (space separated)' ); ?>:
-				<input class="widefat" id="<?php echo $instance[ 'WidgetClass__MLSS' ]; ?>" name="widget-<?php echo $widget->id_base; ?>[<?php echo $widget->number; ?>][WidgetClass__MLSS]" type="text" value="<?php echo $instance[ 'WidgetClass__MLSS' ]; ?>" />
+		if( !isset($instance['WidgetLang__MLSS']) ) { $instance['WidgetLang__MLSS'] = null; }	?>
+		<p><label for='widget-<?php echo $widget->id_base; ?>-<?php echo $widget->number; ?>-WidgetLang__MLSS'>(MLSS) Shown on Language:
+				<select class="widefat" id="<?php echo $instance[ 'WidgetLang__MLSS' ]; ?>" name="widget-<?php echo $widget->id_base; ?>[<?php echo $widget->number; ?>][WidgetLang__MLSS]">
+					<option value="ALL">EVERYWHERE</option>
+					<?php foreach (LANGS__MLSS() as $name=>$value) { 
+						echo '<option value="'.$value. '"'. ( ($value==$instance['WidgetLang__MLSS']) ? 'selected':'' )."> $value ($name)</option>";}?>
+				</select>
 		</label></p> <?php return $instance;
 	}
-	function Update($instance,$new_instance) {$instance['WidgetClass__MLSS']=wp_strip_all_tags($new_instance['WidgetClass__MLSS']);return $instance;}
+	function Update($instance,$new_instance) {$instance['WidgetLang__MLSS']=wp_strip_all_tags($new_instance['WidgetLang__MLSS']);return $instance;}
 	// implement on frontend or ??? add  input box to each widget in the ADMIN DASHBOARD
 	function Apply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
 		if ( !( $widgetlogicfix = $widget['callback'][0]->option_name ) )
 			// because the Widget Logic plugin changes this structure - how selfish of it!
 			$widgetlogicfix = $widget['callback_wl_redirect'][0]->option_name;	$option_name = get_option( $widgetlogicfix );	$number = $widget['params'][0]['number'];
 			
-		if( isset( $option_name[ $number ][ 'WidgetClass__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetClass__MLSS' ] ) ) {
-			// find the end of the class= part and replace with new class and the closing ">
-			$params[0]['before_widget'] = preg_replace('/">/', " {$option_name[$number]['WidgetClass__MLSS']}\"/>", $params[0]['before_widget'], 1);
+		if( isset( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) ) {
+			// find the end of the class= part and replace with new 
+			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
 		} return $params;}	
 } $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
 
@@ -824,7 +828,7 @@ class Simple_Widget_Classes__MLSS {
 //BASED ON CLASSNAME  -Hide Other Language Widgetssss
 add_filter( 'dynamic_sidebar_params', 'widget_visible__MLSS', 10); function widget_visible__MLSS($params) {	global $wp_registered_widgets;
 	$incl_clsnm= $params[0]['before_widget'];
-	if (stripos($incl_clsnm,'MLSS_widget_') !== false && stripos($incl_clsnm,'MLSS_widget_'.LNG) === false) { $params=array(); $params['blabla']=''; }  return $params;
+	if (stripos($incl_clsnm,'MLSS_widget_') !== false && !is_admin() &&  (stripos($incl_clsnm,'MLSS_widget_ALL') === false && stripos($incl_clsnm,'MLSS_widget_'.LNG) === false)   ) { $params=array(); $params['blabla']=''; }  return $params;
 }
 		/*  add_action('wp_head','ShowHideWidgets1__MLSS'); function ShowHideWidgets1__MLSS(){
 		  $out=''; foreach (LANGS__MLSS() as $each) {	if ($each != LNG) { $out .= '.MLSS_widget_'.$each.'{display:none;}';}
