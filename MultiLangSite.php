@@ -156,11 +156,11 @@ function NOTFOUNDDD_REDIRECT2__MLSS($urll,$myHINT){
 	header("HTTP/1.1 404 Not Found");header('Cache-Control: no-store, no-cache, must-revalidate');header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');  
 	header("location:" . $urll ) or die('File:'.dirname(__file__).'['.$myHINT.'] (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$urll .')');
 }
-	//fix for customize.php theme viewer:
-	if (stripos(currentURL__MLSS, '/customize.php?' ) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);}
-	else															{define('MLSS_cstRedirect',false); setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
+	//FIX for WP BUG: Appearence>customize.php:
+	if (stripos(currentURL__MLSS, str_replace(home_url(),'',admin_url('customize.php'))) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);}
+	else															{setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
-					if (!empty($_COOKIE['MLSS_cstRedirect']) || MLSS_cstRedirect) {return;}
+					if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
 	header("HTTP/1.1 301 Moved Permanently");header('Cache-Control: no-store, no-cache, must-revalidate');header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
 	header("location:" . $urll ) or die('File:'.dirname(__file__).'['.$myHINT.']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$urll .')');
 	// echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit;
