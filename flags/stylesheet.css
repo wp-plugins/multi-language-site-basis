@@ -9,9 +9,9 @@
 
 #LanguageDropdown1__MLSS {z-index: 9944; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
   #LanguageDropdown1__MLSS #LangDropMenu1__MLSS{	height:24px;}
-	#LanguageDropdown1__MLSS #AllLines1__MLSS		{overflow:hidden;	height:105%;}
+	#LanguageDropdown1__MLSS #AllLines1__MLSS		{overflow:hidden;	height:100%;}
 	#LanguageDropdown1__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
-	 #LanguageDropdown1__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; margin: 0 0 2px;}		
+	 #LanguageDropdown1__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
 	  #LanguageDropdown1__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
 	   #LanguageDropdown1__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
 	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
