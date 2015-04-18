@@ -37,7 +37,7 @@ function validate_Nonce__MLSS($value, $action_name){
 // START 
 if ( is_admin() ){
 	add_action('admin_menu', 'exec_pages__MLSS'); function exec_pages__MLSS() {
-		add_menu_page('MultiLang Simple', 'MultiLang Simple', 'manage_options','my-mlss-slug', 'my_submenu1__MLSS',  plugin_dir_url( __FILE__ ).'/flags/a_main.png', "29.4342423" );
+		add_menu_page('MultiLang Simple', 'MultiLang Simple', 'manage_options','my-mlss-slug', 'my_submenu1__MLSS',  PLUGIN_URL_nodomain__MLSS.'/flags/a_main.png', "29.4342423" );
 		add_submenu_page('my-mlss-slug', 'MLSS Settings',	'MLSS Settings',	'manage_options', 'my-mlss-slug',  'my_submenu1__MLSS');
 		add_submenu_page('my-mlss-slug', 'Translated Words','Translated Words',	'manage_options', 'my-mlss-slug2', 'my_submenu2__MLSS');
 	}
@@ -132,7 +132,7 @@ if ( is_admin() ){
 				</script>
 			
 			<br/> <input type="radio" name="inp_FirstMethod" value="ippp" <?php echo (($chosen_method=='ippp')? 'checked="checked"':'');?> />
-			<b>B)</b> detect COUNTRY [using visitor's IP] and use the following table of languages (to input county names correctly, see <a href="<?php echo plugin_dir_url(__FILE__);?>flags/ip_country_detect/country_names.txt" target="_blank">this page</a>)
+			<b>B)</b> detect COUNTRY [using visitor's IP] and use the following table of languages (to input county names correctly, see <a href="<?php echo PLUGIN_URL_nodomain__MLSS;?>flags/ip_country_detect/country_names.txt" target="_blank">this page</a>)
 					<div id="langset_flds">	<?php global $wpdb;
 					//$country_lang_sets = $wpdb->get_results("SELECT * from `".$wpdb->options."` WHERE `option_name` LIKE '".'optMLSS__Target_'."%'"); 	//foreach ($country_lang_sets as $each_group){	
 					//$abbrev = str_ireplace('optMLSS__Target_','',$each_group->option_name);	 $ItsValue = $each_group->option_value;

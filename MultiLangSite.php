@@ -339,7 +339,7 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 					'publicly_queryable'=> true, 'show_ui'=>true,	//'show_in_nav_menus' => true,'show_in_admin_bar'	=> true,
 					//'show_in_menu' => 'edit.php?post_type=page',//true,
 					'menu_position' => "65.888562" ,
-					'menu_icon'   => plugin_dir_url(__FILE__).'flags/'.$value.'.png',  //below (using <style>) we also use CSS to resize these images
+					'menu_icon'   => PLUGIN_URL_nodomain__MLSS.'flags/'.$value.'.png',  //below (using <style>) we also use CSS to resize these images
 									// 'dashicons-editor-spellcheck', // https://developer.wordpress.org/resource/dashicons/#editor-spellcheck
 					'hierarchical' => true,
 					'has_archive' => true,
@@ -692,7 +692,7 @@ function my_black_backgorund_output__MLSS(){	$scrpt=
 //first time visit POPUP
 add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__MLSS(){
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
-	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo plugin_dir_url(__FILE__).'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
+	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
 	<body>
 	<?php echo my_black_backgorund_output__MLSS();  ?>
 	<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">
@@ -708,7 +708,7 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 							if (stripos(",$HIDDEN_LANGS," ,     ",$key_value," ) === false) {
 			$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
 								'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
-									'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
+									'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
 									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 								'</a>'.
 							'</div>';										}
@@ -748,7 +748,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 						if (stripos($hidden_langs,  ",$key_value," ) === false) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
 								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.$targt_lnk.'"') .'>'.
-									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_nodomain .'flags/'. $key_value .'.png" />'.
+									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/'. $key_value .'.png" />'.
 								'</a>'.
 							'</div>'
 							.'<span class="clerboth2__MLSS"></span>'
