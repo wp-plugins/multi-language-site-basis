@@ -1,6 +1,6 @@
 <?php
 $MLSS_VARS= isset($MLSS_VARS) ? $MLSS_VARS : array();
-function get_user_browser(){	$b = $_SERVER['HTTP_USER_AGENT'];
+function get_user_browser__MLSS(){	$b = $_SERVER['HTTP_USER_AGENT'];
 
 	if( //if mobile
 		preg_match('/android.+mobile|Windows Mobile|Nokia|avantgo|Mozilla(.*?)(Android|Mobile|Blackberry|Symbian)|OperaMini|Opera Mini|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|ap|od)|iris|kindle|lge |maemo|meego.+mobile|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$b)
@@ -27,16 +27,16 @@ function get_user_browser(){	$b = $_SERVER['HTTP_USER_AGENT'];
 	$final['is_new_browser']= in_array($k, array('Opera','Chrome','Firefox','Safari','Flock')) ?  true : false;
 	$final['full_namee']	= $b;
 	return $final;
-} $z = get_user_browser();  $MLSS_VARS=array_merge($MLSS_VARS,$z);
+} $z = get_user_browser__MLSS();  $MLSS_VARS=array_merge($MLSS_VARS,$z);
 
-function get_user_OperatingSystem() { 
+function get_user_OperatingSystem__MLSS() { 
 	$user_agent=$_SERVER['HTTP_USER_AGENT']; $final['os_namee']="_Unknown_OS_";
 	$os_array=array(
 		'/windows nt 6.3/i'=>'Windows 8.1', '/windows nt 6.2/i'=>'Windows 8', '/windows nt 6.1/i'=>'Windows 7',	'/windows nt 6.0/i'=>'Windows Vista','/windows nt 5.2/i'=>'Windows Server 2003/XP x64', '/windows nt 5.1/i'=>'Windows XP', '/windows xp/i'=>'Windows XP','/windows nt 5.0/i'=>'Windows 2000','/windows me/i'=>'Windows ME','/win98/i'=>'Windows 98','/win95/i'=>'Windows 95','/win16/i'=>'Windows 3.11','/macintosh|mac os x/i' =>'Mac OS X','/mac_powerpc/i'=>'Mac OS 9', '/linux/i'=>'Linux','/ubuntu/i'=>'Ubuntu','/iphone/i'=>'iPhone','/ipod/i'=>'iPod','/ipad/i'=>'iPad','/android/i'=>'Android','/blackberry/i'=>'BlackBerry', '/webos/i'=>'Mobile'
 					);
 	foreach ($os_array as $regex => $value) {	if(preg_match($regex, $user_agent)){$final['os_namee']=$value;}		}
 	return $final;
-} $z = get_user_OperatingSystem(); $MLSS_VARS=array_merge($MLSS_VARS,$z);
+} $z = get_user_OperatingSystem__MLSS(); $MLSS_VARS=array_merge($MLSS_VARS,$z);
 
 
 $MLSS_VARS['is_pc_platform'] = (in_array($MLSS_VARS['os_namee'],array('_Unknown_OS_','iPhone','iPod','iPad','Android','BlackBerry','Mobile')) || $MLSS_VARS['brwsr'] == "Mobilee")  ?  false : true;
