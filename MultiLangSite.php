@@ -885,17 +885,13 @@ add_filter( 'widget_text', 'do_shortcode' ); //enable SHORTCODES in widgets
 add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
 	//http://codex.wordpress.org/Function_Reference/wp_nav_menu
 	//http://codex.wordpress.org/Function_Reference/wp_get_nav_menu_items
-	echo wp_nav_menu( array(
-		'theme_location'  => '',
-		'menu'            => LNG.'_'.$atts['name'],
-		'container'       => 'div',			'container_class' => 'sideMyBox',			'container_id'    => 'my_SideTreeee',
+	echo wp_nav_menu( array('theme_location'=>'',    'menu'=> LNG.'_'.$atts['name'],
+		'container'       => 'div',			'container_class' => 'sideMyBox',    'container_id'=> 'my_SideMenuTreeee',
 		'menu_class'      => 'menu',		'menu_id'         => '',
 		'echo'            => 0,				'fallback_cb'     => 'wp_page_menu',
-			'before'          => '',			'after'           => '',
-			'link_before'     => '',			'link_after'      => '',
+			'before'=>'', 'after'=>'', 'link_before'=>'', 'link_after'=>'',
 			'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-		'depth'           => 0,
-		'walker'          => ''
+		'depth'           => 0,	'walker'          => ''
 	));
 }
 add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts){
