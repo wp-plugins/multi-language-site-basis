@@ -7,7 +7,7 @@
 /*--------------------## RESET CSS ##---------------------------------------*/
 
 
-#LanguageDropdown1__MLSS {z-index: 9044; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
+#LanguageDropdown1__MLSS {z-index: 9944; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
   #LanguageDropdown1__MLSS #LangDropMenu1__MLSS{	height:24px;}
 	#LanguageDropdown1__MLSS #AllLines1__MLSS		{overflow:hidden;	height:105%;}
 	#LanguageDropdown1__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
@@ -18,7 +18,7 @@
 	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS:hover{}
 		 
 
-#FirstTimeLanguage1__MLSS {z-index: 9600; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
+#FirstTimeLanguage1__MLSS {z-index: 9970; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
 	#FirstTimeLanguage1__MLSS #popup_CHOOSER2__MLSS{ }
 	 #FirstTimeLanguage1__MLSS .LineHolder2__MLSS{background-color:grey;}
 	 #FirstTimeLanguage1__MLSS a.ImgHolder2__MLSS {display:block; margin: 10px 0; }
