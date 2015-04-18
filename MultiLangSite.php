@@ -4,6 +4,7 @@
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
  * Version: 1.24 
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
+ global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -480,23 +481,32 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 //QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
 add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATED_QUERY__MLSS($query) {
     if ( !isLangHomeURI__MLSS && $query->is_main_query() ) {
+		
 		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
 		$CustBuildEnabled = get_option('optMLSS__BuildType')=='custom_p' ? true:false ;
-		$CustTaxonmEnabled = get_option('optMLSS__EnableCustCat');
+		$CustTaxonmEnabled = get_option('optMLSS__EnableCustCat')=='y' ? true:false ;
 		
-		$UrlDetectedByWp = url_to_postid(currentURL__MLSS);
 		//url details
-		$UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray));
-		$AfterHomePath=substr(requestURIfromHomeWithoutParameters__MLSS, 4);
-		$BaseSLUG=basename(currentURL__MLSS);  //i.e. "TORNADOO"
+		$PostOrPageDetectedByWp = url_to_postid(currentURL__MLSS); //detects only for posts,pages and custom posts,
 		
-		if (($CustBuildEnabled || !$UrlDetectedByWp))
+		$UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray));
+		$PathAfterHome=requestURIfromHomeWithoutParameters__MLSS;
+		$PathAfterLangRoot=substr($PathAfterHome, 4);
+		$BaseSLUG=basename(currentURL__MLSS);  //i.e. "TORNADOO"
+
+		if (!$PostOrPageDetectedByWp)
 		{
-			//IF CUSTOM POSTS/TAXONOMIES ENABLED
-			if ($CustBuildEnabled){
-				if ($CustTaxonmEnabled=='y'){
-					//CUSTOM TAXONOMY
-					$term=term_exists($BaseSLUG, LNG);
+			//============CUSTOM TAXONOMY=============== 
+			if ($CustBuildEnabled){ //IF ENABLED
+				if ($CustTaxonmEnabled){ //IF ENABLED
+					//term_is_ancestor_of  get_term_link( 
+					//$terms = get_the_terms( $post->ID, 'taxonomy'); foreach ( $terms as $term ) {    $termID[] = $term->term_id;}echo $termID[0]; 
+					//get_queried_object()->name;
+					//$term_slug = get_query_var( 'term' );
+					//$taxonomyName = get_query_var( 'taxonomy' );
+					//$current_term = get_term_by( 'slug', $term_slug, $taxonomyName );
+					
+					$term= term_exists($BaseSLUG, LNG);
 					if ($term){  
 						$tr = get_term_by('slug', $BaseSLUG , LNG);
 						$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
@@ -510,8 +520,27 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 						return $query;
 					}
 				}
-				//CUSTOM post
-				$cpost= ($x = get_page_by_path($AfterHomePath, OBJECT, LNG)) ?  $x : ''; //get_page_by_path($BaseSLUG...
+			}
+			
+			//===========standard category==========  (WE MUST CHECK IT!! because we use . as CATEGORY BASE, and wordpress bugs that..)
+			$cat= get_category_by_path( $PathAfterHome, true );// term_exists($BaseSLUG, 'category'); <-- this bugs, because  /mylink/smth >"smth" may be categoryy too, so, post may become  overrided in this case..
+			if ($cat){  
+				$tr = get_term_by('slug', $BaseSLUG , 'category');
+				$query->init();	$query->parse_query(array('post_type' => array('post') ,
+									'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
+				$query->is_home = false;
+				$query->is_single = false;
+				$query->is_archive = true;
+				$query->is_tax = true;
+				$query->is_post_type_archive=false;
+				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',..
+				return $query;	
+			}
+			
+			
+			//===========CUSTOM post===========
+			if ($CustBuildEnabled){
+				$cpost= ($x = get_page_by_path($PathAfterHome, OBJECT, LNG)) ?  $x : ''; //get_page_by_path($BaseSLUG...
 				if ($cpost){
 					$query->init();	$query->parse_query(   array('post_type' =>array(LNG) )  ) ;	
 					$query->is_single = true;	
@@ -523,9 +552,24 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 					return $query;
 				}
 			}
-					
-			//standard post
-			$post= ($x = get_page_by_path($AfterHomePath, OBJECT, 'post')) ?  $x : ''; //get_page_by_path($BaseSLUG...
+			
+			
+			//===========standard page===========
+			$page=($x = get_page_by_path($PathAfterHome, OBJECT, 'page')) ?  $x : ''; // get_page_by_path($BaseSLUG...
+			if ($page){
+				$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
+				$query->is_home = false;	
+				$query->is_single = false;	
+				$query->is_singular = true;	
+				$query->is_page = true;
+				$query->queried_object_id = $page->ID; 
+				$query->set( 'page_id', $page->ID );
+				return $query;
+			}
+			
+			
+			//===========standard post===========
+			$post= ($x = get_page_by_path($PathAfterHome, OBJECT, 'post')) ?  $x : ''; //get_page_by_path($BaseSLUG...
 			if ($post){ $passed=true;
 				for($i=0; $i<count($k)-1; $i++){ $cat = get_term_by('slug', $k[$i], 'category'); 
 					if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){ $passed=false; break; }
@@ -541,34 +585,6 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$query->set( 'page_id', $post->ID );
 				return $query;
 				}
-			}
-			
-			//standard page
-			$page=($x = get_page_by_path($AfterHomePath, OBJECT, 'page')) ?  $x : ''; // get_page_by_path($BaseSLUG...
-			if ($page){
-				$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
-				$query->is_home = false;	
-				$query->is_single = false;	
-				$query->is_singular = true;	
-				$query->is_page = true;
-				$query->queried_object_id = $page->ID; 
-				$query->set( 'page_id', $page->ID );
-				return $query;
-			}
-			
-			//standard category    (WE MUST CHECK IT!! because we use . as CATEGORY BASE, and wordpress bugs that..)
-			$cat=term_exists($BaseSLUG, 'category');
-			if ($cat){  
-				$tr = get_term_by('slug', $BaseSLUG , 'category');
-				$query->init();	$query->parse_query(array('post_type' => array('post',LNG) ,
-									'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
-				$query->is_home = false;
-				$query->is_single = false;
-				$query->is_archive = true;
-				$query->is_tax = true;
-				$query->is_post_type_archive=false;
-				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',..
-				return $query;			
 			}
 		}
 	}

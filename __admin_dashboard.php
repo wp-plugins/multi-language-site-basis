@@ -1,8 +1,25 @@
 <?php
 //somehow similar useful plugin: https://wordpress.org/plugins/language-icons-flags-switcher/	
-	
-	
-	
+/*
+Homepage:
+- custom post archive
+- standard category
+..
+..
+
+
+not-homepage (i.e. subpage):
+	//- cust.post.
+	- page
+	- post
+	==if post not detected==
+		//- cust.taxonomy.cat  (wp default 404)  created manually
+		- category	(wp default 404)   created manually
+		//- cust.post.
+		- page
+		- post
+
+*/		
 	
 	
 //================================================================================== //
@@ -90,7 +107,7 @@ if ( is_admin() ){
 			<form action="" method="POST">
 
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22"><a href="javascript:alert('\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website (The plugin doesnt provide the a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site). But this can be used by skilful developer, who is able to integrate the functionalities with his theme. (Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate).');" class="readpopp">Read this popup</a>!</span></center>
+		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(please wait 1-2 weeks, i am going to complete this): 1) there is not-changeable embeded css design of the first time language chooser popup; 2)plugin doesnt work correctly with other,your speciall, already registered CUSTOM POST TYPES(if you have them);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), but it maybe not good in case you need to edit something(desing or etc..), you will need to edit on both sites everytime...  Thats why its may be much better to have multisite in one installation(Theoretically, there may be a bit negative sides, for example, with shared administrative access, or etc...).  \r\n\r\n(Note, that the plugin doesnt provide the a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)');" class="readpopp">Read this popup</a>!</span></center>
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 1) Common setting</span>
@@ -154,8 +171,8 @@ if ( is_admin() ){
 		<div class="eachBlock">
 			<span class="fakeH22"> 4) STRUCTURE</span>
 			<br/><b>-Build Up website structure using</b>: 
-			<br/><input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Custom Post Types (<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenever i.e. YOURSITE.COM/eng/ is opened, all CUSTOM POSTS will be shown, which are published under that CUSTOM POST TYPE. Also, when visitor makes a SEARCH, it also will be looped through \u0022STANDARD POSTS\u0022,which are published under the root language \u0022STANDARD CATEGORY\u0022). REMEMBER, ALWAYS ASSIGN A LANGUAGED PPOST ONLY TO ONE CATEGORY!!! \r\n\r\n\r\n[p.s. in case, you are programmer and you will need CODING modifications, instead of is_home(), its better to use is_post_type_archive()]');" class="readpopp">Read this popup!</a>) 
-				<span style="margin:0 0 0 20px;"></span>[ enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if (get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> /> ]
+			<br/><input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Custom Post Types (<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenever i.e. YOURSITE.COM/eng/ is opened, all CUSTOM POSTS will be shown, which are published under that CUSTOM POST TYPE. Also, when visitor makes a SEARCH, it also will be looped through \u0022STANDARD POSTS\u0022,which are published under the root language \u0022STANDARD CATEGORY\u0022). REMEMBER, ALWAYS ASSIGN A LANGUAGED PPOST ONLY TO ONE CATEGORY!!! \r\n\r\n\r\n\r\n NOTE: If there may be problems or etc, YOU MAY HAVE TO CLICK \u0022SAVE PERMALINKS\u0022 button in OPTIONS-Permalinks page, to refresh the structure.\r\n\[p.s. in case, you are a programmer and you will need CODING modifications, instead of is_home(), its better to use is_post_type_archive()]');" class="readpopp">Read this popup!</a>) 
+				<span style="margin:0 0 0 20px;"></span>[ enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS.\r\n\r\np.s. However, if you dont need them very very much, then maybe there is no need to implement them, but you can simply use the standard categories.. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if (get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> />]
 			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> />Standard Posts (<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: \u0022CATEGORY BASE\u0022 is set to .(dot) in PERMALINKS settings , so, if you want that your categories URLs were like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. Otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)\r\n\r\n\r\np.s. Just as an advice, is it better to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/?');" class="readpopp">Read this popup!</a>)
 			
 			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then leave empty.)');" class="readpopp">Read this popup!</a>) :
@@ -183,6 +200,7 @@ if ( is_admin() ){
 			<span class="fakeH22">7) Read Important Tips</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   A) <b>Attention to PERMALINKS</b> - <i><a href="javascript:alert('in PERMALINKS, you must use PRETTY PERMALINKS (i.e. /\u0025postname\u0025/, or  /\u0025category\u0025/\u0025postname\u0025/ or etc. Otherwise, this plugn will have problems... ');" class="readpopp">Read this popup!</a></i>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read this popup!</a></i>
 		</div>
 		
+		<br/><br/><br/>*If you have found bugs, have suggestions or etc, <a href="http://goo.gl/N307HM" target="_blank"><b>CONTACT ME</b></a>!
 		<!--
 		<h2 class="tiitl"> 6) parameters </b></h2>
 		(NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
