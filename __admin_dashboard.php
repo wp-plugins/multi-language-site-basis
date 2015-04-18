@@ -1,25 +1,5 @@
 <?php
-//somehow similar useful plugin: https://wordpress.org/plugins/language-icons-flags-switcher/	
-/*
-Homepage:
-- custom post archive
-- standard category
-..
-..
-
-
-not-homepage (i.e. subpage):
-	//- cust.post.
-	- page
-	- post
-	==if post not detected==
-		//- cust.taxonomy.cat  (wp default 404)  created manually
-		- category	(wp default 404)   created manually
-		//- cust.post.
-		- page
-		- post
-
-*/		
+	
 	
 	
 //================================================================================== //
@@ -99,6 +79,7 @@ if ( is_admin() ){
 		.fakeH22{font-size:2em;font-weight:bold;}
 		.eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;}
 		a.readpopp{color:#56CC18;}
+		span.smallnotic{font-size:8px;}
 		</style>
 		<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 		
@@ -106,7 +87,7 @@ if ( is_admin() ){
 			<form action="" method="POST">
 
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(please wait 1-2 weeks, i am going to complete this): 1) there is not-changeable embeded css design of the first time language chooser popup; 2)plugin doesnt work correctly with other,your speciall, already registered CUSTOM POST TYPES(if you have them);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), but it maybe not good in case you need to edit something(desing or etc..), you will need to edit on both sites everytime...  Thats why its may be much better to have multisite in one installation(Theoretically, there may be a bit negative sides, for example, with shared administrative access, or etc...).  \r\n\r\n(Note, that the plugin doesnt provide the a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme gets posts using non-standard(custom) query methods..');" class="readpopp">Read this popup</a>!</span></center>
+		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(probably soon, i am going to complete this, and you will get a notification): 1) At this moment you have to manually change the design of the first time popup chooser. 2) If you use your own, already registered CUSTOM POST TYPES, then this plugin might not be compatible with it);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install Multisite - two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), and then try to use the same THEME, but it maybe not be easy to manage that method...  Thats why its may be better to have multilanguage site within one Wordpress installation(Theoretically, there may be a bit negative sides, for example, if you are sharding accessto different peoples, or etc...).  \r\n\r\n(Note: at this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme gets posts using non-standard(custom) query methods..');" class="readpopp">Read this popup</a>!</span></center> (<span class="smallnotic"><a href="http://j.mp/wpluginstt#mlss" target="_blank">other MS plugins</a></span>)
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 1) Common setting</span>
