@@ -52,12 +52,11 @@ if ( is_admin() ){
 			//update optionsss	
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
-			update_option('optMLSS__HiddenLangs',		str_replace(' ','',$_POST['inp_HiddenLangs']) ); 
-			
 						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
-							update_option('optMLSS__Lngs', $_POST['inp_Langs']);
+							update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
+			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('',''),$_POST['inp_HiddenLangs']) ); 
 			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
 			foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
 			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
@@ -111,9 +110,9 @@ if ( is_admin() ){
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 1) Common setting</span>
-			<br/>You can add/remove the languages using this field. Insert Language title, and it's official abbreviation  (Needs to be 3 characters... View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
+			<br/>You can add/remove the languages using this field. Insert Language title, and along it, in CURLED BRACKETS, insert it's official abbreviation  (Needs to be 3 latin characters... View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
 			<br/><input name="inp_Langs" type="text" class="inpt langs" value="<?php echo get_option('optMLSS__Lngs');?>" />
-			<br/>(p.s. Using FTP or etc, you may need to upload your desired language's <a href="https://sites.google.com/site/thecsmag/file-cabinet/200%2BCountryFlags-MassiveFreebieIconPack.zip" target="_blank">flag</a> image (i.e.: <b>eng.</b>png [approx: 150x100pixels]) in <span class="codee"><?php echo plugin_dir_url(__FILE__);?>flags/</span> )
+			<br/>(p.s. Using FTP or etc, you may need to upload your desired language's <a href="https://ps.w.org/multi-language-site-basis/assets/unused_flags.zip" target="_blank">flag</a> image (its name should be 3 chars,for example: <b>eng</b>.png [approximately 128px]) into <span class="codee"><?php echo plugin_dir_url(__FILE__);?>flags/</span> )
 			<br/>
 			<div class="hiddenlngs">
 				Hidden Langs: (<i><a href="javascript:alert('later,if you will need to disable any above language, it is better to put its name (3symbol!) here, rather than removing from the above list. Thus, that language will be just hidden from site(instead of REMOVING),because \u0022REMOVING\u0022 might also remove indexed pages from GOOGLE too..');" class="readpopp">Read this popup!</a></i>)

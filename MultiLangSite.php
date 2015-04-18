@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.24 
+ * Version: 1.25 
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
@@ -35,7 +35,7 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
 	update_option( 'flush_rewrite_rules__MLSS','okk');
 	if (!get_option('optMLSS__Lngs')) {
-		update_option('optMLSS__Lngs','English(eng),Русский(rus),');
+		update_option('optMLSS__Lngs','English{eng},Русский{rus},');
 		update_option('optMLSS__HiddenLangs',		'Japan(jpn),Dutch(nld),');
 		update_option('optMLSS__DefForOthers',		'dropdownn');
 		update_option('optMLSS__FirstMethod',		'dropddd');
@@ -71,7 +71,10 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	//flush-update permalinks for CUSTOM POST TYPES 
 	DetermineLanguages__MLSS(); myf_63__MLSS();	flush_rewrite_rules();
 	
-	//=============insert SAMPLE CATEGORIES and PAGES============
+	
+	//=================================================================
+	//================insert SAMPLE CATEGORIES and PAGES===============
+	//=================================================================
 	//categories
 	$slug= S_CategPrefix__MLSS;
 	if (!term_exists('eng'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
@@ -117,7 +120,7 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 
 
 
-//================================================= SEVERAL USEFUL FUNCTIONS ===============================
+//========================================= SEVERAL USEFUL FUNCTIONS ===============================
 //it's better,that useless pages not indexed in GOOGLE...
 add_action( 'wp_head', 'noindex_pagesss__MLSS' );	function noindex_pagesss__MLSS() 	{
 	if ( !is_404() && !is_page() && !is_single() && !is_search() && !is_archive() && !is_admin() && !is_attachment() && !is_author() && !is_category() && !is_front_page() && !is_home() && !is_preview() && !is_tag()) 
@@ -134,8 +137,6 @@ function PostRootCatDetect__MLSS ($postid=false, $catid=false) {
 	while ($catid) 	{ $cat = get_category($catid);	$catid = $cat->category_parent;  $catParent=$cat->slug; }
 	return $catParent;
 }
-
-
 //https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php
 function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
 	  //convert array to STRING
@@ -193,7 +194,7 @@ function DetermineLanguages__MLSS(){
 	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
 	$temp_contents = explode(',',  get_option('optMLSS__Lngs','None(none)') ); 
 	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
-		if (!empty($value))	{	preg_match('/(.*?)\((.*)\)/si',$value,$nnn); 	//var_dump($nnn);exit;
+		if (!empty($value))	{	preg_match('/(.*?)\{(.*)\}/si',$value,$nnn); 	//var_dump($nnn);exit;
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
 		}
 	}
