@@ -35,8 +35,8 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
 	update_option( 'flush_rewrite_rules__MLSS','okk');
 	if (!get_option('optMLSS__Lngs')) {
-		update_option('optMLSS__Lngs','English{eng},Русский{rus},');
-		update_option('optMLSS__HiddenLangs',		'Japan(jpn),Dutch(nld),');
+		update_option('optMLSS__Lngs','English{eng},Русский{rus},Japan{jpn}');
+		update_option('optMLSS__HiddenLangs',		'Japan{jpn},Dutch{nld},');
 		update_option('optMLSS__DefForOthers',		'dropdownn');
 		update_option('optMLSS__FirstMethod',		'dropddd');
 		//
@@ -192,10 +192,10 @@ function PERMANENTTT_REDIRECT2__MLSS($urll,$myHINT)	{
 
 //==================================================== pre-define languages ===============================
 //add_action('muplugins_loaded','DetermineLanguages__MLSS',1); 
-DetermineLanguages__MLSS();
+DetermineLanguages__MLSS(); 
 function DetermineLanguages__MLSS(){
 	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
-	$temp_contents = explode(',',  get_option('optMLSS__Lngs','None(none)') ); 
+	$temp_contents = explode(',',  get_option('optMLSS__Lngs','None{none}') ); 
 	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
 		if (!empty($value))	{	preg_match('/(.*?)\{(.*)\}/si',$value,$nnn); 	//var_dump($nnn);exit;
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
@@ -209,13 +209,17 @@ function DetermineLanguages__MLSS(){
 	Defines_MLSS();	//add_action('muplugins_loaded','Defines_MLSS',1); 
 	function Defines_MLSS(){ foreach (LANGS__MLSS() as $n=>$v) { define ($v.'__MLSS',$v); define($v.'_title__MLSS',$n);} }
 	
-	//this function is loaded at this second
+	//this function is(not?) loaded at this second		
 	function MLSS_PHRAZE($variable){ global $wpdb; 
 		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".LNG."'");
 		return stripslashes($res[0]->translation);
-	}
-	add_filter('MLSS','MLSS_PHRAZE');
+	} add_filter('MLSS','MLSS_PHRAZE');
 	
+	//determine temporary hided languages by user
+	$hidden_langs_mlss= get_option('optMLSS__HiddenLangs', 'Nothing{none}'); //let's make query only once..
+	function isHiddenLang__MLSS($abbr){
+		if (stripos($GLOBALS['hidden_langs_mlss'],'{'.$abbr.'}') !== false ) {return true;}
+	}
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
@@ -703,13 +707,12 @@ add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__ML
 		<?php
 		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-		$SITE_LANGUAGES=LANGS__MLSS(); $HIDDEN_LANGS = get_option('optMLSS__HiddenLangs');
-
+		$SITE_LANGUAGES=LANGS__MLSS(); 
 		$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 							$targt_lnk=homeURL__MLSS.'/'.$key_value;
 							//if language is not included in "HIDDEN LANGS" option
-							if (stripos(",$HIDDEN_LANGS," ,     ",$key_value," ) === false) {
+							if (!isHiddenLang__MLSS($key_value) ) {
 			$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
 								'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
 									'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
@@ -742,14 +745,12 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 		if (defined('LNG')) {						function fix_1($i){return $i != LNG;}
 			$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);							//remove current language
 			$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 			//insert current language in first place
-		}
-			$hidden_langs = ','.get_option('optMLSS__HiddenLangs').',';
-		
+		}		
 		$lng_Dropdown	='<div id="LangDropMenu1__MLSS"><div id="AllLines1__MLSS">     <a href="javascript:MyMobileFunc__MLSS();" id="LngSelector1__MLSS">&#8897;</a>';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 						$targt_lnk=homeURL__MLSS.'/'.$key_value;
 						//if language is not included in "HIDDEN LANGS" option
-						if (stripos($hidden_langs,  ",$key_value," ) === false) {
+						if (!isHiddenLang__MLSS($key_value)) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
 								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.$targt_lnk.'"') .'>'.
 									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/'. $key_value .'.png" />'.

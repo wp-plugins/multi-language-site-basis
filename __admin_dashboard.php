@@ -33,7 +33,7 @@ if ( is_admin() ){
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
 						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
-							update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));
+			update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));
 							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
 						}
 			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('',''),$_POST['inp_HiddenLangs']) ); 
@@ -79,7 +79,7 @@ if ( is_admin() ){
 		.fakeH22{font-size:2em;font-weight:bold;}
 		.eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;}
 		a.readpopp{color:#56CC18;}
-		span.smallnotic{font-size:8px;}
+		span.smallnotic{font-size: 8px; float: right; right: 5%; position: relative;}
 		</style>
 		<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 		
@@ -87,7 +87,7 @@ if ( is_admin() ){
 			<form action="" method="POST">
 
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(probably soon, i am going to complete this, and you will get a notification): 1) At this moment you have to manually change the design of the first time popup chooser. 2) If you use your own, already registered CUSTOM POST TYPES, then this plugin might not be compatible with it);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install Multisite - two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), and then try to use the same THEME, but it maybe not be easy to manage that method...  Thats why its may be better to have multilanguage site within one Wordpress installation(Theoretically, there may be a bit negative sides, for example, if you are sharding accessto different peoples, or etc...).  \r\n\r\n(Note: at this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query..');" class="readpopp">Read this popup</a>!</span></center> (<span class="smallnotic"><a href="http://j.mp/wpluginstt#mlss" target="_blank">other MS plugins</a></span>)
+		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(probably soon, i am going to complete this, and you will get a notification): 1) At this moment you have to manually change the design of the first time popup chooser. 2) If you use your own, already registered CUSTOM POST TYPES, then this plugin might not be compatible with it);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install Multisite - two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), and then try to use the same THEME, but it maybe not be easy to manage that method...  Thats why its may be better to have multilanguage site within one Wordpress installation(Theoretically, there may be a bit negative sides, for example, if you are sharding accessto different peoples, or etc...).  \r\n\r\n(Note: at this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query..');" class="readpopp">Read this popup</a>!</span></center> <span class="smallnotic">(...<a href="http://j.mp/wpluginstt#mlss" target="_blank">other MultiLang plugins</a>...)</span>
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 1) Common setting</span>
