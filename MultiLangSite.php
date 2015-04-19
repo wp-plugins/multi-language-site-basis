@@ -42,14 +42,17 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		//
 		update_option('optMLSS__Cat_base_BACKUP',	get_option('category_base'));
 		update_option('category_base',				'/.'); flush_rewrite_rules(); 
+		update_option('optMLSS__ShowHideOtherCats',	'no'); 
 		//
-		update_option('optMLSS__BuildType',			'custom_p');
+		update_option('optMLSS__BuildType',			'custom_p');  
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optMLSS__Target_'.'default',	'eng');
 		//
 		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
+		
+		
 		
 	}
 	

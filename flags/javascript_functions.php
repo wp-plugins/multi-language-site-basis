@@ -17,6 +17,11 @@ function pop_hide(RandomIDD)  { var x=document.getElementById("black_backgr_"+Ra
 </script>
 
 
+<script type="text/javascript">
+//Separate functions, BLACKen background (NOTE: on your overshown element, use at least: z-index:9600 )
+	function SHOW_blackGROUND(){ var AAADIV = document.createElement('div'); AAADIV.id = "my_black_bck_123";   AAADIV.setAttribute("style", 'background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;'); document.body.insertBefore(AAADIV, document.body.childNodes[0]); }
+	function REMOVE_blackGROUND(){ var AAADIV = document.getElementById('my_black_bck_123'); AAADIV.parentNode.removeChild(AAADIV); }
+</script>
 
 
 <!--  https://github.com/tazotodua/useful-javascript/blob/master/AJAX-examples  -->
@@ -46,7 +51,7 @@ function myRequest_1(parameters, url, method, passedFunction){
 	function SHOW_waiting(){
 	var innerDiv = document.createElement('div'); innerDiv.id = 'my_waiting_box';
 	innerDiv.innerHTML=
-	'<div style="background-color:black; color:white; height:1000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:1007;" id="ppshadow">' +
+	'<div style="background-color:black; color:white; height:4000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:1007;" id="ppshadow">' +
 	'<div style="position:absolute; top:200px;left:49%; z-index: 1008;" id="ppload"> ' +
 	'<span style="color:white;font-size:24px;"> LOADING...</span><br/>'+
 	'</div>'+
