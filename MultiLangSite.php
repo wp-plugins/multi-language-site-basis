@@ -7,6 +7,7 @@
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
 
+ return "sorry, plugin has problems at this moment..i am working on it. you will be notified througt admin page, while version will be updated..";
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
  //define essentials
