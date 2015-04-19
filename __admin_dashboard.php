@@ -327,7 +327,7 @@ if ( is_admin() ){
 			<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
 			<div id="CatDrHeader" style="display:none;">
 				<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
-				<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if (get_option('optMLSS__ShowHideOtherCats')=='yes'){echo 'checked="checked"';};?> id="showhidecatID" onclick="mySHCcheck();"  />]
+				<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if (get_option('optMLSS__ShowHideOtherCats')=='yes'){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
 				</div>
 			</div>
 			<script type="text/javascript">
