@@ -7,7 +7,6 @@
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
 
- return "sorry, plugin has problems at this moment..i am working on it. you will be notified througt admin page, while version will be updated..";
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
  //define essentials
@@ -19,14 +18,15 @@ define('currentURL__MLSS',				domainURL__MLSS.requestURI__MLSS);
 define('THEME_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', get_template_directory_uri()) );
 define('PLUGIN_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', plugin_dir_url(__FILE__)) );
 	
-	
-//option names
+	//option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
 define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
 
+		
+		
 
 //Redirect to SETTINGS (after activation)
 add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { 
@@ -34,7 +34,7 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 }
 //==================================================== ACTIVATION commands ===============================
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
-	update_option( 'flush_rewrite_rules__MLSS','okk');
+	update_option( 'optMLSS__NeedFlush','okk');
 	if (!get_option('optMLSS__Lngs')) {
 		update_option('optMLSS__Lngs','English{eng},Русский{rus},Japan{jpn}');
 		update_option('optMLSS__HiddenLangs',		'Japan{jpn},Dutch{nld},');
@@ -42,7 +42,10 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__FirstMethod',		'dropddd');
 		//
 		update_option('optMLSS__Cat_base_BACKUP',	get_option('category_base'));
-		update_option('category_base',				'/.'); flush_rewrite_rules(); 
+		global $wp_rewrite; $wp_rewrite->set_category_base('/.'); $wp_rewrite->flush_rules(); 
+			//$wp_rewrite->set_permalink_structure('/%postname%/' );
+			//update_option('category_base',				'/.'); flush_rewrite_rules(); 
+			//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
 		update_option('optMLSS__ShowHideOtherCats',	'no'); 
 		//
 		update_option('optMLSS__BuildType',			'custom_p');  
@@ -52,6 +55,8 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
+		update_option('optMLSS__EnableQueryStrPosts',	'n');
+		update_option('optMLSS__EnableCustCat',			'n');
 		
 		
 		
@@ -120,26 +125,26 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 
 
 
-
-
-
-
 //========================================= SEVERAL USEFUL FUNCTIONS ===============================
 //it's better,that useless pages not indexed in GOOGLE...
 add_action( 'wp_head', 'noindex_pagesss__MLSS' );	function noindex_pagesss__MLSS() 	{
 	if ( !is_404() && !is_page() && !is_single() && !is_search() && !is_archive() && !is_admin() && !is_attachment() && !is_author() && !is_category() && !is_front_page() && !is_home() && !is_preview() && !is_tag()) 
 	{	echo '<meta name="robots" content="noindex, nofollow">';	}
 }		
-function iss_admiiiiiin__MLSS()	{if (is_admin()) {require_once(ABSPATH . 'wp-includes/pluggable.php');}	
+function iss_admiiiiiin__MLSS()	{require_once(ABSPATH . 'wp-includes/pluggable.php');
 		if (current_user_can('create_users')){return true;}
 		else {return false;}
 }
-function PostRootCatDetect__MLSS ($postid=false, $catid=false) { 
+function PostRootCatDetect__MLSS ($postid=false, $catid=false) { $catParent='';
 	if (!$postid){$postid=$GLOBALS['post']->ID;}
 	if (!$catid) {$catid=get_the_category($postid)[0]->term_id ;}
 	// continue, untill a parent $catid will be null
 	while ($catid) 	{ $cat = get_category($catid);	$catid = $cat->category_parent;  $catParent=$cat->slug; }
 	return $catParent;
+}
+function DetectedPostLang__MLSS($postid=false, $catid=false){
+	$catBase = PostRootCatDetect__MLSS($postid); 
+	if (in_array($catBase, LANGS__MLSS())){return $catBase;} else {return false;}
 }
 //https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php
 function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
@@ -150,6 +155,11 @@ function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	gl
 	if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray );}
 	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
 }	
+
+
+//DUE TO WORDPRESS BUG ( https://core.trac.wordpress.org/ticket/32023 ) , i use this: (//USE ECHO ONLY! because code maybe executed before other PHP functions.. so, we shouldnt stop&redirect, but  we should redirect from already executed PHP output )
+define('ReFlushREDIRECT__MLSS',			'<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>');
+
 
 function errorrrr_404__MLSS(){
 	if (is_404() && WP_USE_THEMES === true )	{NOTFOUNDDD_REDIRECT2__MLSS(homURL,'problemm_702');}   
@@ -248,6 +258,12 @@ function DetectLangUsingUrl__MLSS(){
 	//STANDARD POST inside category		(example.com/ENG-categories1/my-post
 		preg_match("/$hom\/(.*?)".S_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
 		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
+	//other check: standard post Or standard page  (CUSTOM_POSTS are not yet registered...  so, I am detecting them with "postrootCat__MLSS" function
+		if(!$x){  
+			// 
+			$p1 = get_page_by_path(requestURIfromHomeWithoutParameters__MLSS, OBJECT, get_post_types(array('_builtin'=>true))); //url_to_postid causes too early error
+			if ($p1)  { if ($catslug=DetectedPostLang__MLSS($p1->ID))	{ $x=$catslug; } }
+		}
 	//ANYTHING ALL (CUSTOM POST or etc)..(example.com/ENG/my-page)
 		preg_match("/$hom\/(.*?)\//si",   						$_SERVER['REQUEST_URI'].'/',$n);		
 		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
@@ -311,14 +327,17 @@ function DetectLangUsingUrl__MLSS(){
 	}
 	
 	
-	
 	//--------------------------------------------------------------------------------------
-	//lets add one trick - if STANDARD POST is published under language category.. (i.e. site.com/my-post), then detect it's language
+	//lets add one additional, luxury trick - if STANDARD(or unknown cutom) POST is published under language category.. (i.e. site.com/my-post), then detect it's language
 	add_action('template_redirect','postrootCat__MLSS');function postrootCat__MLSS(){
-		$catslug=PostRootCatDetect__MLSS();	
-		if (in_array($catslug, LANGS__MLSS())){
-			if ( defined(LNG) && $catslug != LNG ){
-				setcookie(cookienameLngs__MLSS, $catslug, time()+100000000, homeFOLD__MLSS);	
+		if ($catslug= DetectedPostLang__MLSS(url_to_postid(currentURL__MLSS))) {}
+		elseif ($p1 = get_page_by_path(requestURIfromHomeWithoutParameters__MLSS, OBJECT, get_post_types(array('_builtin'=>true))))  { $catslug= DetectedPostLang__MLSS($p1->ID); }
+		elseif ($catslug= DetectedPostLang__MLSS()) {}
+		if ( $catslug) {
+			//if language constant incorrectly is set for this post
+			if ( (defined('LNG') && $catslug != LNG) || !defined('LNG')){  
+				setcookie(cookienameLngs__MLSS, $catslug, time()+100000000, homeFOLD__MLSS);
+				//$final_req = str_ireplace('lng='.$_SERVER['REQUEST_URI']);
 				PERMANENTTT_REDIRECT2__MLSS($_SERVER['REQUEST_URI'], 'problemm_714' );	
 			}
 		}
@@ -370,20 +389,17 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 			//maybe better to register TAXONOMIES using this:
 			register_taxonomy_for_object_type( 'category', $value );
 			register_taxonomy_for_object_type( 'post_tag', $value );
-				if (get_option('optMLSS__EnableCustCat')=='y') {
+									if (get_option('optMLSS__EnableCustCat')=='y') {
 			register_taxonomy_for_object_type(  $value.C_CategPrefix__MLSS, $value );
-				}
-			
-			
-			//FLUSH RULES !!! READ: http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
-			if ( get_option( 'flush_rewrite_rules__MLSS' ) ) {
-				flush_rewrite_rules();	delete_option('flush_rewrite_rules__MLSS' );
-			}
+									}
 		}
 		//resize icon size within Dashboard sidebar
 		add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
-		
 	}
+	//FLUSH RULES !!! READ: http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
+	if ( get_option( 'optMLSS__NeedFlush' ))	{ $GLOBALS['wp_rewrite']->flush_rules(); 
+													echo ReFlushREDIRECT__MLSS;	delete_option('optMLSS__NeedFlush' ); }
+	if (isset($_POST['mlss_FRRULES_AGAIN'])){ $GLOBALS['wp_rewrite']->flush_rules(); }
 }
 //================================= ##### POST TYPES =============================== //
 //================================================================================== //		
@@ -426,7 +442,7 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 
 //QUERY FOR STARPAGE (i.e. yoursite.com/ENG,yoursite.com/CHN,..)
 add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS($query) {
-    if ( isLangHomeURI__MLSS && $query->is_main_query() ) { 	
+    if ( isLangHomeURI__MLSS && $query->is_main_query()   && !is_admin() ) { 	
 		//if static ID is set for the language's STARTPAGE
 		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){ 
 			$query->init();
@@ -489,7 +505,7 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 
 //QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
 add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATED_QUERY__MLSS($query) {
-    if ( !isLangHomeURI__MLSS && $query->is_main_query() ) {
+    if ( !isLangHomeURI__MLSS && $query->is_main_query()  && !is_admin() ) {
 		
 		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
 		$CustBuildEnabled = get_option('optMLSS__BuildType')=='custom_p' ? true:false ;
@@ -503,7 +519,9 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 		$PathAfterLangRoot=substr($PathAfterHome, 4);
 		$BaseSLUG=basename(currentURL__MLSS);  //i.e. "TORNADOO"
 
-		if (!$PostOrPageDetectedByWp)
+		//var_dump($PostOrPageDetectedByWp);
+		//if (!$PostOrPageDetectedByWp)
+		if (1==1)
 		{
 			//============CUSTOM TAXONOMY=============== 
 			if ($CustBuildEnabled){ //IF ENABLED
@@ -532,7 +550,16 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 			}
 			
 			//===========standard category==========  (WE MUST CHECK IT!! because we use . as CATEGORY BASE, and wordpress bugs that..)
-			$cat= get_category_by_path( $PathAfterHome, true );// term_exists($BaseSLUG, 'category'); <-- this bugs, because  /mylink/smth >"smth" may be categoryy too, so, post may become  overrided in this case..
+			//special query for categories	.. for example, url is: yoursite.com/category/extrapart/blabla
+				$cBase_ORIG=get_option('category_base');
+				if($cBase_ORIG=='' || $cBase_ORIG !='/.'){  $cBase= '/'.$cBase_ORIG;
+					$LengthOfCBase = strlen($cBase);
+					$UrlStartPart = substr($PathAfterHome,0,$LengthOfCBase);	//i.e. "/CATEGORY"
+					if ($UrlStartPart == $cBase){
+						$PathCAT = substr($PathAfterHome,$LengthOfCBase);		//i.e. "/EXTRAPART/BLABLA"
+					}
+				}
+			$cat= get_category_by_path( ( isset($PathCAT) ?  $PathCAT : $PathAfterHome) , true ); // term_exists($BaseSLUG, 'category'); <-- this bugs, because  /mylink/smth >"smth" may be categoryy too, so, post may become  overrided in this case..
 			if ($cat){  
 				$tr = get_term_by('slug', $BaseSLUG , 'category');
 				$query->init();	$query->parse_query(array('post_type' => array('post') ,
@@ -546,7 +573,7 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				return $query;	
 			}
 			
-			
+						
 			//===========CUSTOM post===========
 			if ($CustBuildEnabled){
 				$cpost= ($x = get_page_by_path($PathAfterHome, OBJECT, LNG)) ?  $x : ''; //get_page_by_path($BaseSLUG...
@@ -575,7 +602,6 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				$query->set( 'page_id', $page->ID );
 				return $query;
 			}
-			
 			
 			//===========standard post===========
 			$post= ($x = get_page_by_path($PathAfterHome, OBJECT, 'post')) ?  $x : ''; //get_page_by_path($BaseSLUG...
@@ -651,19 +677,18 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+//add Language parameter to URL
+add_filter( 'post_type_link', 'my_append_query_string', 10, 4 ); function my_append_query_string( $permalink, $post, $leavename, $sample ) {
+	if (!in_array($post->post_type,    array_merge(LANGS__MLSS(),array('page')) )  ){ 
+		if ('y'==get_option('optMLSS__EnableQueryStrPosts')){
+			if ( $catSlug = DetectedPostLang__MLSS($post->ID)) { 
+				$permalink = $permalink . ( !stripos($permalink,'?') ? "?lng=$catSlug" : "&lng=$catSlug") ; 	 //&&  get_option('permalink_structure') 
+			} 
+		}
+	}
+    return $permalink;
+}
 	
 	
 
@@ -688,43 +713,36 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',99,99 ); function stylesht__MLSS() {
 	wp_enqueue_style( 'custom_styles__MLSS', plugin_dir_url(__FILE__).'flags/stylesheet.css');
 }
-function my_black_backgorund_output__MLSS(){	$scrpt=
-	'<div id="my_black_backgr__MLSS" style="background:black; height:4000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9507;"></div>
-	<script type="text/javascript">
-	var BODYYY = document.body;	if (BODYYY)  {BODYYY.insertBefore(document.getElementById("my_black_backgr__MLSS").innerHTML, BODYYY.childNodes[0]);}
-	</script>'; 	return $scrpt;
-}
-
-
-
 
 //first time visit POPUP
-add_action('wp','OutputFirstTimePopup__MLSS'); function OutputFirstTimePopup__MLSS(){
+add_action('wp_head','OutputFirstTimePopup__MLSS',99); function OutputFirstTimePopup__MLSS(){
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
-	?><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel='stylesheet' id='tipsy-css'  href='<?php echo PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css';?>' type='text/css' media='all' /></head>
-	<body>
-	<?php echo my_black_backgorund_output__MLSS();  ?>
-	<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">
-		<?php
-		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
-		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-		$SITE_LANGUAGES=LANGS__MLSS(); 
-		$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
-		foreach ($SITE_LANGUAGES as $keyname => $key_value){
-							$targt_lnk=homeURL__MLSS.'/'.$key_value;
-							//if language is not included in "HIDDEN LANGS" option
-							if (!isHiddenLang__MLSS($key_value) ) {
-			$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
-								'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
-									'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
-									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
-								'</a>'.
-							'</div>';										}
-		}
-		$Choose_POPUP .= '</div></div>';
-		echo $Choose_POPUP; exit;
+	?>
+		<?php //echo '<link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />';
+		include_once(__DIR__.'/flags/javascript_functions.php'); echo '<div></div><script>SHOW_blackGROUND();</script>';
 		?>
-	</div><?php
+		<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">
+			<?php
+			// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
+			//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
+			$SITE_LANGUAGES=LANGS__MLSS(); 
+			$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
+			foreach ($SITE_LANGUAGES as $keyname => $key_value){
+								$targt_lnk=homeURL__MLSS.'/'.$key_value;
+								//if language is not included in "HIDDEN LANGS" option
+								if (!isHiddenLang__MLSS($key_value) ) {
+				$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
+									'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
+										'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
+										'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
+									'</a>'.
+								'</div>';										}
+			}
+			$Choose_POPUP .= '</div></div>';
+			echo $Choose_POPUP; 
+			?>
+		</div>
+		<?php exit;
 	}
 }
 

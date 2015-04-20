@@ -21,32 +21,40 @@ if ( is_admin() ){
 	}
 	
 	
-	
 	//===================================================FIRST SUBMENU (settings)==========================================
+	add_action('init','PriorityFields__MLSS',1); function PriorityFields__MLSS(){
+		if (is_admin() && iss_admiiiiiin__MLSS()){
+			if (isset($_POST['mlss_FRRULES_AGAIN'])){$GLOBALS['wp_rewrite']->flush_rules(); }
+			if (isset($_POST['formupdate__mlss'])){	
+				$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
+				validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+					
+					if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				{ $NEEDS_FLUSH_REDIRECT=true;}
+				update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));	
+					if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		{ $NEEDS_FLUSH_REDIRECT=true;}
+				update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
+					if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']){ $NEEDS_FLUSH_REDIRECT=true;}
+				update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
+				
+				if (isset($NEEDS_FLUSH_REDIRECT)) { $GLOBALS['wp_rewrite']->flush_rules();  echo ReFlushREDIRECT__MLSS; }
+			}
+		}
+	}
+	
 	function my_submenu1__MLSS() { 
 		if (isset($_POST['formupdate__mlss'])){	
 			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 			validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			//update optionsss	
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
-			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']); 
-						if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs']) {
-			update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));
-							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
-						}
+			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']);
 			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('',''),$_POST['inp_HiddenLangs']) ); 
 			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
 			foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
 			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
-
-						if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild']) {
-							update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
-							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
-						}
-						if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) {
-							update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
-							flush_rewrite_rules(); echo '<script>window.location=location.href; </script>'; //REFRESH PAGE
-						}
+			//
+			update_option('optMLSS__EnableQueryStrPosts',$_POST['EnablePostQueryStr']);
+			//
 			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
 			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
 			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
@@ -77,7 +85,7 @@ if ( is_admin() ){
 		.fakeH22{font-size:2em;font-weight:bold;}
 		.eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;}
 		a.readpopp{color:#56CC18;}
-		span.smallnotic{font-size: 8px; float: right; right: 5%; position: relative;}
+		span.smallnotic{font-size: 10px; float: right; right: 5%; position: relative;}
 		</style>
 		<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 		
@@ -85,8 +93,9 @@ if ( is_admin() ){
 			<form action="" method="POST">
 
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(probably soon, i am going to complete this, and you will get a notification): 1) At this moment you have to manually change the design of the first time popup chooser. 2) If you use your own, already registered CUSTOM POST TYPES, then this plugin might not be compatible with it);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. Some people might install Multisite - two different Wordpress sites in different directory (i.e. site.com/eng, site.com/spa), and then try to use the same THEME, but it maybe not be easy to manage that method...  Thats why its may be better to have multilanguage site within one Wordpress installation(Theoretically, there may be a bit negative sides, for example, if you are sharding accessto different peoples, or etc...).  \r\n\r\n(Note: at this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query..');" class="readpopp">Read this popup</a>!</span></center> <span class="smallnotic">(...<a href="http://j.mp/wpluginstt#mlss" target="_blank">other MultiLang plugins</a>...)</span>
-		
+		<center><span class="fakeH22"><a href="javascript:alert('(NOTICE: as of April 2015, Everything else is ok, but this plugin has some lacks at this moment(probably soon, i am going to complete this, and you will get a notification): 1) At this moment you have to manually change the design of the first time popup chooser. 2) If you use your own, already registered CUSTOM POST TYPES, then this plugin might not be compatible with it);\r\n\r\n\r\n\u0022MLSS plugin\u0022 is mainly intended as a helpful functionality for them, who want to have Multi-Language website. \r\n\r\n(Note: at this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).\r\nThis plugin can be used by skilful developer, who is able to integrate the functionalities with his theme. \r\n\r\n(p.s Also, if you wish, you can change design of this plugin from your theme FUNCTIONS.PHP, or if you wish, you can modify the functionality&codes of this plugin - just rename the plugin-name to your desired name, modify it and then re-activate)\r\n\r\n\r\nAlso note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query..\r\n\r\n PLEASE, notify me about bugs!');" class="readpopp">Read this popup</a>!</span></center> 
+					<span class="smallnotic">(View <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
+					<br/><span class="smallnotic">(View <a href="http://j.mp/wpluginstt#mlss" target="_blank">other useful plugins</a>...)</span>				
 		<div class="eachBlock">
 			<span class="fakeH22"> 1) Common setting</span>
 			<br/>You can add/remove the languages using this field. Insert Language title, and along it, in CURLED BRACKETS, insert it's official abbreviation  (Needs to be 3 latin characters... View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
@@ -103,7 +112,7 @@ if ( is_admin() ){
 			<span class="fakeH22">  2) Choosing Languages for visitor</span>
 			<br/>Now, whenever a person enters your website start page (and it's <b>first time</b> he enters), then you can set a language for him. Select desired option:
 			<br/> <input type="radio" name="inp_FirstMethod" value="dropddd" <?php echo (($chosen_method=='dropddd')? 'checked="checked"':'');?> />
-			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>)
+			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>) (<i><a href="javascript:if your theme header.php file doesnt containt wp_head() default action, then this cant be triggered.. ');" class="readpopp">Read this popup!</a></i>)
 				<script type="text/javascript">
 				function previewww(){ document.cookie="<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; 
 					window.open("<?php echo homeURL__MLSS;?>?previewDropd__MLSS","_blank");	}
@@ -150,11 +159,13 @@ if ( is_admin() ){
 			<span class="fakeH22"> 4) STRUCTURE</span>
 			<br/><b>-Build Up website structure using</b>: 
 			<br/><input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /><b>Custom Post Types </b>(<a href="javascript:alert('maybe you are already familiar with CUSTOM POST TYPES... if you choose this option,then within the left sidebar, you will have menu buttons for each language. Then, whenever i.e. YOURSITE.COM/eng/ is opened, all \u0022ENG\u0022 CUSTOM POSTS will be shown. Also, when visitor makes a SEARCH, it also will be looped through \u0022STANDARD POSTS\u0022,which are published under the root language \u0022STANDARD CATEGORY\u0022). REMEMBER, always assign a language-specific STANDARD POST only to one category!!! \r\n\r\n\r\n\[p.s. in case, you are a programmer and you will need CODING modifications, instead of is_home(), its better to use is_post_type_archive()]');" class="readpopp">Read this popup!</a>) 
-				<div id="cpost_others">
-				<span style="margin:0 0 0 20px;"></span>[enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS.\r\n\r\np.s. However, if you dont need them very very much, then maybe there is no need to implement them, but you can simply use the standard categories.. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if (get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> />] 
-				</div>
+				<span class="cpost_others" style="margin:0 0 0 20px;">
+				[enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS.\r\n\r\np.s. However, if you dont need them very very much, then maybe there is no need to implement them, but you can simply use the standard categories.. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if ('y'==get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> />] 
+				</span>
 			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /> <b>Standard Posts  </b>(<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: \u0022CATEGORY BASE\u0022 is set to .(dot) in PERMALINKS settings , so, if you want that your categories URLs were like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. Otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)\r\n\r\n\r\np.s. Just as an advice, is it better to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/  ?');" class="readpopp">Read this popup!</a>)
-			
+				<span class="cpost_others" style="margin:0 0 0 20px;">
+				[add query strings to post links <i>(<a href="javascript:alert('For example, when you publish a any post(except CUSTOM LANGUAGE POST TYPE) under specific LANGUAGE CATEGORY(i.e. eng), its link can include LANGUAGE parameter (i.e. site.com/mypost?lng=eng).  However, It is not necessary, because LANGUAGE will be automatically detected for that post.. This can be just useful for you, for visual purposes, or in case you have other custom post types, or i dont know... However, by default, it is not needed. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnablePostQueryStr" value="n" /> <input type="checkbox" name="EnablePostQueryStr" value="y" <?php if ('y'==get_option('optMLSS__EnableQueryStrPosts')) {echo 'checked="checked"';} ?> />] 
+				</span>
 			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then leave empty.)');" class="readpopp">Read this popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
 				echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -320,31 +331,33 @@ if ( is_admin() ){
 	// SHow or hide other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
 	//=========================================================================
 	add_action('admin_head','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
-		if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type=')) && !stristr(currentURL__MLSS,admin_url('post-new.php?post_type=page') ) ) {
-			?> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
-			<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
-			<div id="CatDrHeader" style="display:none;">
-				<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
-				<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if (get_option('optMLSS__ShowHideOtherCats')=='yes'){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
+		if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
+			if (in_array($_GET['post_type'], LANGS__MLSS())){
+				?> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
+				<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
+				<div id="CatDrHeader" style="display:none;">
+					<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
+					<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if (get_option('optMLSS__ShowHideOtherCats')=='yes'){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
+					</div>
 				</div>
-			</div>
-			<script type="text/javascript">
-				function myAlert(){
-					if (document.getElementById('category-adder')){
-						SHOW_blackGROUND();
-						document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
-						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
-						var MessageDiv = document.createElement('div');		MessageDiv.innerHTML = document.getElementById("CatDrHeader").innerHTML;
-						cDiv.insertBefore(MessageDiv, cDiv.childNodes[0]); 	//window.setTimeout('',4000);
-					}
-				} window.onload=function(){myAlert();};
-			</script>
-			<?php  //hide all other categories
-			if (get_option('optMLSS__ShowHideOtherCats')=='yes') { ?>
-				<style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
-					'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
-				</style> 
-				<?php
+				<script type="text/javascript">
+					function myAlert(){
+						if (document.getElementById('category-adder')){
+							SHOW_blackGROUND();
+							document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
+							var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
+							var MessageDiv = document.createElement('div');		MessageDiv.innerHTML = document.getElementById("CatDrHeader").innerHTML;
+							cDiv.insertBefore(MessageDiv, cDiv.childNodes[0]); 	//window.setTimeout('',4000);
+						}
+					} window.onload=function(){myAlert();};
+				</script>
+				<?php  //hide all other categories
+				if (get_option('optMLSS__ShowHideOtherCats')=='yes') { ?>
+					<style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
+						'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
+					</style> 
+					<?php
+				}
 			}
 		}
 	} 

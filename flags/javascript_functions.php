@@ -19,7 +19,10 @@ function pop_hide(RandomIDD)  { var x=document.getElementById("black_backgr_"+Ra
 
 <script type="text/javascript">
 //Separate functions, BLACKen background (NOTE: on your overshown element, use at least: z-index:9600 )
-	function SHOW_blackGROUND(){ var AAADIV = document.createElement('div'); AAADIV.id = "my_black_bck_123";   AAADIV.setAttribute("style", 'background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;'); document.body.insertBefore(AAADIV, document.body.childNodes[0]); }
+	function SHOW_blackGROUND(){ var AAADIV = document.createElement('div'); AAADIV.id = "my_black_bck_123";  var stl='background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;';  AAADIV.setAttribute("style", stl ); 
+	if (mybodyyy = document.body)	{mybodyyy.insertBefore(AAADIV, mybodyyy.childNodes[0]);} 
+	else 							{document.write('<div style="'+stl+'"></div>');}
+	}
 	function REMOVE_blackGROUND(){ var AAADIV = document.getElementById('my_black_bck_123'); AAADIV.parentNode.removeChild(AAADIV); }
 </script>
 
