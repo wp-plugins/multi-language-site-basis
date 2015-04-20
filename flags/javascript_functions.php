@@ -1,4 +1,4 @@
-<!--  https://github.com/tazotodua/useful-javascript/master/simple-javascript-popup.html  --> 
+<!--  https://github.com/tazotodua/useful-javascript/simple-javascript-popup.html  --> 
 <script type="text/javascript">
 //==============================================     simple POPUP   ==============================================
 function show_my_popup(TEXTorID){   
