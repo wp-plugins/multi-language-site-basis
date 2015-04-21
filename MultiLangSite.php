@@ -1040,3 +1040,47 @@ add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts)
 
 
 include(__dir__.'/__admin_dashboard.php');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+My TO-DO-LIST:::
+
+*post alternatives
+*horizontal flags
+4) tu sxva custom-post-type-shi gamoqveynenbulia ori sxvadasxna enispostebi, mashin imis ARCHIVE_HOME-shi marto iuzeris ena iyos?? ori variantia: 1) yvela sxva post_types home -ebis linki sheicvalos:  /lng/postype;   anda daematos query: /posttype?lng=xxx
+//to do list: tags permalinks structure?
+
+i.e.  /eng/eng-sub
+Homepage:
+- custom post archive
+- standard category
+..
+..
+not-homepage (i.e. subpage):
+
+ wordpress default url_to_postid ( if enabled cposts: then custom-type; others 404 ; if not enabled cposts: then  page; others 404)
+if url_to_postid not found
+	//- cust.post.
+	- page
+	- post
+	==if post not detected==
+		//- cust.taxonomy.cat  (wp default 404)  created manually
+		- category	(wp default 404)   created manually
+		//- cust.post.
+		- page
+		- post
+
+*/	
+
