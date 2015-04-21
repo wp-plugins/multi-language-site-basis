@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.28
+ * Version: 1.29
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
@@ -28,12 +28,11 @@ define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pa
 define('CatBaseWpOpt__MLSS',			get_option('category_base') );
 		define('CAT_BASE_WpOption_IS_EMPTY__MLSS', ( in_array(CatBaseWpOpt__MLSS, array('.','/.','\.')) ? true:false)   );
 	//others
-	$x= get_option('optMLSS__CatBaseRemoved','y');
-define('REMOVE_CAT_BASE_FUNC__MLSS', ('y'==$x ? true : false) );
+	$x= get_option('optMLSS__CatBaseRemoved','y'); 
+define('REMOVE_CAT_BASE_FUNC__MLSS', ('y'==$x ? true : false) ); 
 define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alternative for me..
 		define('CAT_BASE_NOT_USED__MLSS', ((REMOVE_CAT_BASE_FUNC__MLSS || REMOVE_CAT_BASE_WpOption__MLSS || CAT_BASE_WpOption_IS_EMPTY__MLSS) ? true:false)   );
 
-		 
 		
 //Redirect to SETTINGS (after activation)
 add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { 
@@ -49,9 +48,9 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__FirstMethod',		'dropddd');
 			//
 			if (REMOVE_CAT_BASE_WpOption__MLSS) {
-				update_option('optMLSS__Cat_base_BACKUP',	CatBaseWpOpt__MLSS);
-				$GLOBALS['wp_rewrite']->set_category_base('/.'); $GLOBALS['wp_rewrite']->flush_rules();  
-				//update_option('category_base',				'/.'); 	$GLOBALS['wp_rewrite']->flush_rules();  
+				update_option('optMLSS__Cat_base_BACKUP',	CatBaseWpOpt__MLSS );
+				$GLOBALS['wp_rewrite']->set_category_base('/.'); MyFlush__MLSS(false);  
+				//update_option('category_base',				'/.'); 	MyFlush__MLSS(false);  
 				//$wp_rewrite->set_permalink_structure('/%postname%/' );
 				//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
 			}
@@ -85,7 +84,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 							array('translation'=>'haи иуzer!'),
 							array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
 	//flush-update permalinks for CUSTOM POST TYPES 
-	DetermineLanguages__MLSS(); myf_63__MLSS();	flush_rewrite_rules();
+	DetermineLanguages__MLSS(); myf_63__MLSS();	MyFlush__MLSS(false);  
 	
 	
 	//=================================================================
@@ -123,9 +122,30 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 }
 register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
 	if (REMOVE_CAT_BASE_WpOption__MLSS) {	update_option('category_base', get_option('optMLSS__Cat_base_BACKUP')); }
-	flush_rewrite_rules(); 
+	MyFlush__MLSS(false); 
 }
 //=================================================== ### ACTIVATION commands===============================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -164,9 +184,15 @@ function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	gl
 	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
 }	
 
-
-//DUE TO WORDPRESS BUG ( https://core.trac.wordpress.org/ticket/32023 ) , i use this: (//USE ECHO ONLY! because code maybe executed before other PHP functions.. so, we shouldnt stop&redirect, but  we should redirect from already executed PHP output )
-define('ReFlushREDIRECT__MLSS',			'<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>');
+function FINAL_MyFlush__MLSS(){
+	
+}
+function MyFlush__MLSS($RedirectFlushToo=false){
+	$GLOBALS['wp_rewrite']->flush_rules(); 
+	
+	//DUE TO WORDPRESS BUG ( https://core.trac.wordpress.org/ticket/32023 ) , i use this: (//USE ECHO ONLY! because code maybe executed before other PHP functions.. so, we shouldnt stop&redirect, but  we should redirect from already executed PHP output )
+	if($RedirectFlushToo) {echo '<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>';}
+}
 
 
 function errorrrr_404__MLSS(){
@@ -259,7 +285,7 @@ function DetectLangUsingUrl__MLSS(){
 	//STANDARD CATEGORY with prefix 	(example.com/category/ENG-categories1/ [P.S. IT MAY NOT INCLUDE base phraze "/category/"] 
 				$addn= (CAT_BASE_NOT_USED__MLSS) ? '' :  CatBaseWpOpt__MLSS.'\/';
 		preg_match("/$hom\/$addn(.*?)".S_CategPrefix__MLSS.'\//si',$_SERVER['REQUEST_URI'].'/',$n);
-		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
+		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1]; die('a');}
 	//STANDARD PAGE with prefix 		(example.com/ENG-pages/my-page
 		preg_match("/$hom\/(.*?)".PagePrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
 		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
@@ -405,9 +431,8 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 		add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
 	}
 	//FLUSH RULES !!! READ: http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
-	if ( get_option( 'optMLSS__NeedFlush' ))	{ $GLOBALS['wp_rewrite']->flush_rules(); 
-													echo ReFlushREDIRECT__MLSS;	delete_option('optMLSS__NeedFlush' ); }
-	if (isset($_POST['mlss_FRRULES_AGAIN'])){ $GLOBALS['wp_rewrite']->flush_rules(); }
+	if ( get_option( 'optMLSS__NeedFlush' )) { MyFlush__MLSS(true);	delete_option('optMLSS__NeedFlush' ); }
+	if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false);   }
 }
 //================================= ##### POST TYPES =============================== //
 //================================================================================== //		
@@ -638,7 +663,7 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 			}
 			$term= term_exists($BaseSLUG, 'xxxxx');
 			if ($term){   
-				$tr = get_term_by('slug', $BaseSLUG , LNG);
+				$tr = get_term_by('slug', $BaseSLUG , 'xxxxx');
 				$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
 									'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
 				$query->is_home = false;
@@ -687,7 +712,7 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 	
 	
 //================== SEARCH FILTER ===================
-add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS($query) {
+add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS($query) { 
 	if ( !is_admin() && $query->is_main_query() ) 	{
 		if ( $query->is_search ) {
 			$arrs= array_merge(array(), array());
@@ -727,11 +752,13 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 	
 
 //add Language parameter to URL
-add_filter( 'post_type_link', 'my_append_query_string', 10, 4 ); function my_append_query_string( $permalink, $post, $leavename, $sample ) {
+add_filter( 'post_link', 		'my_append_query_string', 10, 2 );
+add_filter( 'post_type_link',	'my_append_query_string', 10, 2 );
+ function my_append_query_string( $permalink, $post) {
 	if (!in_array($post->post_type,    array_merge(LANGS__MLSS(),array('page')) )  ){ 
 		if ('y'==get_option('optMLSS__EnableQueryStrPosts')){
 			if ( $catSlug = DetectedPostLang__MLSS($post->ID)) { 
-				$permalink = $permalink . ( !stripos($permalink,'?') ? "?lng=$catSlug" : "&lng=$catSlug") ; 	 //&&  get_option('permalink_structure') 
+				$permalink = $permalink . ( !stripos($permalink,'?') ? "?" : "&") . "lng=$catSlug" ; 	 //&&  get_option('permalink_structure') 
 			} 
 		}
 	}
@@ -756,7 +783,7 @@ function fix_slash__MLSS( $string, $type ){global $wp_rewrite;
 		}
 		if ( $type == 'category' ) { return trailingslashit( $string ); }
 			//}
-	//$GLOBALS['wp_rewrite']->flush_rules();
+	//MyFlush__MLSS(false);
 	return $string;
 }
 
