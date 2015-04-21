@@ -211,7 +211,7 @@ if ( is_admin() ){
 				<br/>B) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read popup!</a></i>
 		</div>
 		
-		<br/><br/><br/>*If you have found bugs, have suggestions or etc, <a href="http://goo.gl/N307HM" target="_blank"><b>CONTACT ME</b></a>!
+		<br/><br/><br/>*If you have found bugs, have suggestions or etc, <a href="http://j.mp/wordpressthemestt" target="_blank"><b>CONTACT ME</b></a>!
 		<!--
 		<h2 class="tiitl"> 6) parameters </b></h2>
 		(NOTE: Once you build a website, and google indexes your site, then dont change this value, or your site will loose all pages+ranking indexed!)
