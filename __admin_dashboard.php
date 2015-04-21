@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 // ====================================== USEFUL functions  ================================
 //a Admin Validator function
-function validate_Nonce__MLSS($value, $action_name){
+function NonceCheck__MLSS($value, $action_name){
 	if ( !isset($value) || !wp_verify_nonce($value, $action_name) ) { die("not allowed due to interal_error_151");}
 }	
 // =================================== ##### USEFUL functions #### =============================
@@ -24,36 +24,39 @@ if ( is_admin() ){
 	//===================================================FIRST SUBMENU (settings)==========================================
 	add_action('init','PriorityFields__MLSS',1); function PriorityFields__MLSS(){
 		if (is_admin() && iss_admiiiiiin__MLSS()){
+			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			if (isset($_POST['mlss_FRRULES_AGAIN'])){$GLOBALS['wp_rewrite']->flush_rules(); }
 			if (isset($_POST['formupdate__mlss'])){	
 				$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
-				validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+				NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 					
 					if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				{ $NEEDS_FLUSH_REDIRECT=true;}
-				update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('',''),$_POST['inp_Langs']));	
+				update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_Langs']));	
 					if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		{ $NEEDS_FLUSH_REDIRECT=true;}
 				update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
 					if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']){ $NEEDS_FLUSH_REDIRECT=true;}
 				update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 				
-				if (isset($NEEDS_FLUSH_REDIRECT)) { $GLOBALS['wp_rewrite']->flush_rules();  echo ReFlushREDIRECT__MLSS; }
-			}
+				if (isset($NEEDS_FLUSH_REDIRECT)) { $GLOBALS['wp_rewrite']->flush_rules();  //echo ReFlushREDIRECT__MLSS; }
+		}}
 		}
 	}
 	
 	function my_submenu1__MLSS() { 
 		if (isset($_POST['formupdate__mlss'])){	
 			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
-			validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			//update optionsss	
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']);
-			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('',''),$_POST['inp_HiddenLangs']) ); 
+			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_HiddenLangs']) ); 
 			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
 			foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
 			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
 			//
 			update_option('optMLSS__EnableQueryStrPosts',$_POST['EnablePostQueryStr']);
+			//update_option('optMLSS__ShowHideOtherCats',	$_POST['EnableHideOtherCtypeEntri']);
+			//update_option('optMLSS__HidenEntriesIdSlug',$_POST['SlugofHidenEntriesId']);
 			//
 			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
 			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
@@ -170,6 +173,12 @@ if ( is_admin() ){
 			<?php foreach(LANGS__MLSS() as $each){
 				echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;';
 			} ?>
+			
+			<!-- <br/><br/><b>-Show only visitor's Languages' entries inside OTHER CUSTOM POST_TYPES listings: </b>(<a href="javascript:alert('(This is a test feature, and it may work on your site, or may not. However, nothing danger is here, you can test.)\r\n\r\n\r\n For example, if you use WP eCommerce or other plugins, and you have other CUSTOM POST TYPES(lets say\u0022PRODUCT\u0022 post-type as an example. Of course,you can imagine anything instead it) on your site, then when you visit \u0022yoursite.com/product\u0022 , then there will be listed all product entries, nevertheless to their checked \u0022language category\u0022. If you want, that inside such CUSTOM POST TYPE listings,  there were shown only such entries, which are assigned to the LANGUAGE CATEGORY(i.e. \u0022ENG\u0022) and visitors detected language is \u0022ENG\u0022 too, then only those language entries will be shown... but this is a bit tricky, and you should have some coding skills: \r\nA) First method is to check \u0022Add Query String\u0022 checkbox above, and then from your style.css, hide all posts from listings, which dont include \u0022?lng=eng\u0022 parameter in url... B) Second method is:  you should open source of LISTING(category) page, where are listed those products.  Find the default start-slug of a typical,looped DIV id(for example, post-63, post-65, post-83 or etc..). In this case, the start-slug will be \u0022post-\u0022. So, check the checkbox, and enter that startslug here:');" class="readpopp">Read this popup!</a>) 
+				<span class="cpost_others" style="margin:0 0 0 20px;">
+				[enabled? <input type="hidden" name="EnableHideOtherCtypeEntri" value="n" /> <input type="checkbox" name="EnableHideOtherCtypeEntri" value="y" <?php if ('y'==get_option('optMLSS__ShowHideOtherCats')) {echo 'checked="checked"';} ?> />;  &nbsp;&nbsp;&nbsp;&nbsp; If so, enter start-slug:<input type="text" name="SlugofHidenEntriesId" value="<?php echo get_option('optMLSS__HidenEntriesIdSlug');?>" />] 
+				</span> 
+			-->
 		</div>
 		
 		<div class="eachBlock">
@@ -178,6 +187,8 @@ if ( is_admin() ){
 	
 		<div class="eachBlock">
 			<span class="fakeH22">6) NAVIGATIONS, MENUS, WIDGETS.</span>
+			<br/><br/>*<b>How to access the language variables from other php files? </b> - <a href="javascript:alert('This plugin returns an array of all languages within $GLOBALS[\u0027SiteLangs__MLSS\u0027] variable. But the language parameter for current visitor/session, can be accessed with LNG constant.');" class="readpopp">Read this popup</a>!
+			
 			<br/><br/>*<b>Show Widgets only for Certain Languages</b> - <a href="javascript:alert('From now, you will see a Dropdown in the top of any Widget(inside ADMIN SIDEBARS). Then, you can choose on which Language the individual widget should be shown. ( If it appears not to work on a certain widget, that widget probably breaks WordPress Widgets API rules somehow). \r\n\r\n\r\n (p.s. Thanks to Author of \u0022SIMPLE WIDGET CLASSES and WIDGET ATTRIBUTES\u0022.) ');" class="readpopp">Read this popup</a>!
 			<!-- <br/> -B) Another good solution is to use one of these plugins: <span class="codee">Dynamic-Widgets</span>,&nbsp;&nbsp; <span class="codee">Simple-Widgets (<a href="javascript:alert('This plugin allows PHP conditions checking too. You can use condition for individual widgets:  LNG==\u0022eng\u0022  , and similarly for other widgets...');" class="readpopp">Read this popup</a>!) </span>, &nbsp;&nbsp; <span class="codee">Restrict-Widgets</span>,.. -->
 			
@@ -313,7 +324,7 @@ if ( is_admin() ){
 
 	add_action('init','verify_saved_words__MLSS'); function verify_saved_words__MLSS(){
 		if (isset($_POST['mlss_update1']) && iss_admiiiiiin__MLSS()){		
-			validate_Nonce__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			global $wpdb;
 			foreach($_POST['titlee'] as $name1=>$Value1){
 				foreach($Value1 as $name2=>$Value2){

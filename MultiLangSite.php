@@ -46,7 +46,6 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 			//$wp_rewrite->set_permalink_structure('/%postname%/' );
 			//update_option('category_base',				'/.'); flush_rewrite_rules(); 
 			//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
-		update_option('optMLSS__ShowHideOtherCats',	'no'); 
 		//
 		update_option('optMLSS__BuildType',			'custom_p');  
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
@@ -57,9 +56,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
 		update_option('optMLSS__EnableQueryStrPosts',	'n');
 		update_option('optMLSS__EnableCustCat',			'n');
-		
-		
-		
+		//update_option('optMLSS__ShowHideOtherCats',		'n'); update_option('optMLSS__HidenEntriesIdSlug',	'post-');
 	}
 	
 		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
@@ -434,9 +431,8 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 
 // ===================================================== QUERY MODIFY ============================================== //
 // ================================================================================================================= //
-//difference between [$query->is_XXX=true    and   $query->set('is_XXX', true)   
+//difference between [$query->is_XXX=true    and   $query->set('is_XXX', true) [set_query_var() is 100% this]
 // http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
-//ALSO possible:  set_query_var()
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
 
 
@@ -491,7 +487,7 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 					$query->is_page = false;
 					$query->is_archive = true;
 					
-					$query->is_category = false; //$query->set('cat', $tr->term_id);	//set_query_var('cat',...);	
+					$query->is_category = false; //$query->set('cat', $tr->term_id);	
 					$query->is_single = false;
 					//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
 				}
@@ -621,6 +617,27 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				return $query;
 				}
 			}
+			
+			
+			//if other post_type (i.e. categories)..
+			if(is_post_type_archive()){
+			}
+			$term= term_exists($BaseSLUG, LNG);
+			if ($term){  
+				$tr = get_term_by('slug', $BaseSLUG , LNG);
+				$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
+									'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
+				$query->is_home = false;
+				$query->is_single = false;
+				$query->is_archive = true;
+				$query->is_tax = true;
+				$query->is_post_type_archive=false;
+				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
+				return $query;
+			}
+			
+			
+			
 		}
 	}
 	return $query;
@@ -694,8 +711,9 @@ add_filter( 'post_type_link', 'my_append_query_string', 10, 4 ); function my_app
 
 	
 	
-
-	
+add_action('wp_head','aa');function aa(){ global $wp_rewrite;
+   var_dump($wp_rewrite->wp_rewrite_rules());exit;
+}
 	
 	
 	
@@ -831,6 +849,8 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 	
 	
 	
+	
+		
 	
 	
 	
