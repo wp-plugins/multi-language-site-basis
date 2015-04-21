@@ -24,10 +24,17 @@ define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
 define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
+//
+define('CatBaseWpOpt__MLSS',			get_option('category_base') );
+		define('CAT_BASE_WpOption_IS_EMPTY__MLSS', ( in_array(CatBaseWpOpt__MLSS, array('.','/.','\.')) ? true:false)   );
+	//others
+	$x= get_option('optMLSS__CatBaseRemoved','y');
+define('REMOVE_CAT_BASE_FUNC__MLSS', ('y'==$x ? true : false) );
+define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alternative for me..
+		define('CAT_BASE_NOT_USED__MLSS', ((REMOVE_CAT_BASE_FUNC__MLSS || REMOVE_CAT_BASE_WpOption__MLSS || CAT_BASE_WpOption_IS_EMPTY__MLSS) ? true:false)   );
 
+		 
 		
-		
-
 //Redirect to SETTINGS (after activation)
 add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { 
     if( $plugin == plugin_basename( __FILE__ ) ) { exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) );  }
@@ -40,13 +47,15 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__HiddenLangs',		'Japan{jpn},Dutch{nld},');
 		update_option('optMLSS__DefForOthers',		'dropdownn');
 		update_option('optMLSS__FirstMethod',		'dropddd');
-		//
-		update_option('optMLSS__Cat_base_BACKUP',	get_option('category_base'));
-		global $wp_rewrite; $wp_rewrite->set_category_base('/.'); $wp_rewrite->flush_rules(); 
-			//$wp_rewrite->set_permalink_structure('/%postname%/' );
-			//update_option('category_base',				'/.'); flush_rewrite_rules(); 
-			//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
-		//
+			//
+			if (REMOVE_CAT_BASE_WpOption__MLSS) {
+				update_option('optMLSS__Cat_base_BACKUP',	CatBaseWpOpt__MLSS);
+				$GLOBALS['wp_rewrite']->set_category_base('/.'); $GLOBALS['wp_rewrite']->flush_rules();  
+				//update_option('category_base',				'/.'); 	$GLOBALS['wp_rewrite']->flush_rules();  
+				//$wp_rewrite->set_permalink_structure('/%postname%/' );
+				//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
+			}
+			//
 		update_option('optMLSS__BuildType',			'custom_p');  
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optMLSS__Target_'.'default',	'eng');
@@ -56,6 +65,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
 		update_option('optMLSS__EnableQueryStrPosts',	'n');
 		update_option('optMLSS__EnableCustCat',			'n');
+		update_option('optMLSS__CatBaseRemoved',		'y');
 		//update_option('optMLSS__ShowHideOtherCats',		'n'); update_option('optMLSS__HidenEntriesIdSlug',	'post-');
 	}
 	
@@ -112,10 +122,11 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		}
 }
 register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
-	update_option('category_base',		get_option('optMLSS__Cat_base_BACKUP')); 
+	if (REMOVE_CAT_BASE_WpOption__MLSS) {	update_option('category_base', get_option('optMLSS__Cat_base_BACKUP')); }
 	flush_rewrite_rules(); 
 }
 //=================================================== ### ACTIVATION commands===============================
+
 
 
 
@@ -246,7 +257,7 @@ function DetectLangUsingUrl__MLSS(){
 		preg_match("/$hom\/(.*?)".C_CategPrefix__MLSS.'\//si',	$_SERVER['REQUEST_URI'].'/',$n);		
 		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];} 		
 	//STANDARD CATEGORY with prefix 	(example.com/category/ENG-categories1/ [P.S. IT MAY NOT INCLUDE base phraze "/category/"] 
-				$addn= ( in_array(get_option('category_base'), array('.','/.','\.')) ? '' :  get_option('category_base').'\/');
+				$addn= (CAT_BASE_NOT_USED__MLSS) ? '' :  CatBaseWpOpt__MLSS.'\/';
 		preg_match("/$hom\/$addn(.*?)".S_CategPrefix__MLSS.'\//si',$_SERVER['REQUEST_URI'].'/',$n);
 		if(!$x && !empty($n[1]) && in_array($n[1], LANGS__MLSS()))         {$x=$n[1];}
 	//STANDARD PAGE with prefix 		(example.com/ENG-pages/my-page
@@ -504,8 +515,8 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
     if ( !isLangHomeURI__MLSS && $query->is_main_query()  && !is_admin() ) {
 		
 		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
-		$CustBuildEnabled = get_option('optMLSS__BuildType')=='custom_p' ? true:false ;
-		$CustTaxonmEnabled = get_option('optMLSS__EnableCustCat')=='y' ? true:false ;
+		$CustBuildEnabled 	= 'custom_p'==get_option('optMLSS__BuildType') ? true:false ;
+		$CustTaxonmEnabled	= 'y'		==get_option('optMLSS__EnableCustCat') ? true:false ;
 		
 		//url details
 		$PostOrPageDetectedByWp = url_to_postid(currentURL__MLSS); //detects only for posts,pages and custom posts,
@@ -518,7 +529,7 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 		//var_dump($PostOrPageDetectedByWp);
 		//if (!$PostOrPageDetectedByWp)
 		if (1==1)
-		{
+		{ 
 			//============CUSTOM TAXONOMY=============== 
 			if ($CustBuildEnabled){ //IF ENABLED
 				if ($CustTaxonmEnabled){ //IF ENABLED
@@ -547,16 +558,15 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 			
 			//===========standard category==========  (WE MUST CHECK IT!! because we use . as CATEGORY BASE, and wordpress bugs that..)
 			//special query for categories	.. for example, url is: yoursite.com/category/extrapart/blabla
-				$cBase_ORIG=get_option('category_base');
-				if($cBase_ORIG=='' || $cBase_ORIG !='/.'){  $cBase= '/'.$cBase_ORIG;
-					$LengthOfCBase = strlen($cBase);
-					$UrlStartPart = substr($PathAfterHome,0,$LengthOfCBase);	//i.e. "/CATEGORY"
-					if ($UrlStartPart == $cBase){
-						$PathCAT = substr($PathAfterHome,$LengthOfCBase);		//i.e. "/EXTRAPART/BLABLA"
-					}
-				}
+						if(CAT_BASE_NOT_USED__MLSS){  $cBase= '/'.CatBaseWpOpt__MLSS;
+							$LengthOfCBase = strlen($cBase);
+							$UrlStartPart = substr($PathAfterHome,0,$LengthOfCBase);	//i.e. "/CATEGORY"
+							if ($UrlStartPart == $cBase){
+								$PathCAT = substr($PathAfterHome,$LengthOfCBase);		//i.e. "/EXTRAPART/BLABLA"
+							}
+						}
 			$cat= get_category_by_path( ( isset($PathCAT) ?  $PathCAT : $PathAfterHome) , true ); // term_exists($BaseSLUG, 'category'); <-- this bugs, because  /mylink/smth >"smth" may be categoryy too, so, post may become  overrided in this case..
-			if ($cat){  
+			if ($cat){   
 				$tr = get_term_by('slug', $BaseSLUG , 'category');
 				$query->init();	$query->parse_query(array('post_type' => array('post') ,
 									'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
@@ -571,37 +581,37 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 			
 						
 			//===========CUSTOM post===========
-			if ($CustBuildEnabled){
-				$cpost= ($x = get_page_by_path($PathAfterHome, OBJECT, LNG)) ?  $x : ''; //get_page_by_path($BaseSLUG...
-				if ($cpost){
-					$query->init();	$query->parse_query(   array('post_type' =>array(LNG) )  ) ;	
-					$query->is_single = true;	
-					$query->is_page = false;	
-					$query->is_home = false;	
-					$query->is_singular = true;
-					$query->queried_object_id = $cpost->ID; 
-					$query->set('page_id', $cpost->ID );
-					return $query;
-				}
+							if ($CustBuildEnabled){ 
+			$post= ($x = get_page_by_path($PathAfterHome, OBJECT, LNG)) ?  $x : ''; //get_page_by_path($BaseSLUG...
+			if ($post){ 
+				$query->init();	$query->parse_query(   array('post_type' =>array($post->post_type) )  ) ;	
+				$query->is_single = true;	
+				$query->is_page = false;	
+				$query->is_home = false;	
+				$query->is_singular = true;
+				$query->queried_object_id = $post->ID; 
+				$query->set('page_id', $post->ID );
+				return $query;
 			}
+							}
 			
 			
 			//===========standard page===========
-			$page=($x = get_page_by_path($PathAfterHome, OBJECT, 'page')) ?  $x : ''; // get_page_by_path($BaseSLUG...
-			if ($page){
-				$query->init();	$query->parse_query(   array('post_type' =>array('page') )  ) ;	
+			$post=($x = get_page_by_path($PathAfterHome, OBJECT, 'page')) ?  $x : ''; // get_page_by_path($BaseSLUG...
+			if ($post){ 
+				$query->init();	$query->parse_query(   array('post_type' =>array($post->post_type) )  ) ;	
 				$query->is_home = false;	
 				$query->is_single = false;	
 				$query->is_singular = true;	
 				$query->is_page = true;
-				$query->queried_object_id = $page->ID; 
-				$query->set( 'page_id', $page->ID );
+				$query->queried_object_id = $post->ID; 
+				$query->set( 'page_id', $post->ID );
 				return $query;
 			}
 			
 			//===========standard post===========
 			$post= ($x = get_page_by_path($PathAfterHome, OBJECT, 'post')) ?  $x : ''; //get_page_by_path($BaseSLUG...
-			if ($post){ $passed=true;
+			if ($post){ $passed=true; 
 				for($i=0; $i<count($k)-1; $i++){ $cat = get_term_by('slug', $k[$i], 'category'); 
 					if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){ $passed=false; break; }
 				} if ($passed){
@@ -617,13 +627,17 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				return $query;
 				}
 			}
+
 			
-			
-			//if other post_type (i.e. categories)..
+		//---------------------------------------------------------------------------------//
+		//-----------"I dont know"  why i have to manually make query, and why not WP makes itself?? ------------------//
+		//---------------------------------------------------------------------------------//			
+			//if other CUSTOM TAXONOMY (i.e. my_products,  or etc..)..
 			if(is_post_type_archive()){
+				
 			}
-			$term= term_exists($BaseSLUG, LNG);
-			if ($term){  
+			$term= term_exists($BaseSLUG, 'xxxxx');
+			if ($term){   
 				$tr = get_term_by('slug', $BaseSLUG , LNG);
 				$query->init();	$query->parse_query(array('post_type' => array(LNG) ,
 									'tax_query' =>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
@@ -635,6 +649,26 @@ add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATE
 				//$query->queried_object=$tr; $query->queried_object_id=$tr->term_id; $query->set('queried_object_id',.. 
 				return $query;
 			}
+					
+			//===========OTHER CUSTOM POST TYPE===========
+					$other_ctypes_final = array_values(get_post_types(array('_builtin'=>false )));
+					//$other_ctypes_final= array_diff($other_ctypes1, LANGS__MLSS());
+					//$other_ctypes_final[]=LNG;
+			$post= ($x = get_page_by_path($BaseSLUG, OBJECT, $other_ctypes_final)) ?  $x : ''; //get_page_by_path($BaseSLUG...
+			if ($post){
+				$query->init();	$query->parse_query(   array('post_type' =>array($post->post_type))  ) ;	
+				//others
+				$query->is_home = false;	
+				$query->is_single = true;	
+				$query->is_singular = true;	
+				$query->is_page = false;
+				$query->queried_object_id = $post->ID; 
+				$query->set( 'page_id', $post->ID );
+				return $query;
+			}
+			
+			//--------------------------"I dont know"  block :))-------------------------------//
+			//---------------------------------------------------------------------------------//
 			
 			
 			
@@ -691,9 +725,6 @@ add_action('pre_get_posts','search_filterr__MLSS');function search_filterr__MLSS
 // ========================================== ### QUERY MODIFY ========================================== //
 // ====================================================================================================== //	
 	
-	
-	
-	
 
 //add Language parameter to URL
 add_filter( 'post_type_link', 'my_append_query_string', 10, 4 ); function my_append_query_string( $permalink, $post, $leavename, $sample ) {
@@ -708,16 +739,54 @@ add_filter( 'post_type_link', 'my_append_query_string', 10, 4 ); function my_app
 }
 	
 	
-
 	
-	
-add_action('wp_head','aa');function aa(){ global $wp_rewrite;
-   var_dump($wp_rewrite->wp_rewrite_rules());exit;
+//Change category permalinks - REMOVE "/CATEGORY" base
+					if (REMOVE_CAT_BASE_FUNC__MLSS){
+add_filter( 'user_trailingslashit', 'fix_slash__MLSS', 55, 2 );
+function fix_slash__MLSS( $string, $type ){global $wp_rewrite;
+	//this below "IF" condition checks if trailing slash is the not last char of PRETY PERMALINKS(i.e. /%postname% )
+	//If so, then the next codes cause /CATEGORY/my-cat to be redirected to /my-cat.
+	//If not, then nothing will happen, and default will be....
+			//so, i have just removed..
+			//if ( $wp_rewrite->use_trailing_slashes == false )	{ 
+		if ( $type != 'single' && $type != 'category' )  return trailingslashit( $string );
+		if ( $type == 'single' && ( strpos( $string, '.html/' ) !== false ) )  {return trailingslashit( $string );}
+		if ( $type == 'category' && ( strpos( $string, 'category' ) !== false ) )  {
+			return trailingslashit(str_replace( "/category/", "/", $string ));
+		}
+		if ( $type == 'category' ) { return trailingslashit( $string ); }
+			//}
+	//$GLOBALS['wp_rewrite']->flush_rules();
+	return $string;
 }
-	
-	
-	
-	
+
+add_filter( 'category_rewrite_rules', 'vipx_filter_category_rewrite_rules22' );
+function vipx_filter_category_rewrite_rules22( $rules ) {
+    $categories = get_categories( array( 'hide_empty' => false ) );
+    if ( is_array( $categories ) && ! empty( $categories ) ) {
+        $slugs = array();
+        foreach ( $categories as $category ) {
+            if ( is_object( $category ) && ! is_wp_error( $category ) ) {
+                if ( 0 == $category->category_parent ) {
+                    $slugs[] = $category->slug;
+                } else {
+                    $slugs[] = trim( get_category_parents( $category->term_id, false, '/', true ), '/' );
+                }
+            }
+        }
+        if ( ! empty( $slugs ) ) {
+            $rules = array();
+
+            foreach ( $slugs as $slug ) {
+                $rules[ '(' . $slug . ')/feed/(feed|rdf|rss|rss2|atom)?/?$' ] = 'index.php?category_name=$matches[1]&feed=$matches[2]';
+                $rules[ '(' . $slug . ')/(feed|rdf|rss|rss2|atom)/?$' ] = 'index.php?category_name=$matches[1]&feed=$matches[2]';
+                $rules[ '(' . $slug . ')(/page/(\d)+/?)?$' ] = 'index.php?category_name=$matches[1]&paged=$matches[3]';
+            }
+        }
+    }
+    return $rules;
+}
+						}
 	
 	
 	

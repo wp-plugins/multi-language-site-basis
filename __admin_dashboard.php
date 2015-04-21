@@ -24,12 +24,11 @@ if ( is_admin() ){
 	//===================================================FIRST SUBMENU (settings)==========================================
 	add_action('init','PriorityFields__MLSS',1); function PriorityFields__MLSS(){
 		if (is_admin() && iss_admiiiiiin__MLSS()){
-			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
 			if (isset($_POST['mlss_FRRULES_AGAIN'])){$GLOBALS['wp_rewrite']->flush_rules(); }
 			if (isset($_POST['formupdate__mlss'])){	
-				$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 				NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
-					
+				
+				$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 					if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				{ $NEEDS_FLUSH_REDIRECT=true;}
 				update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_Langs']));	
 					if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		{ $NEEDS_FLUSH_REDIRECT=true;}
@@ -37,8 +36,8 @@ if ( is_admin() ){
 					if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']){ $NEEDS_FLUSH_REDIRECT=true;}
 				update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 				
-				if (isset($NEEDS_FLUSH_REDIRECT)) { $GLOBALS['wp_rewrite']->flush_rules();  //echo ReFlushREDIRECT__MLSS; }
-		}}
+				if (isset($NEEDS_FLUSH_REDIRECT)) { $GLOBALS['wp_rewrite']->flush_rules();}   //echo ReFlushREDIRECT__MLSS; }
+			}
 		}
 	}
 	
@@ -55,6 +54,7 @@ if ( is_admin() ){
 			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
 			//
 			update_option('optMLSS__EnableQueryStrPosts',$_POST['EnablePostQueryStr']);
+			update_option('optMLSS__CatBaseRemoved',	 $_POST['RemoveCatBase']);
 			//update_option('optMLSS__ShowHideOtherCats',	$_POST['EnableHideOtherCtypeEntri']);
 			//update_option('optMLSS__HidenEntriesIdSlug',$_POST['SlugofHidenEntriesId']);
 			//
@@ -165,8 +165,10 @@ if ( is_admin() ){
 				<span class="cpost_others" style="margin:0 0 0 20px;">
 				[enable CUSTOM CATEGORIES too <i>(<a href="javascript:alert('You will see, that STANDARD CATEGORIES will be enabled for CUSTOM(languaged) POSTS. However, if you also want to be added CUSTOM CATEGORIES too(i dont know, maybe you need some deep variations for your site), then you can enable it, and you will see the CUSTOM CATEGORIES will be added too for that CUSTOM(languaged) POSTS.\r\n\r\np.s. However, if you dont need them very very much, then maybe there is no need to implement them, but you can simply use the standard categories.. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if ('y'==get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> />] 
 				</span>
-			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /> <b>Standard Posts  </b>(<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: \u0022CATEGORY BASE\u0022 is set to .(dot) in PERMALINKS settings , so, if you want that your categories URLs were like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category], then dont change it. Otherwise, empty that field now, and better not to change it after you establish your website and some time will go...  p.s. if in the future, this feature will no longer work, then use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)\r\n\r\n\r\np.s. Just as an advice, is it better to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/  ?');" class="readpopp">Read this popup!</a>)
+			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /> <b>Standard Posts  </b>(<a href="javascript:alert('In this case, whenever i.e. YOURSITE.COM/eng/ is opened, all STANDARD posts will be shown, which are published under \u0022ENG\u0022 category. \r\n\r\n\r\n(NOTE: You dont need to manually set \u0022CATEGORY BASE\u0022 is to .(dot) in PERMALINKS settings, because this plugin automatically removes CATEGORY_BASE slug from sub-categories urls ( like: YOURSITE.COM/ENG/sub-category [instead of YOURSITE.COM/category/ENG/sub-category]).  Also, there wont be even problem, if someone will need to use \u0022/\u0025category\u0025/\u0025postname\u0025/ in permalinks, instead of /\u0025postname\u0025/  ?  \r\n\r\np.s. if in the future, this feature will no longer work, then uncheck \u0022REMOVE CATEGORY BASE\u0022 checkbox, and use plugins, i.e. WP-REMOVE-CATEGORY-BASE ..)');" class="readpopp">Read this popup!</a>)
 				<span class="cpost_others" style="margin:0 0 0 20px;">
+				[REMOVE CATEGORY BASE FROM URLS: <i>(<a href="javascript:alert('');" class="readpopp"></a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				[add query strings to post links <i>(<a href="javascript:alert('For example, when you publish a any post(except CUSTOM LANGUAGE POST TYPE) under specific LANGUAGE CATEGORY(i.e. eng), its link can include LANGUAGE parameter (i.e. site.com/mypost?lng=eng).  However, It is not necessary, because LANGUAGE will be automatically detected for that post.. This can be just useful for you, for visual purposes, or in case you have other custom post types, or i dont know... However, by default, it is not needed. ');" class="readpopp">Read this popup!</a>)</i><input type="hidden" name="EnablePostQueryStr" value="n" /> <input type="checkbox" name="EnablePostQueryStr" value="y" <?php if ('y'==get_option('optMLSS__EnableQueryStrPosts')) {echo 'checked="checked"';} ?> />] 
 				</span>
 			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then leave empty.)');" class="readpopp">Read this popup!</a>) :
