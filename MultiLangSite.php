@@ -183,6 +183,15 @@ function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	gl
 	if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray );}
 	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
 }	
+function FlagImage__MLSS($lang){
+	$flg1= dirname(	plugin_dir_path(__FILE__))	."/flags/$lang.png";
+	$flg2= 			plugin_dir_path(__FILE__)	."/flags/$lang.png";
+	if	 (file_exists($flg1))	{$flag_url= dirname( PLUGIN_URL_nodomain__MLSS) ."/flags/$lang.png";}
+	elseif(file_exists($flg2))	{$flag_url=			 PLUGIN_URL_nodomain__MLSS  ."/flags/$lang.png";}
+	else						{$flag_url= '';}
+	
+	return $flag_url;
+}
 
 function FINAL_MyFlush__MLSS(){
 	
@@ -387,6 +396,10 @@ function DetectLangUsingUrl__MLSS(){
 
 
 
+
+
+
+
 //==================================== POST TYPES ================================== //
 //================================================================================== //		
 add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
@@ -401,7 +414,7 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 					'publicly_queryable'=> true, 'show_ui'=>true,	//'show_in_nav_menus' => true,'show_in_admin_bar'	=> true,
 					//'show_in_menu' => 'edit.php?post_type=page',//true,
 					'menu_position' => "65.888562" ,
-					'menu_icon'   => PLUGIN_URL_nodomain__MLSS.'flags/'.$value.'.png',  //below (using <style>) we also use CSS to resize these images
+					'menu_icon'   => FlagImage__MLSS($value),  //below (using <style>) we also use CSS to resize these images
 									// 'dashicons-editor-spellcheck', // https://developer.wordpress.org/resource/dashicons/#editor-spellcheck
 					'hierarchical' => true,
 					'has_archive' => true,
@@ -847,7 +860,7 @@ add_action('wp_head','OutputFirstTimePopup__MLSS',99); function OutputFirstTimeP
 								if (!isHiddenLang__MLSS($key_value) ) {
 				$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
 									'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
-										'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/' . $key_value .'.png" alt="'. strtoupper($keyname) .'" />'.
+										'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. FlagImage__MLSS($key_value).'" alt="'. strtoupper($keyname) .'" />'.
 										'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 									'</a>'.
 								'</div>';										}
@@ -886,7 +899,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 						if (!isHiddenLang__MLSS($key_value)) {
 			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
 								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.$targt_lnk.'"') .'>'.
-									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. PLUGIN_URL_nodomain__MLSS .'flags/'. $key_value .'.png" />'.
+									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. FlagImage__MLSS($key_value).'" />'.
 								'</a>'.
 							'</div>'
 							.'<span class="clerboth2__MLSS"></span>'
