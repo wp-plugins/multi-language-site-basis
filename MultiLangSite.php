@@ -2,11 +2,11 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.29
+ * Version: 1.30
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
-
+return "please wait 2 days, i will finish this plugin (28.04.2015)";
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
  //define essentials
@@ -59,7 +59,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optMLSS__Target_'.'default',	'eng');
 		//
-		update_option('optMLSS__DropdHeader','y'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
+		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
 		//
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
 		update_option('optMLSS__EnableQueryStrPosts',	'n');
@@ -274,18 +274,18 @@ function DetermineLanguages__MLSS(){
 	function isHiddenLang__MLSS($abbr){
 		if (stripos($GLOBALS['hidden_langs_mlss'],'{'.$abbr.'}') !== false ) {return true;}
 	}
+	
+	
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
 DetectLangUsingUrl__MLSS(); //add_action('mu_plugins_loaded', 'DetectLangUsingUrl__MLSS',1); 
-function DetectLangUsingUrl__MLSS(){
+function DetectLangUsingUrl__MLSS(){      $hom=str_replace('/','\/', homeFOLD__MLSS);   $x=false;
+
 	//if preview
 	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
-				
-	$hom=str_replace('/','\/', homeFOLD__MLSS);  $x=false;
-	
-	
-	// ========================== if LANGUAGE was set using URL..===================//
+						
+	// =============== if LANGUAGE was set using URL.. (priority given to URL parameter)  =========//
 	//PARAMTERED URL 					(example.com/mypagee?lng=ENG)
 	if	(!$x && !empty($_GET['lng']) && in_array($_GET['lng'], LANGS__MLSS()) )	{ $x = $_GET['lng'];}
 	//CUSTOM POST inside category		(example.com/ENG-categories2/my-post
@@ -313,19 +313,14 @@ function DetectLangUsingUrl__MLSS(){
 	//COOKIEd URL 	
 	if	(!$x && !empty($_COOKIE[cookienameLngs__MLSS]) && in_array($_COOKIE[cookienameLngs__MLSS], LANGS__MLSS()))     {$x = $_COOKIE[cookienameLngs__MLSS];} 
 	// ==============================================================================//
-
-					
+	// ==============================================================================//
 	//FINAL SET
-	define('found_lang__MLSS', ((!empty($x) && in_array($x, LANGS__MLSS() )) ?  $x :'')  );  //if incorrect language,do nothing..
-	define('isHomeURI__MLSS',		(in_array($_SERVER['REQUEST_URI'], array(homeFOLD__MLSS.'/', homeFOLD__MLSS))  ?  true :false)  ); 
+	define('found_lang__MLSS',		((!empty($x) && in_array($x, LANGS__MLSS() )) ?  $x :'')  );  //if incorrect language,do nothing..
+	define('isHomeURI__MLSS',		(in_array($_SERVER['REQUEST_URI'], array(homeFOLD__MLSS, homeFOLD__MLSS.'/'))  ?  true :false)  ); 
 	define('isLangHomeURI__MLSS',	(found_lang__MLSS != '' && in_array(requestURI__MLSS, array( homeFOLD__MLSS.'/'.found_lang__MLSS,
-																								 homeFOLD__MLSS.'/'.found_lang__MLSS.'/' )))
-																								? true :false ); 
+																								 homeFOLD__MLSS.'/'.found_lang__MLSS.'/' ))) ? true :false ); 
 
-	//check if language is set for user.. priority language is given to URL parameter
-	global $wpdb; $FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
-	
-				
+			
 	
 	//=========================================== INITIALIZE LANGUAGE ==================================
 	//LANGUAGE detected
@@ -335,8 +330,13 @@ function DetectLangUsingUrl__MLSS(){
 	}
 	//LANGUAGE was NOT detected
 	else { 
-		if (isHomeURI__MLSS){								//only check, when it's home URL
-			if (empty($_COOKIE[cookienameLngs__MLSS])){ 	//if cookie not set, it may be the first-time visit
+		if (isHomeURI__MLSS){ //only check, when it's home URL
+			if (!empty($_COOKIE[cookienameLngs__MLSS])){	//cookie was set previously!! redirect to his last language
+				define('LNG', $_COOKIE[cookienameLngs__MLSS]); 	//p.s. no need to set cookie again...
+				PERMANENTTT_REDIRECT2__MLSS(homeURL__MLSS.'/'.LNG, 'problemm_709' );
+			}
+			else{ 	//if cookie not set, it maybe first-time visit
+					$FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
 				if ($FIRST_TIME_METHOD=='dropddd')	{ define('ENABLED_FIRSTIME_POPUP_MLSS', true); return;}		
 				if ($FIRST_TIME_METHOD=='fixeddd')	{ define('LNG',get_option('optMLSS__FixedLang')); }  //no need to set cookie
 				if ($FIRST_TIME_METHOD=='ippp')		{ include( __DIR__ .'/flags/ip_country_detect/sample_test.php'); //gets $country_name
@@ -357,11 +357,6 @@ function DetectLangUsingUrl__MLSS(){
 					define('LNG', (get_option('optMLSS__Target_default') ? get_option('optMLSS__Target_default') : $GLOBALS['SiteLangs__MLSS'][0]) ) ;
 				}
 				PERMANENTTT_REDIRECT2__MLSS( homeURL__MLSS.'/'.LNG, 'problemm_708' );    //redirect is needed
-			}
-			else{	//if cookie was set already 
-				define('LNG', $_COOKIE[cookienameLngs__MLSS]); 	// no need to set cookie again...
-				PERMANENTTT_REDIRECT2__MLSS(homeURL__MLSS.'/'.LNG, 'problemm_709' );
-				//else {}  //when the page is unknown (for example, custom page or "wp-login.php" or etc... then we dont need redirection
 			}
 		}
 		//IF it not home
@@ -876,40 +871,39 @@ add_action('wp_head','OutputFirstTimePopup__MLSS',99); function OutputFirstTimeP
 
 
 
+
+
+
 //Display dropdown on every page 
-add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){
-	if ('y' == get_option('optMLSS__DropdHeader') ) {
-	?> 
-	<style>#LanguageDropdown1__MLSS {<?php echo 'top:'.get_option('optMLSS__DropdDistanceTop').'px;'.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;';?></style>
-	<div id="LanguageDropdown1__MLSS" class="css_reset__MLSS">
-	<?php
-		// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations =======
+add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){ $Type= get_option('optMLSS__DropdHeader');
+	if ( $Type != 'hide') { echo '
+	<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px;'.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;}</style>
+	<div id="LanguageSelector__MLSS" class="css_reset__MLSS">
+		<div class="'.$Type.'_LSTYPE__MLSS">';
+		
 		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-		$DisableCurrentLangClick = true;
-		$SITE_LANGUAGES=LANGS__MLSS();
+		$DisableCurrentLangClick = true; 	$SITE_LANGUAGES=LANGS__MLSS();
 		//If language is set, then sort languages, as the first language FLAG should be the current language
-		if (defined('LNG')) {						function fix_1($i){return $i != LNG;}
+		if (defined('LNG')) {								function fix_1($i){return $i != LNG;}
 			$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);							//remove current language
 			$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 			//insert current language in first place
 		}		
-		$lng_Dropdown	='<div id="LangDropMenu1__MLSS"><div id="AllLines1__MLSS">     <a href="javascript:MyMobileFunc__MLSS();" id="LngSelector1__MLSS">&#8897;</a>';
+		$lng_Dropdown	='<div id="LangDropMenu1__MLSS">'.
+						   '.<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
-						$targt_lnk=homeURL__MLSS.'/'.$key_value;
-						//if language is not included in "HIDDEN LANGS" option
-						if (!isHiddenLang__MLSS($key_value)) {
-			$lng_Dropdown .='<div class="LineHolder1__MLSS" myyhref="'.$targt_lnk.'" id="lnh_'.$key_value.'">'.
-								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.$targt_lnk.'"') .'>'.
+												
+												if (!isHiddenLang__MLSS($key_value)) { //not included in "HIDDEN LANGS"
+			$lng_Dropdown .='<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
+								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.homeURL__MLSS.'/'.$key_value.'"') .'>'.
 									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. FlagImage__MLSS($key_value).'" />'.
 								'</a>'.
-							'</div>'
-							.'<span class="clerboth2__MLSS"></span>'
-							;
-																												}
+							'</div>'.'<span class="clerboth2__MLSS"></span>';
+												}
 		}
-		$lng_Dropdown .= '</div></div>';
-		echo $lng_Dropdown;
-		?>
-	</div><!-- LanguageDropdown1__MLSS -->
+		$lng_Dropdown .=   '</div>'.
+						 '</div>';  echo $lng_Dropdown;
+		?></div>
+	</div><!-- LanguageSelector__MLSS -->
 	<script type="text/javascript">
 		//============styles========
 			//GETproperty >> http://stackoverflow.com/questions/324486/how-do-you-read-css-rule-values-with-javascript/29130215
@@ -923,9 +917,8 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 		//	ldrmen.style.height = parseInt(flagHeight.replace("px","")) + 0 + "px";
 		//===========## style========
 	
-		var langMenu__MLSS = document.getElementById("LanguageDropdown1__MLSS");
-				var BODYYY__MLSS = document.body;	BODYYY__MLSS.insertBefore(langMenu__MLSS, BODYYY__MLSS.childNodes[0]);
-		var langmnSelcr__MLSS=document.getElementById("LngSelector1__MLSS"); 
+		var langMenu__MLSS = document.getElementById("LanguageSelector__MLSS"); document.body.insertBefore(langMenu__MLSS, document.body.childNodes[0]);
+		var langmnSelcr__MLSS=document.getElementById("RevealButton__MLSS"); 
 		var AllLines1__MLSS=document.getElementById("AllLines1__MLSS");
 		var AllLines1_startHEIGHT__MLSS= AllLines1__MLSS.clientHeight; //overflow maybe  hidden white started
 		

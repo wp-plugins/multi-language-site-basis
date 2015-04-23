@@ -7,17 +7,46 @@
 /*--------------------## RESET CSS ##---------------------------------------*/
 
 
-#LanguageDropdown1__MLSS {z-index: 9944; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
-  #LanguageDropdown1__MLSS #LangDropMenu1__MLSS{	height:24px;}
-	#LanguageDropdown1__MLSS #AllLines1__MLSS		{overflow:hidden;	height:100%;}
-	#LanguageDropdown1__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
-	 #LanguageDropdown1__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
-	  #LanguageDropdown1__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
-	   #LanguageDropdown1__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
-	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
-	 #LanguageDropdown1__MLSS a#LngSelector1__MLSS:hover{}
+#LanguageSelector__MLSS {z-index: 9944; position:absolute; Top-Left-Right:ByJavascripttt; background-color:grey; padding:4px; border:2px solid; border-radius:5px; width:auto; }
+  #LanguageSelector__MLSS #LangDropMenu1__MLSS{}
+	#LanguageSelector__MLSS #AllLines1__MLSS		{}
+	#LanguageSelector__MLSS #AllLines1__MLSS:hover	{}
+	 #LanguageSelector__MLSS .LineHolder1__MLSS{}		
+	  #LanguageSelector__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
+	   #LanguageSelector__MLSS img.FlagImg1__MLSS{}
+	 #LanguageSelector__MLSS a#RevealButton__MLSS{}
+	 #LanguageSelector__MLSS a#RevealButton__MLSS:hover{}
 		 
 
+  .ddropdown_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:24px;}
+	.ddropdown_LSTYPE__MLSS  #AllLines1__MLSS		{overflow:hidden;	height:100%;}
+	.ddropdown_LSTYPE__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
+	 .ddropdown_LSTYPE__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
+	  .ddropdown_LSTYPE__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
+	   .ddropdown_LSTYPE__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
+	 .ddropdown_LSTYPE__MLSS a#RevealButton__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
+	 .ddropdown_LSTYPE__MLSS a#RevealButton__MLSS:hover{}		 
+		 
+  .hhorizontal_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:24px;}
+	.hhorizontal_LSTYPE__MLSS  #AllLines1__MLSS		{overflow:hidden;	height:100%;}
+	.hhorizontal_LSTYPE__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
+	 .hhorizontal_LSTYPE__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
+	  .hhorizontal_LSTYPE__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
+	   .hhorizontal_LSTYPE__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
+	 .hhorizontal_LSTYPE__MLSS a#RevealButton__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
+	 .hhorizontal_LSTYPE__MLSS a#RevealButton__MLSS:hover{}			 
+		 
+  .vvertical_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:24px;}
+	.vvertical_LSTYPE__MLSS  #AllLines1__MLSS		{overflow:hidden;	height:100%;}
+	.vvertical_LSTYPE__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
+	 .vvertical_LSTYPE__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
+	  .vvertical_LSTYPE__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
+	   .vvertical_LSTYPE__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
+	 .vvertical_LSTYPE__MLSS a#RevealButton__MLSS{text-decoration:none; float: right; background-color: #B4E5E9; border-radius: 9px;  font-size: 1em; font-weight: bold; border: 2px solid rgb(239, 204, 13); padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}
+	 .vvertical_LSTYPE__MLSS a#RevealButton__MLSS:hover{}			 
+		 
+		 
+		 
 #FirstTimeLanguage1__MLSS {z-index: 9970; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
 	#FirstTimeLanguage1__MLSS #popup_CHOOSER2__MLSS{ }
 	 #FirstTimeLanguage1__MLSS .LineHolder2__MLSS{background-color:grey;}
