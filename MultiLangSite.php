@@ -6,7 +6,7 @@
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
-return "please wait 2 days, i will finish this plugin (28.04.2015)";
+
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
  //define essentials
@@ -385,9 +385,6 @@ function DetectLangUsingUrl__MLSS(){      $hom=str_replace('/','\/', homeFOLD__M
 //============================================================================================= //	
 //=================================== ##### SET LANGUAGE for visitor ========================== //	
 //============================================================================================= //	
-
-
-
 
 
 
@@ -828,51 +825,47 @@ function vipx_filter_category_rewrite_rules22( $rules ) {
 	
 	
 	
+//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
+
+
 	
 	
 //======================================= SHOW FLAGS SELECTOR  ============================ //
 //========================================================================================= //			
-add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',99,99 ); function stylesht__MLSS() {
+add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',99,98 ); function stylesht__MLSS() {
 	wp_enqueue_style( 'custom_styles__MLSS', plugin_dir_url(__FILE__).'flags/stylesheet.css');
 }
 
+
 //first time visit POPUP
-add_action('wp_head','OutputFirstTimePopup__MLSS',99); function OutputFirstTimePopup__MLSS(){
-	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS') && count(LANGS__MLSS()) > 1) {
+add_action('wp','OutputFirstTimePopup__MLSS',98); function OutputFirstTimePopup__MLSS(){
+	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS')) {
+		
+	//do_action('wp_enqueue_scripts');
+	echo '<title></title>';
+	do_action("wp_head");
+		
 	?>
-		<?php //echo '<link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />';
-		include_once(__DIR__.'/flags/javascript_functions.php'); echo '<div></div><script>SHOW_blackGROUND();</script>';
-		?>
-		<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">
-			<?php
-			// ============================ COMBINE the "FIRST TIME POPUP" and "LANGUAGE DROPDOWN" initializations ===========
-			//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-			$SITE_LANGUAGES=LANGS__MLSS(); 
+		<?php 
+		//THIS IS ALREADY CALLED, from  "wp_enqueue_scripts"
+		//echo '<link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />';
+		echo '<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'flags/javascript_functions.php?jstypee"></script>';
+		echo '<div></div><script>SHOW_blackGROUND();</script>';	?>
+		<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS"> <?php
 			$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
-			foreach ($SITE_LANGUAGES as $keyname => $key_value){
-								$targt_lnk=homeURL__MLSS.'/'.$key_value;
-								//if language is not included in "HIDDEN LANGS" option
-								if (!isHiddenLang__MLSS($key_value) ) {
+			foreach (LANGS__MLSS() as $keyname => $key_value){
+												if (!isHiddenLang__MLSS($key_value) ) {  //not included in "HIDDEN LANGS"
 				$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
-									'<a class="ImgHolder2__MLSS"  href="'. $targt_lnk.'">'.
+									'<a class="ImgHolder2__MLSS"  href="'.homeURL__MLSS.'/'.$key_value.'">'.
 										'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. FlagImage__MLSS($key_value).'" alt="'. strtoupper($keyname) .'" />'.
 										'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 									'</a>'.
-								'</div>';										}
+								'</div>';		}
 			}
-			$Choose_POPUP .= '</div></div>';
-			echo $Choose_POPUP; 
-			?>
-		</div>
-		<?php exit;
+			$Choose_POPUP .= '</div></div>';	echo $Choose_POPUP;	?>
+		</div> <?php exit;
 	}
 }
-
-
-
-
-
-
 
 //Display dropdown on every page 
 add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){ $Type= get_option('optMLSS__DropdHeader');
@@ -906,12 +899,6 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 	</div><!-- LanguageSelector__MLSS -->
 	<script type="text/javascript">
 		//============styles========
-			//GETproperty >> http://stackoverflow.com/questions/324486/how-do-you-read-css-rule-values-with-javascript/29130215
-			//function GETproperty(classOrId,property){ 
-			//	var FirstChar = classOrId.charAt(0);  var Remaining= classOrId.substring(1);
-			//	var elem = (FirstChar =='#') ?  document.getElementById(Remaining) : document.getElementsByClassName(Remaining)[0];
-			//	return window.getComputedStyle(elem,null).getPropertyValue(property);
-			//}
 		//var ldrmen = document.getElementById("LangDropMenu1__MLSS");
 		//var flagHeight = GETproperty(".FlagImg1__MLSS","height"); 
 		//	ldrmen.style.height = parseInt(flagHeight.replace("px","")) + 0 + "px";

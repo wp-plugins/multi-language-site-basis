@@ -1,6 +1,10 @@
-<!--  https://github.com/tazotodua/useful-javascript/simple-javascript-popup.html  --> 
-<script type="text/javascript">
-//==============================================     simple POPUP   ==============================================
+<?php  if (isset($_GET['jstypee'])) { $JSoutp=true;     header("Content-type: application/x-javascript"); } else {$JSoutp=false;} ?>
+
+
+<?php if (!$JSoutp) { ?> <script type="text/javascript"> <?php } ?>
+
+
+// ######################### simple POPUP  ############################## https://github.com/tazotodua/useful-javascript/ ################
 function show_my_popup(TEXTorID){   
 		//=========if #ID or .Class name passed
 		var FirstChar= TEXTorID.charAt(0); var eName = TEXTorID.substr(1);	if( '#' == FirstChar || '.' == FirstChar ){
@@ -14,58 +18,61 @@ function show_my_popup(TEXTorID){
 }
 function pop_hide(RandomIDD)  { var x=document.getElementById("black_backgr_"+RandomIDD); x.parentNode.removeChild(x);      var x=document.getElementById('popupp_'+RandomIDD); x.parentNode.removeChild(x); }
 //==============================================    #END#   simple POPUP     ==============================================	
-</script>
 
 
-<script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Separate functions, BLACKen background (NOTE: on your overshown element, use at least: z-index:9600 )
-	function SHOW_blackGROUND(){ var AAADIV = document.createElement('div'); AAADIV.id = "my_black_bck_123";  var stl='background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;';  AAADIV.setAttribute("style", stl ); 
+function SHOW_blackGROUND(){ var AAADIV = document.createElement('div'); AAADIV.id = "my_black_bck_123";  var stl='background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;';  AAADIV.setAttribute("style", stl ); 
 	if (mybodyyy = document.body)	{mybodyyy.insertBefore(AAADIV, mybodyyy.childNodes[0]);} 
 	else 							{document.write('<div style="'+stl+'"></div>');}
-	}
-	function REMOVE_blackGROUND(){ var AAADIV = document.getElementById('my_black_bck_123'); AAADIV.parentNode.removeChild(AAADIV); }
-</script>
+}
+function REMOVE_blackGROUND(){ var AAADIV = document.getElementById('my_black_bck_123'); AAADIV.parentNode.removeChild(AAADIV); }
 
 
-<!--  https://github.com/tazotodua/useful-javascript/blob/master/AJAX-examples  -->
-<script type="text/javascript">
-function myRequest_1(parameters, url, method, passedFunction){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//##################### AJAX EXAMPLES  ############## https://github.com/tazotodua/useful-javascript/ ####################
+function myyAjaxRequest(parameters, url, method, passedFunction){
 	method = method.toLowerCase() || "get"; if (method  == "get") {url=url+'?'+parameters+'&MakeRandomValuedLinkToAvoidCache=' + Math.random();}
-	SHOW_waiting();	try{try{var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");} catch( e ){var xmlhttp=new ActiveXObject("Msxml2.XMLHTTP");}}catch(e){var xmlhttp = new XMLHttpRequest();}
+	if(typeof SHOW_waiting === 'function') {SHOW_waiting();}	try{try{var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");} catch( e ){var xmlhttp=new ActiveXObject("Msxml2.XMLHTTP");}}catch(e){var xmlhttp = new XMLHttpRequest();}
 	xmlhttp.onreadystatechange=function(){if (xmlhttp.readyState==4){ HIDE_waiting();
-		responseee =xmlhttp.responseText; 
-		//let's execute our desired function
-		eval(passedFunction); 
+		responseee ="STATE:"+ xmlhttp.readyState + ";\nSTATUS:" + xmlhttp.status +";\nRESPONSED:" +xmlhttp.responseText; 
+		eval(passedFunction); //execute any codes
 		}
 	}
 	xmlhttp.open(method,url, true); 
 	if (method  == "post"){xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");xmlhttp.send(parameters);}
 	else if (method  == "get"){xmlhttp.send(null);}
 }
-</script>
-
-
-
-
-
-
-<!-- https://github.com/tazotodua/useful-javascript/blob/master/during-request-show-%22WAIT%22  -->
-<script type="text/javascript">
-	function SHOW_waiting(){
-	var innerDiv = document.createElement('div'); innerDiv.id = 'my_waiting_box';
-	innerDiv.innerHTML=
-	'<div style="background-color:black; color:white; height:4000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:1007;" id="ppshadow">' +
-	'<div style="position:absolute; top:200px;left:49%; z-index: 1008;" id="ppload"> ' +
-	'<span style="color:white;font-size:24px;"> LOADING...</span><br/>'+
-	'</div>'+
-	'</div>';
-	var BODYYY = document.getElementsByTagName('body')[0];
-	BODYYY.insertBefore(innerDiv, BODYYY.childNodes[0]);
-	}
-	function HIDE_waiting(id){
-	var DIIV = document.getElementById('my_waiting_box');DIIV.parentNode.removeChild(DIIV);
-	}
-</script>
 
 
 
@@ -75,8 +82,32 @@ function myRequest_1(parameters, url, method, passedFunction){
 
 
 
-<!-- https://github.com/tazotodua/useful-javascript/blob/master/form%20serialize%20%28without%20jQuery%2C%20plain%20Javascript%29.js  -->
-<script type="text/javascript">
+
+
+
+
+
+
+// ############################### https://github.com/tazotodua/useful-javascript/ ################
+function SHOW_waiting(){  var DIIV = document.createElement('div'); DIIV.id = 'my_waiting_box';  DIIV.innerHTML=  '<div style="background-color:black; color:white; height:4000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:1007;" id="ppshadow">' + '<div style="position:absolute; top:200px;left:49%; z-index: 1008;" id="ppload"> ' + '<span style="color:white;font-size:24px;"> LOADING...</span><br/>'+'</div>'+'</div>'; 	var b=document.body;   b.insertBefore(DIIV, b.childNodes[0]);  }
+function HIDE_waiting(id){  var DIIV = document.getElementById('my_waiting_box'); DIIV.parentNode.removeChild(DIIV);  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #####################  Form-serialize ###########################  http://github.com/tazotodua/useful-javascript/   #################
 function serialize (form) {
     'use strict';
     var i, j, len, jLen, formElement, q = [];
@@ -151,14 +182,32 @@ function serialize (form) {
     }
     return q.join('&');
 }
-</script>
 
 
-<!-- http://stackoverflow.com/questions/324486/how-do-you-read-css-rule-values-with-javascript/29130215 -->
-<script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+// ################  get STYLESHEET style of element ################ http://goo.gl/2o6mem ##########
 function GETproperty(classOrId,property){ 
 	var FirstChar = classOrId.charAt(0);  var Remaining= classOrId.substring(1);
 	var elem = (FirstChar =='#') ?  document.getElementById(Remaining) : document.getElementsByClassName(Remaining)[0];
 	return window.getComputedStyle(elem,null).getPropertyValue(property);
 }
-</script>
+
+
+
+
+
+
+
+
+
+
+<?php if (!$JSoutp) { ?> </script> <?php } ?>
