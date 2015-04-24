@@ -284,9 +284,8 @@ if ( is_admin() ){
 						<br/>2) To modify the output of the standard  LANGUAGE SELECTOR/DROPDOWN (which is in top corner of your site), then hook your function similarly, into <b>MLSS__dropdownselector</b>
 					</div>
 					
-		
-	
-			<br/><br/>*<b>custom coding (output navigation menus,posts or etc...)</b> - <a href="javascript:show_my_popup('#CustomCodings');" class="readpopp">Read popup!</a>)
+					
+			<br/>*<b>custom coding (output navigation menus,posts or etc...)</b> - <a href="javascript:show_my_popup('#CustomCodings');" class="readpopp">Read popup!</a>)
 					<div id="CustomCodings" style="display:none;">
 						you can use functions <span class="codee">wp_list_categories(),wp_list_pages(), get_posts()</span>, but use <span class="codee">LNG</span> constant as a "root" slug (of post_type, root category or whatever)... 
 						<br/> even, if you want, you can modify the functionality&codes of this plugin - just rename the plugin inner name to your desired name, modify it and then activate. But, It may be better to say with me, as this plugin is developed already.. If you have some suggestions, then let me know, and let's update together ...
