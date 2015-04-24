@@ -3,7 +3,9 @@
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
  * Version: 1.30
- -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category..
+ -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
+ + post alternatives...
+ ....... delete your post to delete it's slug !!
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
 
@@ -17,6 +19,8 @@ define('requestURI__MLSS',				$_SERVER["REQUEST_URI"]); 				define('requestURIfr
 define('currentURL__MLSS',				domainURL__MLSS.requestURI__MLSS);
 define('THEME_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', get_template_directory_uri()) );
 define('PLUGIN_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', plugin_dir_url(__FILE__)) );
+define('THEME_DIR__MLSS',				get_stylesheet_directory() );
+define('PLUGIN_DIR__MLSS',				plugin_dir_path(__FILE__) );
 	
 	//option names
 define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
@@ -183,15 +187,36 @@ function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	gl
 	if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray );}
 	else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues, $WhereArray));  }
 }	
+
+define('FlagFolder__MLSS', "/flags__MLSS");
 function FlagImage__MLSS($lang){
-	$flg1= dirname(	plugin_dir_path(__FILE__))	."/flags/$lang.png";
-	$flg2= 			plugin_dir_path(__FILE__)	."/flags/$lang.png";
-	if	 (file_exists($flg1))	{$flag_url= dirname( PLUGIN_URL_nodomain__MLSS) ."/flags/$lang.png";}
-	elseif(file_exists($flg2))	{$flag_url=			 PLUGIN_URL_nodomain__MLSS  ."/flags/$lang.png";}
+	$flg1= dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS   ."/$lang.png";
+	$flg2= 		   PLUGIN_DIR__MLSS 		 		  ."/flags/$lang.png";
+	if	 (file_exists($flg1))	{$flag_url= dirname( PLUGIN_URL_nodomain__MLSS) .FlagFolder__MLSS  ."/$lang.png";}
+	elseif(file_exists($flg2))	{$flag_url=			 PLUGIN_URL_nodomain__MLSS  			     ."/flags/$lang.png";}
 	else						{$flag_url= '';}
-	
 	return $flag_url;
 }
+add_action('init','DetectFlagIsUploaded__MLSS');function DetectFlagIsUploaded__MLSS(){
+	if (!empty($_POST['ImgUploadForm__mlss'])){
+		if (is_admin() && iss_admiiiiiin__MLSS()){
+			//if directory doesnt exists
+			if (!file_exists(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS)) {  mkdir(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS, 0755, true); }
+			$filename	 = basename($_FILES["ImgFile__mlss"]["name"]);
+			$tmpname	 = $_FILES["ImgFile__mlss"]["tmp_name"];
+			$target_file = dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS.'/'.$filename;
+			$imgType = pathinfo($target_file,PATHINFO_EXTENSION);
+			if(getimagesize($tmpname)===false){die("File is not an image.");}								//==fake image
+			if($imgType != "png")			{die("Sorry,only PNG files are allowed, and not:".$imgType);} 	//==not PNG
+			//if(file_exists($target_file)) {die("Sorry, file already exists.");} 							//==already exists
+			//if ($_FILES["ImgFile__mlss"]["size"] > 500000) {die("Sorry, your file is too large.");}		//==upload Size
+			if (move_uploaded_file($_FILES["ImgFile__mlss"]["tmp_name"], $target_file)) {echo "<b>".$filename. "</b> uploaded. close this window.";}
+			else {echo "Sorry, there was an error uploading your file."; print_r($_FILES); } 				exit;
+}}}
+
+
+
+
 
 function FINAL_MyFlush__MLSS(){
 	
@@ -283,7 +308,7 @@ DetectLangUsingUrl__MLSS(); //add_action('mu_plugins_loaded', 'DetectLangUsingUr
 function DetectLangUsingUrl__MLSS(){      $hom=str_replace('/','\/', homeFOLD__MLSS);   $x=false;
 
 	//if preview
-	if (isset($_GET['previewDropd__MLSS'])) {define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;}
+	if (isset($_GET['previewDropd__MLSS'])) {define('SHOW_FT_POPUP_MLSS', true);return;}
 						
 	// =============== if LANGUAGE was set using URL.. (priority given to URL parameter)  =========//
 	//PARAMTERED URL 					(example.com/mypagee?lng=ENG)
@@ -337,7 +362,7 @@ function DetectLangUsingUrl__MLSS(){      $hom=str_replace('/','\/', homeFOLD__M
 			}
 			else{ 	//if cookie not set, it maybe first-time visit
 					$FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
-				if ($FIRST_TIME_METHOD=='dropddd')	{ define('ENABLED_FIRSTIME_POPUP_MLSS', true); return;}		
+				if ($FIRST_TIME_METHOD=='dropddd')	{ define('SHOW_FT_POPUP_MLSS', true); return;}		
 				if ($FIRST_TIME_METHOD=='fixeddd')	{ define('LNG',get_option('optMLSS__FixedLang')); }  //no need to set cookie
 				if ($FIRST_TIME_METHOD=='ippp')		{ include( __DIR__ .'/flags/ip_country_detect/sample_test.php'); //gets $country_name
 					if (!empty($country_name)){ 
@@ -349,7 +374,7 @@ function DetectLangUsingUrl__MLSS(){      $hom=str_replace('/','\/', homeFOLD__M
 					else{
 						if (get_option('optMLSS__DefForOthers')=='fixedd'){ define('LNG',get_option('optMLSS__Target_'.'default')); 
 							setcookie(cookienameLngs__MLSS, LNG, time()+9999999, homeFOLD__MLSS); }
-						else{	define('ENABLED_FIRSTIME_POPUP_MLSS', true);return;	}
+						else{	define('SHOW_FT_POPUP_MLSS', true);return;	}
 					}
 				}
 						//if unknown situation happens, set default...   better not to set cookie at this time
@@ -477,8 +502,13 @@ add_action( 'init', 'myf_63__MLSS',1);function myf_63__MLSS() {
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
 
 
-//QUERY FOR STARPAGE (i.e. yoursite.com/ENG,yoursite.com/CHN,..)
-add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS($query) {
+
+
+
+add_action( 'pre_get_posts', 'querymodify__MLSS'); function querymodify__MLSS($query) {
+	//============================================================================================================================
+	//===============      QUERY TO SET STARPAGE (i.e. yoursite.com/ENG,   yoursite.com/CHN,..)======================================
+	//============================================================================================================================
     if ( isLangHomeURI__MLSS && $query->is_main_query()   && !is_admin() ) { 	
 		//if static ID is set for the language's STARTPAGE
 		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){ 
@@ -535,13 +565,22 @@ add_action( 'pre_get_posts', 'MAKE_POSTTYPE_STARTPAGE_AS_HOME__MLSS'); function 
 			}
 		}
     }
-	return $query;
-}
 
 
-
-//QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
-add_action( 'pre_get_posts', 'SOPHISTICATED_QUERY__MLSS'); function SOPHISTICATED_QUERY__MLSS($query) {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//============================================================================================================================
+	//QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
+	//============================================================================================================================
     if ( !isLangHomeURI__MLSS && $query->is_main_query()  && !is_admin() ) {
 		
 		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
@@ -831,109 +870,86 @@ function vipx_filter_category_rewrite_rules22( $rules ) {
 	
 	
 //======================================= SHOW FLAGS SELECTOR  ============================ //
-//========================================================================================= //			
-add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',99,98 ); function stylesht__MLSS() {
+//========================================================================================= //	
+//register style for default ftont-page	
+add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',1,98 ); function stylesht__MLSS() {
 	wp_enqueue_style( 'custom_styles__MLSS', plugin_dir_url(__FILE__).'flags/stylesheet.css');
 }
 
 
-//first time visit POPUP
-add_action('wp','OutputFirstTimePopup__MLSS',98); function OutputFirstTimePopup__MLSS(){
-	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS')) {
-		
-		//do_action('wp_enqueue_scripts');
-		echo '<title></title>';do_action("wp_head");echo '<title></title>';
-			
-		?>
-		<?php 
-		//THIS IS ALREADY CALLED, from  "wp_enqueue_scripts"
-		//echo '<link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />';
-		echo '<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'flags/javascript_functions.php?jstypee"></script>';
-		echo '<div></div><script>SHOW_blackGROUND();</script>';	?>
-		<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS"> <?php
-			$Choose_POPUP	='<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
-			foreach (LANGS__MLSS() as $keyname => $key_value){
-												if (!isHiddenLang__MLSS($key_value) ) {  //not included in "HIDDEN LANGS"
-				$Choose_POPUP	.='<div class="LineHolder2__MLSS">'.
-									'<a class="ImgHolder2__MLSS"  href="'.homeURL__MLSS.'/'.$key_value.'">'.
-										'<img class="FlagImg2__MLSS '.$key_value.'_flagg2__MLSS" src="'. FlagImage__MLSS($key_value).'" alt="'. strtoupper($keyname) .'" />'.
-										'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
-									'</a>'.
-								'</div>';		}
-			}
-			$Choose_POPUP .= '</div></div>';	echo $Choose_POPUP;	?>
-		</div> <?php exit;
-	}
-}
 
-//Display dropdown on every page 
-add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){ $Type= get_option('optMLSS__DropdHeader');
-	if ( $Type != 'hhide') { echo '
-	<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px;'.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;}</style>
-	<div id="LanguageSelector__MLSS" class="css_reset__MLSS">
-		<div class="'.$Type.'_LSTYPE__MLSS">';
-		
-		//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-		$DisableCurrentLangClick = true; 	$SITE_LANGUAGES=LANGS__MLSS();
-		//If language is set, then sort languages, as the first language FLAG should be the current language
-		if (defined('LNG')) {								function fix_1($i){return $i != LNG;}
-			$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);							//remove current language
-			$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 			//insert current language in first place
-		}		
-		$lng_Dropdown	='<div id="LangDropMenu1__MLSS">'.
-						   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
-		foreach ($SITE_LANGUAGES as $keyname => $key_value){
-												
-												if (!isHiddenLang__MLSS($key_value)) { //not included in "HIDDEN LANGS"
-			$lng_Dropdown .='<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
-								'<a class="ImgHolder1__MLSS" '.(   ($DisableCurrentLangClick && $key_value == LNG) ? '': 'href="'.homeURL__MLSS.'/'.$key_value.'"') .'>'.
-									'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. FlagImage__MLSS($key_value).'" />'.
+
+//first time visit POPUP
+add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function OutputFirstTimePopup__MLSS($cont){   $out = 
+				//$smth = . '<title></title>';do_action("wp_head");echo '<title></title>';  
+		'<!-- To add your styles, read the MLSS_SETTINGS page --><link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />'. //'<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'flags/javascript_functions.php?jstypee"></script>
+		  '<div id="my_black_bck_24141"></div>'.
+		  '<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">'.
+			 '<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
+				foreach (LANGS__MLSS() as $keyname => $value){		if (!isHiddenLang__MLSS($value) ) {  //not included in "HIDDEN LANGS"
+				$out .= '<div class="LineHolder2__MLSS">'.
+								'<a class="ImgHolder2__MLSS"  href="'.homeURL__MLSS.'/'.$value.'">'.
+									'<img class="FlagImg2__MLSS '.$value.'_flagg2__MLSS" src="'. FlagImage__MLSS($value).'" alt="'. strtoupper($keyname) .'" />'.
+									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 								'</a>'.
-							'</div>'.'<span class="clerboth2__MLSS"></span>';
-												}
-		}
-		$lng_Dropdown .=   '</div>'.
-						 '</div>';  echo $lng_Dropdown;
-		?></div>
-	</div><!-- LanguageSelector__MLSS -->
+						'</div>';										}
+			}
+			$out .= '</div></div></div>';	return $cont.$out;	
+}
+	 add_action('wp','fnc134__MLSS'); function fnc134__MLSS(){ if (defined('SHOW_FT_POPUP_MLSS')) {echo apply_filters('MLSS__firsttimeselector',''); exit; }}
+
+
+
+//Display dropdown on every page 		
+add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont){     $out = 
+	'<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px; '.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;}</style>'.
+		'<div id="LanguageSelector__MLSS" class="css_reset__MLSS">'.
+		 '<div class="'.Dtype__MLSS.'_LSTYPE__MLSS">';
+			//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
+			$DisableCurrentLangClick = true; 	$SITE_LANGUAGES=LANGS__MLSS();
+			//If language is set, then sort languages, as the first language FLAG should be the current language
+			if (defined('LNG')) {								function fix_1($i){return $i != LNG;}
+				$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);						 //remove current language
+				$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 		 //insert current language in first place
+			}	$out.=
+		  '<div id="LangDropMenu1__MLSS">'.
+		   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
+		foreach ($SITE_LANGUAGES as $keyname => $key_value){  	    if (!isHiddenLang__MLSS($key_value)) { //not included in "HIDDEN LANGS"
+			$out.=
+			'<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
+				'<a class="ImgHolder1__MLSS" '.( ($DisableCurrentLangClick && $key_value==LNG) ? '':'href="'.homeURL__MLSS.'/'.$key_value.'"') .'>'.
+					'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. FlagImage__MLSS($key_value). '" />'.
+				'</a>'.
+			'</div>'.'<span class="clerboth2__MLSS"></span>';											}
+		}	$out.=  
+		'</div>'. '</div>'. '</div>'.'</div>';
+		
+		
+		include_once(__DIR__ ."/flags/detect_platform.php");
+		$out.= '<!-- LanguageSelector__MLSS -->
 	<script type="text/javascript">
-		//============styles========
-		//var ldrmen = document.getElementById("LangDropMenu1__MLSS");
-		//var flagHeight = GETproperty(".FlagImg1__MLSS","height"); 
-		//	ldrmen.style.height = parseInt(flagHeight.replace("px","")) + 0 + "px";
-		//===========## style========
-	
 		var langMenu__MLSS = document.getElementById("LanguageSelector__MLSS"); document.body.insertBefore(langMenu__MLSS, document.body.childNodes[0]);
 		var langmnSelcr__MLSS=document.getElementById("RevealButton__MLSS"); 
-		var AllLines1__MLSS=document.getElementById("AllLines1__MLSS");
-		var AllLines1_startHEIGHT__MLSS= AllLines1__MLSS.clientHeight; //overflow maybe  hidden white started
+		var ALines__MLSS=document.getElementById("AllLines1__MLSS");
+		var ALines_startHEIGHT__MLSS= ALines__MLSS.clientHeight; //overflow maybe  hidden white started
 		
-		
-		//for language chooser for mobile devices (if mobile device..so, instead of hover, we need "onclick" action) to be triggered while clicked on the main div
-		var isMobile__MLSS=<?php include_once(__DIR__ .'/flags/detect_platform.php'); echo ( ($MLSS_VARS['isMobile']) ? "true":"false");?>;
-		function MyMobileFunc__MLSS(){	if (isMobile__MLSS){	HideShowAllLines1__MLSS("show1");	}	}
-																//langmnSelcr__MLSS.addEventListener('click', function(){...}, false);}
-		shownOrHidden__MLSS=false;
-		function HideShowAllLines1__MLSS(mystring)	{
-			if (shownOrHidden__MLSS === true){ shownOrHidden__MLSS = false;
-				AllLines1__MLSS.style.overflow="hidden";	AllLines1__MLSS.style.height=AllLines1_startHEIGHT__MLSS + "px";	
-			}
-			else{ shownOrHidden__MLSS = true;
-				AllLines1__MLSS.style.overflow="visible";	AllLines1__MLSS.style.height="auto";
-			}
+		//For mobile devices, instead of hover, we need "onclick" action to be triggered (already injected into that button)
+		var isMobile__MLSS='.( $MLSS_VARS['isMobile'] ? "true":"false" ).';
+		function MyMobileFunc__MLSS(){	if (isMobile__MLSS){	HideShowAllLines1__MLSS();	}	}
+																//langmnSelcr__MLSS.addEventListener("click", function(){...}, false);}
+		Shown__MLSS=false;
+		function HideShowAllLines1__MLSS()	{
+			if (Shown__MLSS===true)	{ Shown__MLSS=false; ALines__MLSS.style.overflow="hidden";   ALines__MLSS.style.height=ALines_startHEIGHT__MLSS + "px";}
+			else					{ Shown__MLSS=true;  ALines__MLSS.style.overflow="visible";  ALines__MLSS.style.height="auto";}
 		}
-
-	</script>
-	<?php 
-	}
+	</script>';	return $cont.$out;
 }
+	 add_action('wp_footer','fnc138__MLSS'); function fnc138__MLSS(){ define('Dtype__MLSS', get_option('optMLSS__DropdHeader') );
+			if ( Dtype__MLSS != 'hhide') { echo apply_filters('MLSS__dropdownselector',''); }}
 //================================= ##### SHOW FLAGS SELECTOR  ============================ //
 //========================================================================================= //	
 
 
-	
-	
-	
 	
 	
 	

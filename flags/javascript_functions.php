@@ -4,19 +4,14 @@
 <?php if (!$JSoutp) { ?> <script type="text/javascript"> <?php } ?>
 
 
-// ######################### simple POPUP  ############################## https://github.com/tazotodua/useful-javascript/ ################
+// ######################## simple POPUP  ############################# https://github.com/tazotodua/useful-javascript/ ###############
 function show_my_popup(TEXTorID){   
-		//=========if #ID or .Class name passed
-		var FirstChar= TEXTorID.charAt(0); var eName = TEXTorID.substr(1);	if( '#' == FirstChar || '.' == FirstChar ){
-			var x = ( '#' == FirstChar) ? document.getElementById(eName) : document.getElementsByClassName(eName)[0];
-			//create atts manually, because we avoided to use "x.outerHTML;", due to the old ANDROID's dont support
-			for (var i=0, atts=x.attributes, n=atts.length, All=''; i<n; i++){All += ' '+atts[i].name+'="'+atts[i].value+'"';}
-			TEXTorID = '<'+ x.tagName+All+'>'+ x.innerHTML +'</'+x.tagName+'>';
-		} var randm_id=Math.floor((Math.random()*100000000));
-	var innerDiv = document.createElement('div'); innerDiv.id = "black_backgr_"+randm_id;   innerDiv.setAttribute("style", 'background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;'); document.body.insertBefore(innerDiv, document.body.childNodes[0]);
-	var innerDiv = document.createElement('div'); innerDiv.id = 'popupp_'+randm_id; innerDiv.setAttribute("style",'background-color:white; border:6px solid white; border-radius:10px; display:block; min-height:100px; min-width:350px; overflow:auto; max-height:80%; max-width:92%; padding:15px; position:fixed; text-align:center; top:25%; left:50%; transform:translate(-50%, 0); z-index:9504;'); 	innerDiv.innerHTML = '<div style="background-color:#C0BCBF; border-radius:55px; padding:5px; font-family:arial; float:right; font-weight:700; margin:-15px -10px 0px 0px;"><a href="javascript:pop_hide('+randm_id+');" style="display:block;margin:-5px 0 0 0;font-size:1.6em;">x</a></div>' + TEXTorID; document.body.insertBefore(innerDiv, document.body.childNodes[0]);
+		//=========if  ID(#SOMETHING)  or   CLASSNAME(.SOMETHING) 
+		TEXTorID=TEXTorID.trim(); var FirstChar= TEXTorID.charAt(0); var eName = TEXTorID.substr(1); if ('#'==FirstChar || '.'==FirstChar){	if('#'==FirstChar){var x=document.getElementById(eName);} else{var x=document.getElementsByClassName(eName)[0];}} else { var x=document.createElement('div');x.innerHTML=TEXTorID;} var randm_id=Math.floor((Math.random()*100000000));
+	var DivAA = document.createElement('div'); DivAA.id = "blkBackgr_"+randm_id; DivAA.className = "MyJsBackg";   DivAA.setAttribute("style", 'background:black; height:5000px; left:0px; opacity:0.9; position:fixed; top:0px; width:100%; z-index:9503;'); document.body.insertBefore(DivAA, document.body.childNodes[0]);
+	var DivBB = document.createElement('div'); DivBB.id = 'popupp_'+randm_id; DivBB.className = "MyJsPopup"; DivBB.setAttribute("style",'background-color:white; border:6px solid white; border-radius:10px; display:block; min-height:100px; min-width:350px; overflow:auto; max-height:80%; max-width:92%; padding:15px; position:fixed; text-align:center; top:25%; left:50%; transform:translate(-50%, 0); z-index:9504;'); 	DivBB.innerHTML = '<div style="background-color:#C0BCBF; border-radius:55px; padding:5px; font-family:arial; float:right; font-weight:700; margin:-15px -10px 0px 0px;"><a href="javascript:pop_hide('+randm_id+');" style="display:block;margin:-5px 0 0 0;font-size:1.6em;">x</a></div>'; document.body.insertBefore(DivBB, document.body.childNodes[0]);z=x.cloneNode(true);DivBB.appendChild(z); if(z.style.display=="none"){z.style.display="block";}
 }
-function pop_hide(RandomIDD)  { var x=document.getElementById("black_backgr_"+RandomIDD); x.parentNode.removeChild(x);      var x=document.getElementById('popupp_'+RandomIDD); x.parentNode.removeChild(x); }
+function pop_hide(RandomIDD)  { var x=document.getElementById("blkBackgr_"+RandomIDD); x.parentNode.removeChild(x);      var x=document.getElementById('popupp_'+RandomIDD); x.parentNode.removeChild(x); }
 //==============================================    #END#   simple POPUP     ==============================================	
 
 
