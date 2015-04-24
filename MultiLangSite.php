@@ -841,11 +841,10 @@ add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',99,98 ); function stylesht__M
 add_action('wp','OutputFirstTimePopup__MLSS',98); function OutputFirstTimePopup__MLSS(){
 	if ( defined('ENABLED_FIRSTIME_POPUP_MLSS')) {
 		
-	//do_action('wp_enqueue_scripts');
-	echo '<title></title>';
-	do_action("wp_head");
-		
-	?>
+		//do_action('wp_enqueue_scripts');
+		echo '<title></title>';do_action("wp_head");echo '<title></title>';
+			
+		?>
 		<?php 
 		//THIS IS ALREADY CALLED, from  "wp_enqueue_scripts"
 		//echo '<link rel="stylesheet" id="mlsss_css"  href="'.PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css" type="text/css" media="all" />';
@@ -869,7 +868,7 @@ add_action('wp','OutputFirstTimePopup__MLSS',98); function OutputFirstTimePopup_
 
 //Display dropdown on every page 
 add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS(){ $Type= get_option('optMLSS__DropdHeader');
-	if ( $Type != 'hide') { echo '
+	if ( $Type != 'hhide') { echo '
 	<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px;'.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;}</style>
 	<div id="LanguageSelector__MLSS" class="css_reset__MLSS">
 		<div class="'.$Type.'_LSTYPE__MLSS">';
@@ -882,7 +881,7 @@ add_action('wp_footer',	'OutputDropdown__MLSS'); function OutputDropdown__MLSS()
 			$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 			//insert current language in first place
 		}		
 		$lng_Dropdown	='<div id="LangDropMenu1__MLSS">'.
-						   '.<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
+						   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){
 												
 												if (!isHiddenLang__MLSS($key_value)) { //not included in "HIDDEN LANGS"

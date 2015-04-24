@@ -116,7 +116,7 @@ if ( is_admin() ){
 			<span class="fakeH22">  2) Choosing Languages for visitor</span>
 			<br/>Now, whenever a person enters your website start page (and it's <b>first time</b> he enters), then you can set a language for him. Select desired option:
 			<br/> <input type="radio" name="inp_FirstMethod" value="dropddd" <?php echo (($chosen_method=='dropddd')? 'checked="checked"':'');?> />
-			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>) (<i><a href="javascript:if your theme header.php file doesnt containt wp_head() default action, then this cant be triggered.. Also, to style that window from your local .css files, they should be included hooked to add_action(\u0022wp_head\u0022....');" class="readpopp">Read popup!</a></i>)
+			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>) (<i><a href="javascript:Also, to style that window from your local .css files, they should be hooked into add_action(\u0022wp_head\u0022 or \u0022wp_enqueue_scripts\u0022)....');" class="readpopp">Read popup!</a></i>)
 				<script type="text/javascript">
 				function previewww(){ document.cookie="<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; 
 					window.open("<?php echo homeURL__MLSS;?>?previewDropd__MLSS","_blank");	}
@@ -154,7 +154,7 @@ if ( is_admin() ){
 		<div class="eachBlock">
 			<span class="fakeH22"> 3) Design: </span> :
 			<br/>*<B>LANGUAGE SELECTOR style (<a href="javascript:alert('you will see it in the upper corner of your site.. ');" class="readpopp"><i>Read popup</i></a>!)</B>:
-				&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="hhide" <?php if ('hhide'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Hide 
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="hhide" <?php if ('hhide'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />HIDE 
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="hhorizontal" <?php if ('hhorizontal'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Horizontal
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="vvertical" <?php if ('vvertical'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Vertical
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="ddropdown" <?php if ('ddropdown'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Dropdown
