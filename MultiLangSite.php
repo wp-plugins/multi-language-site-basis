@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.30
+ * Version: 1.32
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
  + post alternatives...
  ....... delete your post to delete it's slug !!
@@ -63,7 +63,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optMLSS__Target_'.'default',	'eng');
 		//
-		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50');
+		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50'); update_option('optMLSS__DropdDFixedOrAbs','absolute');
 		//
 		update_option('optMLSS__CategSlugname',	'');   update_option('optMLSS__PageSlugname', '');
 		update_option('optMLSS__EnableQueryStrPosts',	'n');
@@ -902,7 +902,7 @@ add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function
 
 //Display dropdown on every page 		
 add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont){     $out = 
-	'<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px; '.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px;}</style>'.
+	'<style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px; '.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px; position:'.get_option('optMLSS__DropdDFixedOrAbs').';}</style>'.
 		'<div id="LanguageSelector__MLSS" class="css_reset__MLSS">'.
 		 '<div class="'.Dtype__MLSS.'_LSTYPE__MLSS">';
 			//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors

@@ -63,6 +63,7 @@ if ( is_admin() ){
 			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
 			update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
 			update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
+			update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
 			
 			//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
 			//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
@@ -183,6 +184,9 @@ if ( is_admin() ){
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="ddropdown" <?php if ('ddropdown'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Dropdown
 			<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
 			<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optMLSS__DropdDistanceTop');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optMLSS__DropdDistanceSide');?>" />px 
+			<br/>*<B>Make it Fixed Position Or Absolute</B>(<a href="javascript:alert('Stay it in FIXED position while you scrolling your site(beware on small resolution screens!)  or stay it as default, not fixed.');" class="readpopp">Read popup!</a>) :  
+				<input type="radio" name="drd_fixed_rel" value="absolute" <?php if ('absolute'==get_option('optMLSS__DropdDFixedOrAbs')) {echo 'checked="checked"';}?> />Absolute &nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" name="drd_fixed_rel" value="fixed" <?php if ('fixed'==get_option('optMLSS__DropdDFixedOrAbs')) {echo 'checked="checked"';}?> />Fixed
+			
 			
 		</div>
 		
@@ -235,7 +239,7 @@ if ( is_admin() ){
 					</span>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<span class="cpost_othersxx" style="font-size:0.9">
-					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)  </i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
+					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
 					</span>
 				</span>
 			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then empty it.)');" class="readpopp">Read popup!</a>) :
@@ -322,7 +326,7 @@ if ( is_admin() ){
 		-->
 		
 		<br/>=================================
-			<br/><span class="save_div_lng22"><a class="lng_SUBMIT22" href="javascript:document.forms[0].submit();">SAVE</a></span>
+			<br/><span class="save_div_lng22"><a class="lng_SUBMIT22" href="javascript:document.forms[1].submit();">SAVE</a></span>
 				<input type="submit" value="SAVE" style="display:none;" /> <input type="hidden" name="inp_SecureNonce" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
 		
 	</form>
