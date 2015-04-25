@@ -1061,7 +1061,7 @@ add_action('admin_notices', 'check_updates__MLSS'); function check_updates__MLSS
 		$OPTNAME_checktimee=PluginName__MLSS.'_updatechecktime';	$last_checktime=get_option($OPTNAME_checktimee,false); 	
 		if (!$last_checktime || $last_checktime<time()-5*86400){	$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
 			preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
-			if (!(trim($B[2])) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
+			if (trim($B[2]) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
 				echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version already! Please, <a href="'.PluginDown__MLSS.'" target="_blank">Download</a> and install it yourself</a>!</div>';
 }}}}
 	//=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================
