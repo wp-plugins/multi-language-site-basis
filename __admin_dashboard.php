@@ -1,47 +1,38 @@
 <?php
-	
-//================================================================================== //
-//===================================== DASHBOARD ================================== //
-//================================================================================== //
 if (!defined('ABSPATH')) exit;
 
-// ====================================== USEFUL functions  ================================
-//a Admin Validator function
-function NonceCheck__MLSS($value, $action_name){
-	if ( !isset($value) || !wp_verify_nonce($value, $action_name) ) { die("not allowed due to interal_error_151");}
-}	
-// =================================== ##### USEFUL functions #### =============================
- 
-// START 
+// START, if admin url
 if ( is_admin() ){
 	add_action('admin_menu', 'exec_pages__MLSS'); function exec_pages__MLSS() {
 		add_menu_page('MultiLang Simple', 'MultiLang Simple', 'manage_options','my-mlss-slug', 'my_submenu1__MLSS',  PLUGIN_URL_nodomain__MLSS.'/flags/a_main.png', "29.4342423" );
 		add_submenu_page('my-mlss-slug', 'MLSS Settings',	'MLSS Settings',	'manage_options', 'my-mlss-slug',  'my_submenu1__MLSS');
 		add_submenu_page('my-mlss-slug', 'Translated Words','Translated Words',	'manage_options', 'my-mlss-slug2', 'my_submenu2__MLSS');
-	}
+	}  //NonceCheck__MLSS()  is in main file
 	
 	
 	//===================================================FIRST SUBMENU (settings)==========================================
-	add_action('init','PriorityFields__MLSS',1); function PriorityFields__MLSS(){
-		if (is_admin() && iss_admiiiiiin__MLSS()){
-			if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false); }
-			if (isset($_POST['inp_SecureNonce'])){	
-				NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
-				
-				$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
-					if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				{ $NEEDS_FLUSH_REDIRECT=true;}
-				update_option('optMLSS__Lngs', str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_Langs']));	
-					if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		{ $NEEDS_FLUSH_REDIRECT=true;}
-				update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
-					if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']){ $NEEDS_FLUSH_REDIRECT=true;}
-				update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
-					if(get_option('optMLSS__CatBaseRemoved') != $_POST['RemoveCatBase']){ $NEEDS_FLUSH_REDIRECT=true;}
-				update_option('optMLSS__CatBaseRemoved',	 $_POST['RemoveCatBase']);
-				if (isset($NEEDS_FLUSH_REDIRECT)) { MyFlush__MLSS(true);}    
-			}
-		}
-	}
-	
+					//At first, update priority fields...
+					add_action('init','ffff454__MLSS',1);function ffff454__MLSS(){
+						if (is_admin() && iss_admiiiiiin__MLSS()){
+							if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false); }
+							if (isset($_POST['inp_SecureNonce'])){	
+								NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+								
+								$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
+									if(get_option('optMLSS__OnOffMode') != $_POST['ioptMLSS__OnOffMode']){ $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__OnOffMode', $_POST['ioptMLSS__OnOffMode']);	
+									if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				 { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__Lngs',      str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_Langs']));	
+									if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		 { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
+									if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
+									if(get_option('optMLSS__CatBaseRemoved') != $_POST['RemoveCatBase']) { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__CatBaseRemoved',	 $_POST['RemoveCatBase']);
+								if (isset($NEEDS_FLUSH_REDIRECT)) { MyFlush__MLSS(true);}    
+							}
+						}
+					}
 	function my_submenu1__MLSS() { 
 		if (isset($_POST['inp_SecureNonce'])){	
 			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
@@ -69,64 +60,66 @@ if ( is_admin() ){
 			//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
 			
 		}
-		$chosen_method = get_option('optMLSS__FirstMethod');
+		$ChosenSelectorType = get_option('optMLSS__FirstMethod');
+		$PluginOnOffMode = get_option('optMLSS__OnOffMode');
 		?> 
-		<style>
-		body{font-family:arial;}
-		input.langs{width:100%;} 
-		input.hiddenlangs{width:100%;}		
-		span.codee{background-color: #D2CFCF;padding: 3px;font-family: Consolas;}
-		.eachColumn22{border:1px solid;margin:2px 0 0 90px;}
-		.delete22{padding:3px; background-color:#759C83; float:right; display:inline-block;}		
-		.lng_NAME22{width:25px; display:inline-block;padding:0px 2px;} 
-		input.inpVALUES22{width:70%;}   	
-		.title{display: inline-block;}   
-		.addNEWlnBLOCK22{position:relative;background-color:#B9B9B9;width:90%; padding:2px; margin: 30px 0 0 100px;}
-		span.save_div_lng22{display:block; position:fixed; bottom:25px; width:300px; left:45%; z-index:101;}
-		a.lng_SUBMIT22{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;}   
-		span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}
-		.hiddenlngs{margin: 10px 0 0 140px;background-color:#DBDBDB;}
-		.dividerrr{background-color:black;height:2px; clear:both; margin:20px 0;}
-		.fakeH22{font-size:2em;font-weight:bold;}
-		.eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;}
-		a.readpopp{color:#56CC18;}
-		span.smallnotic{font-size: 10px; float: right; right: 5%; position: relative;}
-		.MyJsPopup {text-align:left!important;}
-		</style>
-		<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
-		
+		<style>	body{font-family:arial;}input.langs{width:100%;} input.hiddenlangs{width:100%;}	span.codee{background-color: #D2CFCF;padding: 3px;font-family: Consolas;} .eachColumn22{border:1px solid;margin:2px 0 0 90px;} .delete22{padding:3px; background-color:#759C83; float:right; display:inline-block;}	.lng_NAME22{width:25px; display:inline-block;padding:0px 2px;} input.inpVALUES22{width:70%;} .title{display: inline-block;} .addNEWlnBLOCK22{position:relative;background-color:#B9B9B9;width:90%; padding:2px; margin: 30px 0 0 100px;} span.save_div_lng22{display:block; position:fixed; bottom:25px; width:300px; left:45%; z-index:101;} a.lng_SUBMIT22{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;} span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}	.hiddenlngs{margin: 10px 0 0 140px;background-color:#DBDBDB;} .dividerrr{background-color:black;height:2px; clear:both; margin:20px 0;} .fakeH22{font-size:2em;font-weight:bold;} .eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;} a.readpopp{color:#56CC18;} span.smallnotic{font-size: 10px; float: right; right: 5%; position: relative;} .MyJsPopup {text-align:left!important;} </style> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 		<div class="multiLangSimpPage">
-		
 		
 				<form action="" method="post" enctype="multipart/form-data" target="_blank" id="addflagimage" style="display:none;">
 					Most of flags are not added. Because, at first, you'd better to download <a href="https://ps.w.org/multi-language-site-basis/assets/unused_flags.zip" target="_blank">flags</a>, then name your desired image the <b>3 official letters</b> (as mentioned previously).  For example: <b>spa</b>.png,<b>rus</b>.png... (The image dimensions could be approximately 128px+.)
-					<br/>
-					<br/>Select image to upload (file will be uploaded in a new window, so, dont worry  - if havent yet saved any changes on current page, they <b>wont be lost</b>):
+					<br/><br/>Select image to upload (file will be uploaded in a new window, so, dont worry  - if havent yet saved any changes on current page, they <b>wont be lost</b>):
 					<div style="background-color:grey;">						
-						<br/><input type="file" name="ImgFile__mlss" /><input type="hidden" name="ImgUploadForm__mlss" value="OK" /> <input type="submit" value="Upload Image" name="submit"> 
-						<br/><i>(Will be stored in <?php echo dirname( PLUGIN_URL_nodomain__MLSS) .FlagFolder__MLSS;?>)</i>
+						<br/><input type="file" name="ImgFile__mlss" /><input type="hidden" name="ImgUploadForm__mlss" value="OK" /> <input type="submit" value="Upload Image" name="submit"> <br/><i>(Will be stored in <?php echo dirname( PLUGIN_URL_nodomain__MLSS) .FlagFolder__MLSS;?>)</i>
 					</div>
 				</form>
 				
 				
-				<form action="" method="POST">
-
+																<form action="" method="POST">
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
 		<center><span class="fakeH22">(<a href="javascript:alert('To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs! \r\n\r\n\r\n(Notes):\r\n1) This plugin is coded simply, using only 1 file! So, if you are experienced developer, you can easily re-produce it.  (To modify/design the output, read the last paragraph on this page). \r\n2) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).  ');" class="readpopp">Read popup</a>!)</span></center> 
-					<span class="smallnotic">(Visit <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
+					<br/><span class="smallnotic">(Visit <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
 					<br/><span class="smallnotic">(Visit <a href="http://j.mp/wpluginstt#mlss" target="_blank">other useful plugins</a>...)</span>
+					
+		<div class="eachBlock"><span class="fakeH22"></span> 
+			<div class="pluginStatus">
+				Status: 
+				<input type="radio" name="ioptMLSS__OnOffMode" value="oon" <?php echo ($PluginOnOffMode=='oon' ? 'checked="checked"':'');?> />ON(default)  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="ioptMLSS__OnOffMode" value="onlycodes" <?php echo ($PluginOnOffMode=='onlycodes' ? 'checked="checked"':'');?> /><b style="color:red;">Only functionalities</b> (<a href="javascript:show_my_popup('#pluginonoff');" class="readpopp">Read popup</a>!)
+					<div id="pluginonoff" style="display:none;">
+					<br/>ONLY CODES means: This option can be very useful for development/developers - Plugin wont function and it wont trigger any actions itself. Just its functionality can be integrated silently into your other plugins/themes, so it will help you and  you'll be able to use its core functionalities and detected language parameters (<a href="javascript:document.getElementsByClassName('MyJsBackg')[0].style.display='none';document.getElementsByClassName('MyJsPopup')[0].style.display='none'; show_my_popup('#pluginsparameters');" class="readpopp">See those parameters</a>!).
+						<div id="pluginsparameters" style="display:none;">
+							At first,you should have reviewed this page fully, after that you wont have problems to understand the below terminology..
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">$GLOBALS['SiteLangs__MLSS']</span> [Returns array of all languages]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LNG</span> (CONSTANT) [Returns visitor's detected language's name, i.e. "<b>eng</b>" (<a href="javascript:alert('this LNG parameter is detected by this plugin\u0027 own logic... \r\n However, in case you wish to pre-set that value with your own logic&function (i dont know, maybe you are programmer, and have your own functions to find out the language parameter yourself, on any page of your site), then you can pre-set the constant,named LNG_PASSED (but ensure, that constant\u0027s value should be correct, 3 official letters, as described previously), in functions.php or elsewhere, with  add_action(\u0027init\u0027,\u0027your_func\u0027,3);  \r\nSo, on every page load, our LNG constant will get that value, and not according to this plugin\u0027s own logic...');">read more!</a>)]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- Language Specific Widgets [<span style="color:red;">useful!!</span> you can output your pre-defined widgets for any language category.  ]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">echo apply_filters('MLSS','<span style="color:red;">my_HeadingMessage</span>', LNG);</span> [<span style="color:red;">useful!!</span> Returns/Outputs translation of any transaltion_phrase(you will set them in the left sidebar menu),  according to visitor's language. <b>LNG</b> will be auto detected by plugin. however, you can pass, for example: <b>"eng"</b>, instead of LNG, you can pass "eng"]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_phrase name="<span style="color:red;">my_HeadingMessage</span>"]</span> [Shortcode, to return that translation phrase.. can be used in widgets and posts]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isHomeURI__MLSS</span>     [Returns true or false, whether opened url <br/>is exactly home: <b>http://site.com/</b> ]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isLangHomeURI__MLSS</span> [Returns true or false, whether opened url<br/>  is exactly any Language's  StartPage: <b>http://site.com/eng/</b>]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">GetFlagUrl('eng')</span> [Returns Flag url for desired language]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">STYLESHEETURL__MLSS</span> [Returns plugin's stylesheet url]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">DetectedPostLang__MLSS($GLOBALS['post']-&gt;ID);</span> [Returns language slug for current post]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">apply_filters('MLSS__firsttimeselector',0);</span> [Returns output of "Select FirstTime Language" popup's list]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_navigation name="<span style="color:red;">your_menus_base_slug</span>"]</span> [read the 6th paragraph on this page]
+						</div>
+					</div>
+			</div>
+		</div>
+
+
+
 		
-		
-		
-		<div class="eachBlock"><span class="fakeH22"> 1) Enabled Languages</span> (<a href="javascript:show_my_popup('#enabledlanguages');" class="readpopp">Read popup!</a>)
+		<div class="eachBlock"><span class="fakeH22"> 1) Languages</span> (<a href="javascript:show_my_popup('#enabledlanguages');" class="readpopp">Read popup!</a>)
 						<div id="enabledlanguages" style="display:none;">
 						<br/>To add a language,  Insert Language title (i.e: <b>Spanish</b>, and after it, in <b>CURLED BRACKETS</b>, insert it's official abbreviation  (Needs to be 3 latin characters,i.e. "<b>spa</b>"....   &nbsp;&nbsp;View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
 						</div>
-				
-			<br/><input name="inp_Langs" type="text" class="inpt langs" value="<?php echo get_option('optMLSS__Lngs');?>" />
-			<br/>(p.s. You may need too add your flag image - <a href="javascript:show_my_popup('#addflagimage');" class="readpopp">Read popup!</a>)  
 						
-							
+			<div class="enabled_langs">		
+				Enabled langs:
+				<br/><input name="inp_Langs" type="text" class="inpt langs" value="<?php echo get_option('optMLSS__Lngs');?>" />
+				<br/><div style="float:right;">(p.s. You may need too add your flag image - <a href="javascript:show_my_popup('#addflagimage');" class="readpopp">Read popup!</a>)  </div><div style="clear:both;"></div>
+				
+			</div>
 			<div class="hiddenlngs">
 				Hidden Langs: (<i><a href="javascript:alert('later,if you will need to disable any above language, it is better to put its phraze here, rather than removing from the above list. Thus, that language will be just hidden from site(instead of REMOVING),because \u0022REMOVING\u0022 might also remove indexed pages from GOOGLE too..');" class="readpopp">Read popup!</a></i>)
 				<br/><input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="jap,fre," />
@@ -135,14 +128,12 @@ if ( is_admin() ){
 		
 		
 		
-		<div class="eachBlock">			<span class="fakeH22">2) Choose Language for visitors</span>  (<a href="javascript:alert('\r\nNow, whenever a person enters your website start page (and it\u0027s \u0022FIRST TIME\u0022 he enters), then you can set a language for him, and he will enter to that language HomePage(i.e. YOURSITE.COM/eng/ )..  Choose your desired option.');" class="readpopp">Read popup!</a>)
+		<div class="eachBlock">			<span class="fakeH22">2) Choose Language for visitors</span>  (<a href="javascript:alert('\r\nNow, whenever a person enters your site\u0027s HOME URL (and it\u0027s \u0022FIRST TIME\u0022 he enters), then you can set a language for him, and he will enter to that language HomePage(i.e. YOURSITE.COM/eng/ )..  Choose your desired option.');" class="readpopp">Read popup!</a>)
 		
-			<br/> <input type="radio" name="inp_FirstMethod" value="dropddd" <?php echo (($chosen_method=='dropddd')? 'checked="checked"':'');?> />
-			<b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>) <script type="text/javascript">	function previewww(){ document.cookie="<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; window.open("<?php echo homeURL__MLSS;?>?previewDropd__MLSS","_blank");	}	</script>
+			<br/> <input type="radio" name="inp_FirstMethod" value="dropddd" <?php echo (($ChosenSelectorType=='dropddd')? 'checked="checked"':'');?> /> <b>A)</b> Let user choose the desired language from dropdown (<a href="javascript:previewww();">See preview</a>) <script type="text/javascript">	function previewww(){ document.cookie="<?php echo cookienameLngs__MLSS;?>=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"; window.open("<?php echo homeURL__MLSS;?>?previewDropd__MLSS","_blank");	}	</script>
 				(<i><a href="javascript:alert('(To modify/design the output, read the last paragraph on this page.)');" class="readpopp">Read popup!</a></i>)
 			
-			<br/> <input type="radio" name="inp_FirstMethod" value="ippp" <?php echo (($chosen_method=='ippp')? 'checked="checked"':'');?> />
-			<b>B)</b> Autodetect COUNTRY (<a href="javascript:show_my_popup('#autodetectcountry');" class="readpopp">Read popup!</a>)
+			<br/> <input type="radio" name="inp_FirstMethod" value="ippp" <?php echo (($ChosenSelectorType=='ippp')? 'checked="checked"':'');?> /><b>B)</b> Autodetect COUNTRY (<a href="javascript:show_my_popup('#autodetectcountry');" class="readpopp">Read popup!</a>)
 						
 							<div id="autodetectcountry" style="display:none;">
 							The plugin contains a detector, to detect visitor's country [using IP]. Fill the table of languages accurately (to input county names correctly, see <a href="<?php echo PLUGIN_URL_nodomain__MLSS;?>flags/ip_country_detect/country_names.txt" target="_blank">this page</a>)
@@ -171,13 +162,13 @@ if ( is_admin() ){
 					<script type="text/javascript">	
 					 function deleteThisBlock22(IDD){ 	if (confirm("Are you sure?")){var x=document.getElementById(IDD); x.parentNode.removeChild(x);}   }
 					</script>
-				<br/> <input type="radio" name="inp_FirstMethod" value="fixeddd" <?php echo (($chosen_method=='fixeddd')? 'checked="checked"':'');?> /> 
+				<br/> <input type="radio" name="inp_FirstMethod" value="fixeddd" <?php echo (($ChosenSelectorType=='fixeddd')? 'checked="checked"':'');?> /> 
 			<b>C)</b> redirect all visitors to this fixed language <input style="width:50px;" type="text" name="inp_FirsttimeFixed" value="<?php echo get_option('optMLSS__FixedLang');?>" placeholder="eng" />
 		</div>		
 		
 		<div class="eachBlock">
-			<span class="fakeH22"> 3) Design: </span> :
-			<br/>*<B>LANGUAGE SELECTOR style (<a href="javascript:alert('you will see it in the upper corner of your site..(To modify/design the output, read the last paragraph on this page.)');" class="readpopp"><i>Read popup</i></a>!)</B>:
+			<span class="fakeH22"> 3) Design </span>(<a href="javascript:alert('you will see it in the upper corner of your site..(To modify/design the output, read the last paragraph on this page.)');" class="readpopp"><i>Read popup</i></a>!) :
+			<br/><br/>*<B>LANGUAGE SELECTOR style </B>:
 				&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="drp_in_header" value="hhide" <?php if ('hhide'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />HIDE 
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="hhorizontal" <?php if ('hhorizontal'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Horizontal
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="vvertical" <?php if ('vvertical'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Vertical
@@ -242,7 +233,7 @@ if ( is_admin() ){
 					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
 					</span>
 				</span>
-			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post ID. (If you want to show the regular posts, published under that language, then empty it.)');" class="readpopp">Read popup!</a>) :
+			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post\u0027s numeric ID or FULL LINK. (If you want to show the regular posts, published under that language, then empty it.)');" class="readpopp">Read popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
 				echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;';
 			} ?>
@@ -267,7 +258,8 @@ if ( is_admin() ){
 			<br/>*<b>Tree-Like menus in sidebars of your site</b> - <a href="javascript:show_my_popup('#TreeLikeMenus');" class="readpopp">Read popup!</a>
 					<div id="TreeLikeMenus" style="display:none;">
 						In case, you want to display the "tree-like" menu of the pages & categories on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create custom menu for each language (i.e. name them: <span class="codee"><b>eng_</b><span style="color:red;">DESIRED_SLUG</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">DESIRED_SLUG</span></span>... ). Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.
-						<br/> Then, you can insert your custom "menu" in the Widgets page, as you are typically doing it..  (if you wish to integrate each language's custom-menu dynamically within PHP files,then use <span class="codee">do_shortcode([...]);</span> function, and use this shortcode: <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span>)
+						<br/> Then, you can insert your custom "menu" in the Widgets page, as you are typically doing it.. 
+						<br/><br/><br/>(p.s. if you wish to <b>integrate them within PHP files</b>,then use <span class="codee">do_shortcode([...]);</span> function, and use this shortcode(language will be auto detected): <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span>)
 					</div>
 			
 			<br/>*<b>How to access the language variables from other php files? </b> -   <a href="javascript:show_my_popup('#LangVariables');" class="readpopp">Read popup!</a>
@@ -428,6 +420,35 @@ if ( is_admin() ){
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//===================================== OTHER FUNCTIONS FOR DASHBOARD
+
+
+	//SAVE TRANSLATION WORDS from AJAX request
 	add_action('init','verify_saved_words__MLSS'); function verify_saved_words__MLSS(){
 		if (isset($_POST['mlss_update1']) && iss_admiiiiiin__MLSS()){		
 			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
@@ -443,9 +464,30 @@ if ( is_admin() ){
 	}
 	
 	
-	//====================================================================
-	// SHow or hide other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
-	//=========================================================================
+	//WHEN FLAG IMAGE IS UPLOADED
+	add_action('init','DetectFlagIsUploaded__MLSS');function DetectFlagIsUploaded__MLSS(){
+		if (!empty($_POST['ImgUploadForm__mlss'])){
+			if (is_admin() && iss_admiiiiiin__MLSS()){
+				//if directory doesnt exists
+				if (!file_exists(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS)) {  mkdir(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS, 0755, true); }
+				$filename	 = basename($_FILES["ImgFile__mlss"]["name"]);
+				$tmpname	 = $_FILES["ImgFile__mlss"]["tmp_name"];
+				$target_file = dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS.'/'.$filename;
+				$imgType = pathinfo($target_file,PATHINFO_EXTENSION);
+				if(getimagesize($tmpname)===false){die("File is not an image.");}								//==fake image
+				if($imgType != "png")			{die("Sorry,only PNG files are allowed, and not:".$imgType);} 	//==not PNG
+				//if(file_exists($target_file)) {die("Sorry, file already exists.");} 							//==already exists
+				//if ($_FILES["ImgFile__mlss"]["size"] > 500000) {die("Sorry, your file is too large.");}		//==upload Size
+				if (move_uploaded_file($_FILES["ImgFile__mlss"]["tmp_name"], $target_file)) {echo "<b>".$filename. "</b> uploaded. close this window.";}
+				else {echo "Sorry, there was an error uploading your file."; print_r($_FILES); } 				exit;
+	}}}
+
+	
+	
+	
+	//=======================================================================================================
+	// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
+	//========================================================================================================
 	add_action('admin_head','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
 		if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
 			if (in_array($_GET['post_type'], LANGS__MLSS())){
@@ -453,7 +495,7 @@ if ( is_admin() ){
 				<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
 				<div id="CatDrHeader" style="display:none;">
 					<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
-					<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if (get_option('optMLSS__ShowHideOtherCats')=='yes'){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
+					<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
 					</div>
 				</div>
 				<script type="text/javascript">
@@ -468,19 +510,13 @@ if ( is_admin() ){
 					} window.onload=function(){myAlert();};
 				</script>
 				<?php  //hide all other categories
-				if (get_option('optMLSS__ShowHideOtherCats')=='yes') { ?>
-					<style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
+				if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
 						'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
-					</style> 
-					<?php
+					</style> <?php
 				}
 			}
 		}
-	} 
-	//saving your chosen YES/NO value
-	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
-		if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); }
-	}
+	} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{ if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } }
 	// =================================### Show/Hide other cats=================
 	// =========================================================================
 
@@ -490,12 +526,13 @@ if ( is_admin() ){
 	
 
 	
-			
-
-//================================================================================== //
+	
+	
+	
+	
+	
+	
+	
+//===================================================================================//
 //===================================== END# DASHBOARD ============================= //
-//================================================================================== //	
-
-
-
 ?>
