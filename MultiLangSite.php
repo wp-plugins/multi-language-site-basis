@@ -211,14 +211,13 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 		if($RedirectFlushToo) {echo '<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>';}
 	}
 
-//REDIRECT function (301 or 404)
-	function          REDIRECTTT__MLSS($url,$SomethingWord=false, $SomethingCode=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
-		$SomethingCode = $SomethingCode ? $SomethingCode:301; if ($SomethingCode==301) { $msg='301 Moved Permanently';} elseif ($SomethingCode==404) { $msg='404 Not Found';} 
-		header("Cache-Control: no-store, no-cache, must-revalidate"); header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); header("HTTP/1.1 ". $msg );header("location:" . $url ) or die('File:'.dirname(__file__).'['.($SomethingWord ? $SomethingWord : '' ) .']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$url .') BACKTRACE:<br/>'.debug_print_backtrace()); //echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit; 
+//REDIRECT function (301,302 or 404)
+	function        REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
+		header("Cache-Control: no-store, no-cache, must-revalidate"); header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); $RedirCodee = $RedirCodee ? $RedirCodee:301;   header("location:" . $url, true, $RedirCodee ) or die('File:'.dirname(__file__).'['.($SomethingWord ? $SomethingWord : '' ) .']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$url .') BACKTRACE:<br/>'.debug_print_backtrace()); exit; //echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit; 
 	} //FIX for WP BUG,, w hile site loaded in: Appearence>customize.php:
 		if (stripos(currentURL__MLSS, str_replace(home_url(),'',admin_url('customize.php'))) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);} else {setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 	//Children of above
-	function TRIGGERR_REDIRECTTT__MLSS($url,$SomethingWord=false, $SomethingCode=false){ if (FullMode__MLSS) {REDIRECTTT__MLSS($url,$SomethingWord,$SomethingCode);} }
+	function TRIGGERR_REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (FullMode__MLSS) {REDIRECTTT__MLSS($url,$SomethingWord,$RedirCodee);} }
 	
 //Redirect from NOTFOUND WP pages, but currently not used, because 404 redirection inside "add_action" may cause problems in custom pages (i.e. where include(..'/wp-load.php');). So, it's better,that this function was in header.php
 	function errorrrr_404__MLSS(){if (is_404() && WP_USE_THEMES === true )	{REDIRECTTT__MLSS(homURL,'problemm_702',404);}}
@@ -492,7 +491,9 @@ if (FullMode__MLSS){ add_action( 'pre_get_posts', 'querymodify__MLSS'); } functi
 	//============================================================================================================================
     if ( isLangHomeURI__MLSS && $query->is_main_query()   && !is_admin() ) { 	
 		//if static ID is set for the language's STARTPAGE
-		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){ 
+		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){
+			//if custom URL is set, instead of ID, then simply redirect..
+			if (!is_numeric($optValue)) {REDIRECTTT__MLSS($optValue,'problem_823',302);}
 			$query->init();
 					$post = get_post( $optValue, OBJECT);
 					if($post->post_type==LNG || is_post_type_archive() )	{

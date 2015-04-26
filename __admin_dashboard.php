@@ -233,7 +233,7 @@ if ( is_admin() ){
 					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
 					</span>
 				</span>
-			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('for the Language MAIN page (i.e. example.com/eng/), you can set a particular post/page as a \u0022START page\u0022. Just input the Post\u0027s numeric ID or FULL LINK. (If you want to show the regular posts, published under that language, then empty it.)');" class="readpopp">Read popup!</a>) :
+			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('By DEFAULT, while the Language\u0027s MAIN page (i.e. example.com/eng/) is opened, the default homepage/listing is shown (to make it DEFAULT METHOD, then empty the field). \r\n However: \r\n- To set a static, typical post/page as a language\u0027s \u0022MAIN page\u0022,then input the Post\u0027s numeric ID. \r\n- To redirect visitor to any custom URL, then input the FULL LINK there, and plugin will make a redirection(\u0022302\u0022 ) for it.');" class="readpopp">Read popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
 				echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;';
 			} ?>
