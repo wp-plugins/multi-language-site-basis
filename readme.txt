@@ -3,7 +3,7 @@ Contributors: selnomeria
 Tags: multi,language,multilanguage,multi language, multilingual,website,site
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 4.1
+Stable tag: 1.37
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
