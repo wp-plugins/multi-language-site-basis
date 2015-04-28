@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.37
+ * Version: 1.38
  -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
  + post alternatives...
  ....... delete your post to delete it's slug !!
@@ -563,7 +563,7 @@ if (FullMode__MLSS){ add_action( 'pre_get_posts', 'querymodify__MLSS'); } functi
 	//============================================================================================================================
 	//QUERY FOR ALL OTHER PAGES( due WORDPRESS QUERY BUG, i have made this correction )...   i.e. yoursite.com/eng/categ2/TORNADOO
 	//============================================================================================================================
-    if ( !isLangHomeURI__MLSS && $query->is_main_query()  && !is_admin() ) {
+    if ( !isLangHomeURI__MLSS && $query->is_main_query()  && !is_admin() && !is_search()) {
 		
 		//within custom language posts, when the PERMALINK was not found, then 404 maybe triggered.. But wait! maybe it is a standard post, under the standard category(which's name is i.e. "eng")
 		$CustBuildEnabled 	= 'custom_p'==get_option('optMLSS__BuildType') ? true:false ;
