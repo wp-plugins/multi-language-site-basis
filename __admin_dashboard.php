@@ -15,8 +15,8 @@ if ( is_admin() ){
 					add_action('init','ffff454__MLSS',1);function ffff454__MLSS(){
 						if (is_admin() && iss_admiiiiiin__MLSS()){
 							if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false); }
-							if (isset($_POST['inp_SecureNonce'])){	
-								NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+							if (isset($_POST['inp_SecureNonce1'])){	
+								NonceCheck__MLSS($_POST['inp_SecureNonce1'],'fupd_mlss');
 								
 								$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 									if(get_option('optMLSS__OnOffMode') != $_POST['ioptMLSS__OnOffMode']){ $NEEDS_FLUSH_REDIRECT=true;}
@@ -34,9 +34,9 @@ if ( is_admin() ){
 						}
 					}
 	function my_submenu1__MLSS() { 
-		if (isset($_POST['inp_SecureNonce'])){	
+		if (isset($_POST['inp_SecureNonce1'])){	
 			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
-			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+			NonceCheck__MLSS($_POST['inp_SecureNonce1'],'fupd_mlss');
 			//update optionsss	
 			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
 			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']);
@@ -319,7 +319,7 @@ if ( is_admin() ){
 		
 		<br/>=================================
 			<br/><span class="save_div_lng22"><a class="lng_SUBMIT22" href="javascript:document.forms[1].submit();">SAVE</a></span>
-				<input type="submit" value="SAVE" style="display:none;" /> <input type="hidden" name="inp_SecureNonce" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
+				<input type="submit" value="SAVE" style="display:none;" /> <input type="hidden" name="inp_SecureNonce1" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
 		
 	</form>
 		</div>
@@ -379,7 +379,7 @@ if ( is_admin() ){
 			echo $output;
 			}
 			?>
-		<input name="mlss_update1" value="x" type="hidden" /><input type="hidden" name="inp_SecureNonce" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
+		<input name="mlss_update1" value="x" type="hidden" /><input type="hidden" name="inp_SecureNonce2" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
 		</form>	
 			<br/><span class="save_div_lexic" style=""><a href="javascript:UpdateSaveAjax();" class="lexic_SUBMIT" >SAVE CHANGES!!</a></span> 
 			<div class="addNEWlnBLOCK">
@@ -413,7 +413,7 @@ if ( is_admin() ){
 			
 			
 			<?php include_once(__DIR__.'/flags/javascript_functions.php'); ?> <script type="text/javascript">
-			function UpdateSaveAjax()	{var data=serialize(document.getElementById("lexiconnn"));   myRequest_1(data, "","POST", "alert(responseee);" ); }
+			function UpdateSaveAjax()	{var data=serialize(document.getElementById("lexiconnn"));   myyAjaxRequest(data, "","POST", "alert(responseee);" ); }
 			</script>
 			
 		<?php 
@@ -451,7 +451,7 @@ if ( is_admin() ){
 	//SAVE TRANSLATION WORDS from AJAX request
 	add_action('init','verify_saved_words__MLSS'); function verify_saved_words__MLSS(){
 		if (isset($_POST['mlss_update1']) && iss_admiiiiiin__MLSS()){		
-			NonceCheck__MLSS($_POST['inp_SecureNonce'],'fupd_mlss');
+			NonceCheck__MLSS($_POST['inp_SecureNonce2'],'fupd_mlss');
 			foreach($_POST['titlee'] as $name1=>$Value1){
 				foreach($Value1 as $name2=>$Value2){
 					UPDATEE_OR_INSERTTT__MLSS($GLOBALS['wpdb']->prefix."translatedwords__mlss", 

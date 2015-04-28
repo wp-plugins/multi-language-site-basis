@@ -29,6 +29,8 @@ Build a Multi-Language Site. This plugin gives you a good framework. After activ
 
 == Changelog ==
 
-= 1.1 =
+= 1.39 =
+* Fixed thousands of things...
 
-* Initial release 
+= 1.1 =
+* Plugin was completed..

@@ -253,7 +253,9 @@ function DetermineLanguages__MLSS(){
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
 		}
 	}
-	$GLOBALS['SiteLangs__MLSS'] = $finall;
+	$GLOBALS['SiteLangs__MLSS'] = $finall; 
+	return $GLOBALS['SiteLangs__MLSS'];
+	
 }
 	
 	function LANGS__MLSS(){return $GLOBALS['SiteLangs__MLSS'];} 
