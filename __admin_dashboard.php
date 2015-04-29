@@ -63,7 +63,7 @@ if ( is_admin() ){
 		$ChosenSelectorType = get_option('optMLSS__FirstMethod');
 		$PluginOnOffMode = get_option('optMLSS__OnOffMode');
 		?> 
-		<style>	body{font-family:arial;}input.langs{width:100%;} input.hiddenlangs{width:100%;}	span.codee{background-color: #D2CFCF;padding: 3px;font-family: Consolas;} .eachColumn22{border:1px solid;margin:2px 0 0 90px;} .delete22{padding:3px; background-color:#759C83; float:right; display:inline-block;}	.lng_NAME22{width:25px; display:inline-block;padding:0px 2px;} input.inpVALUES22{width:70%;} .title{display: inline-block;} .addNEWlnBLOCK22{position:relative;background-color:#B9B9B9;width:90%; padding:2px; margin: 30px 0 0 100px;} span.save_div_lng22{display:block; position:fixed; bottom:25px; width:300px; left:45%; z-index:101;} a.lng_SUBMIT22{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;} span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}	.hiddenlngs{margin: 10px 0 0 140px;background-color:#DBDBDB;} .dividerrr{background-color:black;height:2px; clear:both; margin:20px 0;} .fakeH22{font-size:2em;font-weight:bold;} .eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;} a.readpopp{color:#56CC18;} span.smallnotic{font-size: 10px; float: right; right: 5%; position: relative;} .MyJsPopup {text-align:left!important;} </style> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
+		<style>	body{font-family:arial;}input.langs{width:100%;} input.hiddenlangs{width:100%;}	span.codee{background-color:#D2CFCF; padding:1px 3px; border:1px solid;} .eachColumn22{border:1px solid;margin:2px 0 0 90px;} .delete22{padding:3px; background-color:#759C83; float:right; display:inline-block;}	.lng_NAME22{width:25px; display:inline-block;padding:0px 2px;} input.inpVALUES22{width:70%;} .title{display: inline-block;} .addNEWlnBLOCK22{position:relative;background-color:#B9B9B9;width:90%; padding:2px; margin: 30px 0 0 100px;} span.save_div_lng22{display:block; position:fixed; bottom:25px; width:300px; left:45%; z-index:101;} a.lng_SUBMIT22{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;} span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}	.hiddenlngs{margin: 10px 0 0 140px;background-color:#DBDBDB;} .dividerrr{background-color:black;height:2px; clear:both; margin:20px 0;} .fakeH22{font-size:2em;font-weight:bold;} .eachBlock{margin: 30px 0px 0px; border: 3px solid; padding: 10px; border-radius: 5px;} a.readpopp{color:#56CC18;} span.smallnotic{font-size: 10px; float: right; right: 5%; position: relative;} .MyJsPopup {text-align:left!important; width:60%!important;top:60px!important; } .MyJsBackg{opacity:0.6!important;}</style> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 		<div class="multiLangSimpPage">
 		
 				<form action="" method="post" enctype="multipart/form-data" target="_blank" id="addflagimage" style="display:none;">
@@ -86,16 +86,17 @@ if ( is_admin() ){
 				Status: 
 				<input type="radio" name="ioptMLSS__OnOffMode" value="oon" <?php echo ($PluginOnOffMode=='oon' ? 'checked="checked"':'');?> />ON(default)  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="ioptMLSS__OnOffMode" value="onlycodes" <?php echo ($PluginOnOffMode=='onlycodes' ? 'checked="checked"':'');?> /><b style="color:red;">Only functionalities</b> (<a href="javascript:show_my_popup('#pluginonoff');" class="readpopp">Read popup</a>!)
 					<div id="pluginonoff" style="display:none;">
-					<br/>ONLY CODES means: This option can be very useful for development/developers - Plugin wont function and it wont trigger any actions itself. Just its functionality can be integrated silently into your other plugins/themes, so it will help you and  you'll be able to use its core functionalities and detected language parameters (<a href="javascript:document.getElementsByClassName('MyJsBackg')[0].style.display='none';document.getElementsByClassName('MyJsPopup')[0].style.display='none'; show_my_popup('#pluginsparameters');" class="readpopp">See those parameters</a>!).
-						<div id="pluginsparameters" style="display:none;">
-							At first,you should have reviewed this page fully, after that you wont have problems to understand the below terminology..
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">$GLOBALS['SiteLangs__MLSS']</span> [Returns array of all languages]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LNG</span> (CONSTANT) [Returns visitor's detected language's name, i.e. "<b>eng</b>" (<a href="javascript:alert('this LNG parameter is detected by this plugin\u0027 own logic... \r\n However, in case you wish to pre-set that value with your own logic&function (i dont know, maybe you are programmer, and have your own functions to find out the language parameter yourself, on any page of your site), then you can pre-set the constant,named LNG_PASSED (but ensure, that constant\u0027s value should be correct, 3 official letters, as described previously), in functions.php or elsewhere, with  add_action(\u0027init\u0027,\u0027your_func\u0027,3);  \r\nSo, on every page load, our LNG constant will get that value, and not according to this plugin\u0027s own logic...');">read more!</a>)]
+					ONLY CODES means: This option can be very useful for development/developers - Plugin wont function and it wont trigger any actions itself. Just its functionality can be integrated silently into your theme/plugins, so it will help you, and you'll be able to use its core functionalities and detected language parameters. <!-- (<a href="javascript:show_my_popup('#pluginsparameters');" class="readpopp">See those parameters</a>!). -->
+					
+					<br/><br/>Those parameters are (At first,better reviewed this page fully, after that you will better understand the below terminology...):
+						<div id="pluginsparameters" style="zzzdisplay:none;">
+							&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">$GLOBALS['SiteLangs__MLSS']</span> [Returns array of all languages]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LNG</span> (CONSTANT) [Returns visitor's detected language's name, i.e. "<b>eng</b>" (can be modified,<a href="javascript:alert('this LNG parameter is detected by this plugin\u0027 own logic... \r\n However, in case you wish to pre-set that value with your own logic&function (i dont know, maybe you are programmer, and have your own functions to find out the language parameter yourself, on any page of your site), then you can pre-set the constant,named LNG_PASSED (but ensure, that constant\u0027s value should be correct, 3 official letters, as described previously), in functions.php or elsewhere, with  add_action(\u0027init\u0027,\u0027your_func\u0027,3);  \r\nSo, on every page load, our LNG constant will get that value, and not according to this plugin\u0027s own logic...');">read more!</a>)]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- Language Specific Widgets [<span style="color:red;">useful!!</span> you can output your pre-defined widgets for any language category.  ]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">echo apply_filters('MLSS','<span style="color:red;">my_HeadingMessage</span>', LNG);</span> [<span style="color:red;">useful!!</span> Returns/Outputs translation of any transaltion_phrase(you will set them in the left sidebar menu),  according to visitor's language. <b>LNG</b> will be auto detected by plugin. however, you can pass, for example: <b>"eng"</b>, instead of LNG, you can pass "eng"]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_phrase name="<span style="color:red;">my_HeadingMessage</span>"]</span> [Shortcode, to return that translation phrase.. can be used in widgets and posts]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isHomeURI__MLSS</span>     [Returns true or false, whether opened url <br/>is exactly home: <b>http://site.com/</b> ]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isLangHomeURI__MLSS</span> [Returns true or false, whether opened url<br/>  is exactly any Language's  StartPage: <b>http://site.com/eng/</b>]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isHomeURI__MLSS</span>     [Returns true or false, whether opened url is exactly home: <b>http://site.com/</b> ]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isLangHomeURI__MLSS</span> [Returns true or false, whether opened url is exactly any Language's  StartPage: <b>http://site.com/eng/</b>]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">GetFlagUrl('eng')</span> [Returns Flag url for desired language]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">STYLESHEETURL__MLSS</span> [Returns plugin's stylesheet url]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">DetectedPostLang__MLSS($GLOBALS['post']-&gt;ID);</span> [Returns language slug for current post]
@@ -266,13 +267,6 @@ if ( is_admin() ){
 						</div>
 					</div>
 			
-			<br/>*<b>How to access the language variables from other php files? </b> -   <a href="javascript:show_my_popup('#LangVariables');" class="readpopp">Read popup!</a>
-					<div id="LangVariables" style="display:none;">
-						<br/>This plugin returns an array of all languages within <b>$GLOBALS["SiteLangs__MLSS"]</b> variable;
-						<br/>the language parameter for current visitor/session, can be accessed with <b>LNG</b> constant.
-					</div>
-					
-					
 			<br/>*<b>How to style/modify LANGUAGE Dropdowns,SELECTERS and etc.. output of this plugin? </b> -   <a href="javascript:show_my_popup('#StyleFlagsOutput');" class="readpopp">Read popup!</a>
 					<div id="StyleFlagsOutput" style="display:none;">
 						1) To modify the First time popup selector (<a href="javascript:previewww();">See preview</a>), then you need (i.e. from your theme's FUNCTIONS.PHP or etc..) to hook your function into <b>MLSS__firsttimeselector</b>. See Example:
@@ -284,12 +278,23 @@ if ( is_admin() ){
 						<br/>2) To modify the output of the standard  LANGUAGE SELECTOR/DROPDOWN (which is in top corner of your site), then hook your function similarly, into <b>MLSS__dropdownselector</b>
 					</div>
 					
+			<br/>*<b>How to access the language variables(+functions) from other php files? </b> -  Read first popup in the top.
 					
 			<br/>*<b>custom coding (output navigation menus,posts or etc...)</b> - <a href="javascript:show_my_popup('#CustomCodings');" class="readpopp">Read popup!</a>)
 					<div id="CustomCodings" style="display:none;">
 						you can use functions <span class="codee">wp_list_categories(),wp_list_pages(), get_posts()</span>, but use <span class="codee">LNG</span> constant as a "root" slug (of post_type, root category or whatever)... 
 						<br/> even, if you want, you can modify the functionality&codes of this plugin - just rename the plugin inner name to your desired name, modify it and then activate. But, It may be better to say with me, as this plugin is developed already.. If you have some suggestions, then let me know, and let's update together ...
 					</div>
+					
+			<br/>*<b>Do you want this plugin to be initialized manually?</b> -   <a href="javascript:show_my_popup('#PluginInitManual');" class="readpopp">Read popup!</a>
+					<div id="PluginInitManual" style="display:none;">
+						By Default, plugin's  LANGUAGE DETERMINATION+TYPE REGISTRATION starts at:
+						<br/> <span class="codee">add_action('init', ..., <span style="color:red;">7</span>);</span>
+						<br/> So, if you wish to change the <b>7</b> to any number(i.e. 15), then in <b>wp-config.php</b> insert:  <span class="codee">define('MLSS_INIT_POINT',15);</span>.
+						<br/><br/>p.s. For other opportunities, read the first popup, about functionalities.
+					</div>
+
+
 		</div>
 		
 		<div class="eachBlock">

@@ -3,7 +3,7 @@ Contributors: selnomeria
 Tags: multi,language,multilanguage,wordpress,plugin,website,site
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.39
+Stable tag: 1.38
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,11 +29,8 @@ Build a Multi-Language Site. This plugin gives you a good framework. After activ
 
 == Changelog ==
 
-= 1.39 = 
-* Fixed QUERY bugs !!!!
-
 = 1.38 =
-* Fixed thousands of things...
+* Plugin was completed..
 
 = 1.1 =
-* Plugin was completed..
+* Initial release 

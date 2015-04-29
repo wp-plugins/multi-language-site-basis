@@ -47,7 +47,6 @@ define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alter
 		
 		
 		
-		
 //==================================================== ACTIVATION commands ===============================		
 //REDIRECT SETTINGS PAGE (after activation)
 add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); } }
@@ -94,7 +93,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 							array('translation'=>'haи иуzer!'),
 							array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
 	//flush-update permalinks for CUSTOM POST TYPES 
-	DetermineLanguages__MLSS(); myf_63__MLSS();	MyFlush__MLSS(false);  
+	GetLanguagesFromBase__MLSS(); registPTyps__MLSS();	MyFlush__MLSS(false);  
 	
 	
 	//=============================================================================
@@ -135,19 +134,6 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 	MyFlush__MLSS(false); 
 }
 //=================================================== ### ACTIVATION commands===============================
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -239,30 +225,29 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 
 
 
-
-
-
+  
+	
+//DETERMINE, WHEN PLUGIN SHOULD START LANG_DETERMINATION/TYPE REGISTRATION (default 7, OTHER PLUGINS CAN CHANGE THIS TOO)
+define('MLSS_initNumb', (defined('MLSS_INIT_POINT') ? MLSS_INIT_POINT : 7));
+	
 //==================================================== pre-define languages ===============================
-add_action('init','DetermineLanguages__MLSS',4); 
-//DetermineLanguages__MLSS(); 
-function DetermineLanguages__MLSS(){
+add_action('init','GetLanguagesFromBase__MLSS',MLSS_initNumb);
+function GetLanguagesFromBase__MLSS(){
 	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
-	$temp_contents = explode(',',  get_option('optMLSS__Lngs','None{none}') ); 
-	foreach ($temp_contents as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
+	$aarray = explode(',',  get_option('optMLSS__Lngs','None{none}') ); 
+	foreach ($aarray as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
 		if (!empty($value))	{	preg_match('/(.*?)\{(.*)\}/si',$value,$nnn); 	//var_dump($nnn);exit;
 			$finall[ trim($nnn[1]) ]=trim($nnn[2]);
 		}
 	}
-	$GLOBALS['SiteLangs__MLSS'] = $finall; 
-	return $GLOBALS['SiteLangs__MLSS'];
-	
+	$GLOBALS['SiteLangs__MLSS'] = $finall; 	return $GLOBALS['SiteLangs__MLSS'];
 }
 	
 	function LANGS__MLSS(){return $GLOBALS['SiteLangs__MLSS'];} 
-	add_action('init','LANGS__MLSS',4);  //LANGS__MLSS(); 
+	add_action('init','LANGS__MLSS',MLSS_initNumb);
 	
 	function Defines_MLSS(){ foreach (LANGS__MLSS() as $n=>$v) { define ($v.'__MLSS',$v); define($v.'_title__MLSS',$n);} }
-	add_action('init','Defines_MLSS',4); //Defines_MLSS();
+	add_action('init','Defines_MLSS',MLSS_initNumb);
 	
 	//RETURN TRANSLATION OF ANY INDEX_PHRASE, according to visitor's detected language
 	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; 
@@ -278,8 +263,9 @@ function DetermineLanguages__MLSS(){
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
-add_action('init', 'DetectLangUsingUrl__MLSS',4); 
-//DetectLangUsingUrl__MLSS();
+
+
+add_action('init', 'DetectLangUsingUrl__MLSS',MLSS_initNumb); 
 function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);$x=false;
 	//if preview
 	if (isset($_GET['previewDropd__MLSS'])) {define('SHOW_FT_POPUP_MLSS', true);return;}
@@ -397,12 +383,10 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 
 
 
-
-
 //==================================== POST TYPES ================================== //
 //================================================================================== //
-
-if (FullMode__MLSS){ add_action( 'init', 'myf_63__MLSS',5); }	function myf_63__MLSS() {
+if (FullMode__MLSS){ add_action( 'init', 'registPTyps__MLSS',MLSS_initNumb); }
+function registPTyps__MLSS() {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
 		foreach (LANGS__MLSS() as $name=>$value) {
@@ -893,7 +877,7 @@ class Simple_Widget_Classes__MLSS {
 			
 		if( isset( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) ) {
 			// find the end of the class= part and replace with new 
-			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widgetclass MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
+			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widgetCL MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
 		} return $params;}	
 } $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
 
