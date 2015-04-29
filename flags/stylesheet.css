@@ -13,16 +13,17 @@
 	#LanguageSelector__MLSS #AllLines1__MLSS:hover	{}
 	 #LanguageSelector__MLSS .LineHolder1__MLSS{}		
 	  #LanguageSelector__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
-	   #LanguageSelector__MLSS img.FlagImg1__MLSS{height:24px; width:37px;  border:1px solid #000!important;}
+	   #LanguageSelector__MLSS img.FlagImg1__MLSS{height:26px; width:40px;  border:1px solid #000!important;}
 	 #LanguageSelector__MLSS a#RevealButton__MLSS{}
 		 
-			  .ddropdown_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:24px;}
+			  .ddropdown_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:26px;}
 				.ddropdown_LSTYPE__MLSS  #AllLines1__MLSS		{overflow:hidden;	height:100%;}
 				.ddropdown_LSTYPE__MLSS #AllLines1__MLSS:hover	{overflow:visible;	height:auto;}
 				 .ddropdown_LSTYPE__MLSS .LineHolder1__MLSS{ clear: left; float:left; cursor:default; padding: 0 0 2px;}		
 				  .ddropdown_LSTYPE__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
-				 .ddropdown_LSTYPE__MLSS a#RevealButton__MLSS{text-decoration:none; float: right; background-color: #B4E5E9;  border: 1px solid rgb(239, 204, 13);  border-radius: 9px;  font-size: 17px; font-weight: bold;padding: 2px 0px; margin: 0px 3px; vertical-align: middle;}	 
-					 
+				 .ddropdown_LSTYPE__MLSS a#RevealButton__MLSS{color:#EAF6F8; text-decoration: none; float: right; font-size: 22px; font-weight: bold; padding: 6px 0px; margin: -4px 1px; vertical-align: middle; text-shadow: 1px 1px 1px #61FE31;}	 
+				  .ddropdown_LSTYPE__MLSS a#RevealButton__MLSS:hover{color:#EAF6F8;}
+				  
 			  .hhorizontal_LSTYPE__MLSS #LangDropMenu1__MLSS{}
 				.hhorizontal_LSTYPE__MLSS  #AllLines1__MLSS		{height:100%;}
 				.vvertical_LSTYPE__MLSS #AllLines1__MLSS:hover	{}
