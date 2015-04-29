@@ -254,12 +254,16 @@ if ( is_admin() ){
 			<br/>*<b>Show Widgets only for Certain Languages</b> - <a href="javascript:alert('From now, you will see a Dropdown in the top of any Widget(inside ADMIN SIDEBARS). Then, you can choose on which Language the individual widget should be shown. ( If it appears not to work on a certain widget, that widget probably breaks WordPress Widgets API rules somehow). \r\n\r\n\r\n (p.s. Thanks to Author of \u0022SIMPLE WIDGET CLASSES and WIDGET ATTRIBUTES\u0022.) ');" class="readpopp">Read popup</a>!
 			<!-- <br/> -B) Another good solution is to use one of these plugins: <span class="codee">Dynamic-Widgets</span>,&nbsp;&nbsp; <span class="codee">Simple-Widgets (<a href="javascript:alert('This plugin allows PHP conditions checking too. You can use condition for individual widgets:  LNG==\u0022eng\u0022  , and similarly for other widgets...');" class="readpopp">Read popup</a>!) </span>, &nbsp;&nbsp; <span class="codee">Restrict-Widgets</span>,.. -->
 			
-			
 			<br/>*<b>Tree-Like menus in sidebars of your site</b> - <a href="javascript:show_my_popup('#TreeLikeMenus');" class="readpopp">Read popup!</a>
 					<div id="TreeLikeMenus" style="display:none;">
-						In case, you want to display the "tree-like" menu of the pages & categories on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create custom menu for each language (i.e. name them: <span class="codee"><b>eng_</b><span style="color:red;">DESIRED_SLUG</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">DESIRED_SLUG</span></span>... ). Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.
-						<br/> Then, you can insert your custom "menu" in the Widgets page, as you are typically doing it.. 
-						<br/><br/><br/>(p.s. if you wish to <b>integrate them within PHP files</b>,then use <span class="codee">do_shortcode([...]);</span> function, and use this shortcode(language will be auto detected): <span class="codee">[MLSS_navigation name="<span style="color:red;">DESIRED_SLUG</span>"]</span>)
+						In case, you want to display the "tree-like" menu (for pages,categories, etc...) on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create separate custom menu for Each language. <i>(Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.)</i>
+						<br/> Then, go to <b>WIDGES</b> and insert each custom menu into widget. 
+						<br/><br/><br/>(p.s. if you wish to <b>integrate them within PHP files</b>,then <a href="javascript:show_my_popup('#TreemenuShortcod');" class="readpopp">Read popup!</a>)
+						<div id="TreemenuShortcod" style="display:none;">
+						   in such case, read this:
+						  <br/> on CUSTOM MENUS page, name those custom menus similar names, for example: <span class="codee"><b>eng_</b><span style="color:red;">MyyRightMenuu</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">MyyRightMenuu</span></span>...
+						  <br/>Then, use echo this do_shortcode in your <b>php</b> files : <span class="codee">[MLSS_navigation name="<b>AUTODETECT_</b><span style="color:red;">MyyRightMenuu</span>"]</span>
+						</div>
 					</div>
 			
 			<br/>*<b>How to access the language variables from other php files? </b> -   <a href="javascript:show_my_popup('#LangVariables');" class="readpopp">Read popup!</a>
