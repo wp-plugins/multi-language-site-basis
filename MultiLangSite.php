@@ -893,7 +893,7 @@ class Simple_Widget_Classes__MLSS {
 			
 		if( isset( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) ) {
 			// find the end of the class= part and replace with new 
-			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
+			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widgetclass MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
 		} return $params;}	
 } $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
 
