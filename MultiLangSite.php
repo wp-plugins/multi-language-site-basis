@@ -271,8 +271,10 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 	if (isset($_GET['previewDropd__MLSS'])) {define('SHOW_FT_POPUP_MLSS', true);return;}
 						
 	// =============== if LANGUAGE was set using URL.. (priority given to URL parameter)  =========//
-	//if LNG parameter is already defined by developer (i dont know, maybe with his own functions)
-		if (defined('LNG_PASSED'))													{define ('LNG',LNG_PASSED); return; } //{  $x = LNG_PASSED; } // 
+			//if LNG parameter is already defined by developer (i dont know, maybe with his own functions)
+			if (defined('LNG_PASSED'))	{define ('LNG',LNG_PASSED); return; } //{  $x = LNG_PASSED; } 
+	//if ADMIN PANEL
+		if (!$x && is_admin() && !empty($_COOKIE[cookienameLngs__MLSS]))			{ $x = $_GET['lng'];}
 	//PARAMTERED URL 					(example.com/mypagee?lng=ENG)
 		if	(!$x && !empty($_GET['lng']) && in_array($_GET['lng'], LANGS__MLSS()) )	{ $x = $_GET['lng'];}
 	//CUSTOM POST inside category		(example.com/ENG-categories2/my-post
