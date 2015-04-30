@@ -494,40 +494,49 @@ if ( is_admin() ){
 	
 	
 	
-	//=======================================================================================================
-	// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
-	//========================================================================================================
-	add_action('admin_head','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
-		if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
-			if (in_array($_GET['post_type'], LANGS__MLSS())){
-				?> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
-				<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
-				<div id="CatDrHeader" style="display:none;">
-					<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
-					<br/><br/>[From now,Hide other Lang categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
-					</div>
+	
+	
+	
+	
+	
+
+//=======================================================================================================
+// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
+//========================================================================================================
+add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
+	if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
+		if (in_array($_GET['post_type'], LANGS__MLSS())){
+			?> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
+			<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
+			<div style="display:none;"><div id="CatDrHeader">
+				<div style="margin:0 0 0 1px;"><span style="color:red;">Dont forget, choose one Category.</span>
+				<br/>[From now,hide any other Language categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
 				</div>
-				<script type="text/javascript">
-					function myAlert(){
-						if (document.getElementById('category-adder')){
-							SHOW_blackGROUND();
-							document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
-							var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
-							var MessageDiv = document.createElement('div');		MessageDiv.innerHTML = document.getElementById("CatDrHeader").innerHTML;
-							cDiv.insertBefore(MessageDiv, cDiv.childNodes[0]); 	//window.setTimeout('',4000);
-						}
-					} window.onload=function(){myAlert();};
-				</script>
-				<?php  //hide all other categories
-				if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
-						'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
-					</style> <?php
-				}
+			</div></div>
+			<script type="text/javascript">
+				function myCategoryAlert(){
+					if (document.getElementById('taxonomy-category')){
+						//Show Black Background
+						SHOW_blackGROUND();
+						//POPUP-like CATEGORY WINDOW
+						var catDiv = document.getElementById('categorydiv');	catDiv.style['zIndex']='9639';	catDiv.onclick = function(){REMOVE_blackGROUND();};
+						//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
+						document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
+						//INSERT OUR MESSAGE
+						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	//window.setTimeout('',4000);
+					}
+				} window.onload=myCategoryAlert();
+			</script>
+			<?php  //hide all other categories
+			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
+					'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
+				</style> <?php
 			}
 		}
-	} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{ if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } }
-	// =================================### Show/Hide other cats=================
-	// =========================================================================
+	}
+} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{ if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } }
+// =================================### Show/Hide other cats=================
+// =========================================================================
 
 
 	
