@@ -924,7 +924,7 @@ add_filter( 'widget_text', 'do_shortcode' ); //enable SHORTCODES in widgets
 add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
 	//http://codex.wordpress.org/Function_Reference/wp_nav_menu
 	//http://codex.wordpress.org/Function_Reference/wp_get_nav_menu_items
-	echo wp_nav_menu( array('theme_location'=>'',    'menu'=> str_replace('AUTODETECT_',LNG,$atts['name']),
+	echo wp_nav_menu( array('theme_location'=>'',    'menu'=> str_replace('AUTODETECT_',LNG.'_',$atts['name']),
 		'container'       => 'div',			'container_class' => 'sideMyBox',    'container_id'=> 'my_SideMenuTreeee',
 		'menu_class'      => 'menu',		'menu_id'         => '',
 		'echo'            => 0,				'fallback_cb'     => 'wp_page_menu',
