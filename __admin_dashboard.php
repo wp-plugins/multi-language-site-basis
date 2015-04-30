@@ -191,11 +191,13 @@ if ( is_admin() ){
 								maybe you are already familiar with CUSTOM POST TYPES (It's an additional instance of like Wordpress default "posts/pages". <a href="http://goo.gl/oQkTVv" style="font-size:0.8em" target="_blank">here tutorials</a>)... If you choose this option,then you will see buttons for each language (in the left sidebar).
 								<br/>Then, whenever  <b>YOURSITE.COM/<span style="color:red;">eng</span></b>/ is opened, all <b>eng</b>(English) CUSTOM POSTS will be shown.  
 								<br/>
-								<br/>p.s.1) REMEMBER, always assign a language-specific STANDARD POST to one category!
+								<br/>p.s.1) During the installation of this plugin, some sample pages/categories/posts were published. See carefully their structure, to understand the idea of structure. (especially note, that the root page/category slugs are only 3 chars (<b>eng</b> or etc.) 
 								<br/>
-								<br/>p.s.2) However when visitor makes a SEARCH, it also will be looped through <b>STANDARD</b> posts, which are published under <b>STANDARD</b> root language category ). 
+								<br/>p.s.2) REMEMBER, always assign a language-specific STANDARD POST to one category!
 								<br/>
-								<br/>p.s.3) In case, you are a programmer and you will need CODING modifications, note, that this plugin modifies queries. So, you can look through the plugin file (<i>pre_get_posts</i> function), to see what and how it behaves.
+								<br/>p.s.3) However when visitor makes a SEARCH, it also will be looped through <b>STANDARD</b> posts, which are published under <b>STANDARD</b> root language category ). 
+								<br/>
+								<br/>p.s.4) In case, you are a programmer and you will need CODING modifications, note, that this plugin modifies queries. So, you can look through the plugin file (<i>pre_get_posts</i> function), to see what and how it behaves.
 							</div>
 				<span class="cpost_others" style="margin:0 0 0 20px;">
 					[enable CUSTOM CATEGORIES too <i>(<a href="javascript:show_my_popup('#EnableCustomCatsss');" class="readpopp">Read popup!</a>)</i>
