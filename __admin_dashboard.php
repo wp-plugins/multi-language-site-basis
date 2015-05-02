@@ -75,7 +75,7 @@ if ( is_admin() ){
 				
 																<form action="" method="POST">
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22">(<a href="javascript:alert('To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs! \r\n\r\n\r\n(Notes):\r\n1) This plugin is coded simply, using only 1 file! So, if you are experienced developer, you can easily re-produce it.  (To modify/design the output, read the last paragraph on this page). \r\n2) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).  ');" class="readpopp">Read popup</a>!)</span></center> 
+		<center><span class="fakeH22">(<a href="javascript:alert('To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs! \r\n\r\n\r\n(Notes):\r\n1) To modify/design the output, read the 6th paragraph on this page.  \r\n2)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it.  \r\n3) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).  ');" class="readpopp">Read popup</a>!)</span></center> 
 					<br/><span class="smallnotic">(Visit <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
 					<br/><span class="smallnotic">(Visit <a href="http://j.mp/wpluginstt#mlss" target="_blank">other useful plugins</a>...)</span>
 					
@@ -269,13 +269,12 @@ if ( is_admin() ){
 			
 			<br/>*<b>How to style/modify LANGUAGE Dropdowns,SELECTERS and etc.. output of this plugin? </b> -   <a href="javascript:show_my_popup('#StyleFlagsOutput');" class="readpopp">Read popup!</a>
 					<div id="StyleFlagsOutput" style="display:none;">
-						1) To modify the First time popup selector (<a href="javascript:previewww();">See preview</a>), then you need (i.e. from your theme's FUNCTIONS.PHP or etc..) to hook your function into <b>MLSS__firsttimeselector</b>. See Example:
+						1) To modify a <b>Design</b> of LANGUAGE SELECTORs: First Time Popup Selector[<a href="javascript:previewww();">see preview</a>] OR default Language Selector[in the top corner of your site], then you can easily style it from your default stylesheet/css file. Just target the element names.
+						<br/>2) To modify the </b>CODES</b>(OUTPUT) of the LANGUAGE SELECTORs, then you need (i.e. from your theme's FUNCTIONS.PHP or etc..) to hook your function into <b>MLSS__firsttimeselector</b>(or <b>MLSS__dropdownselector</b>). See Example:
 						<span class="codee">add_filter('MLSS__dropdownselector','yourFuncNameeeee');
 						<br/>function yourFuncNameeeee($passer){
 						<br/>&nbsp;&nbsp;&nbsp;return $passer."blablabla";
 						<br/>}</span>
-						<br/>
-						<br/>2) To modify the output of the standard  LANGUAGE SELECTOR/DROPDOWN (which is in top corner of your site), then hook your function similarly, into <b>MLSS__dropdownselector</b>
 					</div>
 					
 			<br/>*<b>How to access the language variables(+functions) from other php files? </b> -  Read first popup in the top.

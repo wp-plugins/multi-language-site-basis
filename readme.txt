@@ -13,7 +13,7 @@ Build a Multi-Language Website.
 
 **For building a Multi-Language Site.** 
 
-I avoided explanations here, it's better to read everything on plugin's page, after activation. 
+I avoided explanations here, it's better to read everything on plugin's page, after activation.
 
 `(P.S. Other MUST-HAVE plugins for everyone: http://bitly.com/MWPLUGINS )`
 
