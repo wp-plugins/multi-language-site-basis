@@ -309,9 +309,9 @@ if ( is_admin() ){
 					<div id="AttentionQueries" style="display:none;">
 					Also note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query... 
 					</div>
-				<br/>C) <b>Avoid exactly SLUG/URL</b> - <i><a href="javascript:show_my_popup('#sameslugproblems');" class="readpopp">Read popup!</a></i>
+				<br/>C) <b>Problems with same SLUG'ed Pages?</b> - <i><a href="javascript:show_my_popup('#sameslugproblems');" class="readpopp">Read popup!</a></i>
 					<div id="sameslugproblems" style="display:none;">
-					If you have the page and post, and both's slug links are the same (i.e.  site.com/eng/<b>mypage</b>), then you may need to delete one of the (even from TRASH), otherwise, you cant open one of them.
+					For example,If you have a page and a post, and both's slug links are the same (i.e. site.com/eng/<b>mypage</b>), then you may need to delete one of the (even from TRASH), otherwise, you cant open one of them.
 					</div>				
 				<br/>D) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read popup!</a></i>
 		</div>
