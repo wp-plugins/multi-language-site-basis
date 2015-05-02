@@ -1002,7 +1002,7 @@ add_action('admin_notices', 'check_updates__MLSS'); function check_updates__MLSS
 		if (!$last_checktime || $last_checktime<time()-5*86400){	$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
 			preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
 			if (trim($B[2]) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
-				echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version(<a href="'.PluginDown__MLSS.'" target="_blank"><b>'.$B[2].'</b></a>) already! Please, <a href="'.PluginDown__MLSS.'" target="_blank">Download</a> and install it yourself</a>!</div>';
+				echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS(download)</a> page and update on your site too</a>!</div>';
 }}}}
 	//=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================
 	function get_remote_data__MLSS($url, $post_paramtrs=false)	{
