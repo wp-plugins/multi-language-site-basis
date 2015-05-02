@@ -3,15 +3,16 @@ Contributors: selnomeria
 Tags: wordpress,multi,language,multilanguage,site,plugin,website,
 Requires at least: 3.7
 Tested up to: 4.2.1
-Stable tag: 1.40
+Stable tag: 1.41
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.
+Build a Multi-Language Website.
 
 == Description ==
 
-Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation. (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
+Build a Multi-Language Site. I avoided explanations here.. It's better, to read everything on plugin's page, after activation. 
+<br/><br/>(P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
 
 == Installation ==
 

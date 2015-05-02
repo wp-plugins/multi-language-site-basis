@@ -2,9 +2,8 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.40
- -- future to-do list: sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
- + post alternatives...
+ * Version: 1.41
+ -- future to-do list: post alternatives, sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
  ....... delete your post to delete it's slug !!
  global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
@@ -117,7 +116,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	$slug= PagePrefix__MLSS;
 		$page =get_page_by_path('eng'.$slug, OBJECT, 'page');
 		//see, if exists,but trashed
-		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'draft'));}
+		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
 		elseif(!$page){
 		  $parentt	= wp_insert_post(array('post_title'=>'eng'.$slug, 'post_name'=>'eng'.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
 		  $subb		= wp_insert_post(array('post_title'=>'sample1','post_name'=>'sample1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
@@ -126,7 +125,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	
 		$page =get_page_by_path('rus'.$slug, OBJECT, 'page');
 		//see, if exists,but trashed
-		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'draft'));}
+		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
 		elseif(!$page){
 		  $parentt	= wp_insert_post(array('post_title'=>'rus'.$slug,		'post_name'=>'rus'.$slug,  'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
 		  $subb		= wp_insert_post(array('post_title'=>'somethinggggg1',	'post_name'=>'somethinggggg1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));

@@ -11,13 +11,36 @@ if ( is_admin() ){
 	
 	
 	//===================================================FIRST SUBMENU (settings)==========================================
-					//At first, update priority fields...
+					
 					add_action('init','ffff454__MLSS',1);function ffff454__MLSS(){
-						if (is_admin() && iss_admiiiiiin__MLSS()){
-							if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false); }
-							if (isset($_POST['inp_SecureNonce1'])){	
-								NonceCheck__MLSS($_POST['inp_SecureNonce1'],'fupd_mlss');
+						if (isset($_POST['inp_SecureNonce1'])){	NonceCheck__MLSS($_POST['inp_SecureNonce1'],'fupd_mlss');
+							if (is_admin() && iss_admiiiiiin__MLSS()){
+								//update optionsss	
+								update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
+								update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']);
+								update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_HiddenLangs']) ); 
+								update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
+								foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
+								update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
+								//
+								update_option('optMLSS__EnableQueryStrPosts',$_POST['EnablePostQueryStr']);
+								//update_option('optMLSS__ShowHideOtherCats',	$_POST['EnableHideOtherCtypeEntri']);
+								//update_option('optMLSS__HidenEntriesIdSlug',$_POST['SlugofHidenEntriesId']);
+								//
+								foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
+								update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
+								update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
+								update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
+								update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
+								update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
 								
+								//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
+								//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
+								
+								
+								//update priority fields...
+										//if reflush is needed
+										if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false); }
 								$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
 									if(get_option('optMLSS__OnOffMode') != $_POST['ioptMLSS__OnOffMode']){ $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__OnOffMode', $_POST['ioptMLSS__OnOffMode']);	
@@ -34,32 +57,7 @@ if ( is_admin() ){
 						}
 					}
 	function my_submenu1__MLSS() { 
-		if (isset($_POST['inp_SecureNonce1'])){	
-			$_POST = array_map("trim", $_POST);	//TRIM ALL requests	
-			NonceCheck__MLSS($_POST['inp_SecureNonce1'],'fupd_mlss');
-			//update optionsss	
-			update_option('optMLSS__FirstMethod',		$_POST['inp_FirstMethod']	); 
-			update_option('optMLSS__FixedLang',			$_POST['inp_FirsttimeFixed']);
-			update_option('optMLSS__HiddenLangs',		str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_HiddenLangs']) ); 
-			update_option('optMLSS__DefForOthers',		$_POST['other_defaulter']);
-			foreach (LANGS__MLSS() as $name=>$value){ update_option('optMLSS__Target_'. $value,	$_POST['titlee22_'.$value] ); }
-			update_option('optMLSS__Target_'.'default', $_POST['titlee22_default'] );
-			//
-			update_option('optMLSS__EnableQueryStrPosts',$_POST['EnablePostQueryStr']);
-			//update_option('optMLSS__ShowHideOtherCats',	$_POST['EnableHideOtherCtypeEntri']);
-			//update_option('optMLSS__HidenEntriesIdSlug',$_POST['SlugofHidenEntriesId']);
-			//
-			foreach (LANGS__MLSS() as $name=>$value){	update_option('optMLSS__HomeID_'.$value ,	$_POST['homeID_'.$value]);	} 
-			update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
-			update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
-			update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
-			update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
-			update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
-			
-			//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
-			//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
-			
-		}
+		//update options are in separate function,because they needed flush inside INIT
 		$ChosenSelectorType = get_option('optMLSS__FirstMethod');
 		$PluginOnOffMode = get_option('optMLSS__OnOffMode');
 		?> 
@@ -300,7 +298,7 @@ if ( is_admin() ){
 		</div>
 		
 		<div class="eachBlock">
-			<span class="fakeH22">7) Read Important Tips</span>:
+			<span class="fakeH22">7) Read Quick Popup INFOs</span>:
 				<br/>A) <b>Attention to PERMALINKS</b> - <i><a href="javascript:show_my_popup('#AttentionPermalinks');" class="readpopp">Read popup!</a></i>
 					<div id="AttentionPermalinks" style="display:none;">
 						in PERMALINKS, you must use PRETTY PERMALINKS ("PRETTY" means i.e. <b>/%postname%</b>,  /%category%/%postname% or etc). Otherwise, this plugn will have problems... 
@@ -311,8 +309,11 @@ if ( is_admin() ){
 					<div id="AttentionQueries" style="display:none;">
 					Also note, that this plugin wont work, if your theme outputs posts using non-standard(custom) query methods. In this case, you might have to modify your themes code to default HAVE_POSTS() query... 
 					</div>
-				
-				<br/>C) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read popup!</a></i>
+				<br/>C) <b>Avoid exactly SLUG/URL</b> - <i><a href="javascript:show_my_popup('#sameslugproblems');" class="readpopp">Read popup!</a></i>
+					<div id="sameslugproblems" style="display:none;">
+					If you have the page and post, and both's slug links are the same (i.e.  site.com/eng/<b>mypage</b>), then you may need to delete one of the (even from TRASH), otherwise, you cant open one of them.
+					</div>				
+				<br/>D) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read popup!</a></i>
 		</div>
 		
 		<br/><br/><br/><br/>*<b>If you have found bugs or etc, <a href="http://j.mp/wordpressthemestt" target="_blank">CONTACT ME</b></a>! Check if there are UPDATES from time to time!!
