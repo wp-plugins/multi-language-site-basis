@@ -15,7 +15,7 @@ Build a Multi-Language Website.
 
 I avoided explanations here, it's better to read everything on plugin's page, after activation. 
 
-` (P.S. Other MUST-HAVE plugins for everyone: http://bitly.com/MWPLUGINS )
+`(P.S. Other MUST-HAVE plugins for everyone: http://bitly.com/MWPLUGINS )`
 
 == Installation ==
 
