@@ -11,9 +11,11 @@ Build a Multi-Language Website.
 
 == Description ==
 
-Build a Multi-Language Site. I avoided explanations here.. It's better, to read everything on plugin's page, after activation. 
+**For building a Multi-Language Site.** 
 
-> (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
+I avoided explanations here, it's better to read everything on plugin's page, after activation. 
+
+` (P.S. Other MUST-HAVE plugins for everyone: http://bitly.com/MWPLUGINS )
 
 == Installation ==
 
