@@ -29,7 +29,7 @@ I avoided explanations here, it's better to read everything on plugin's page, af
 
 == Screenshots ==
 
-1. screenshot-1.png 
+1. sample dropdown
 
 == Changelog ==
 
