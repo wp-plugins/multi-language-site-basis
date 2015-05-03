@@ -521,13 +521,13 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 						//Show Black Background
 						SHOW_blackGROUND();
 						//POPUP-like CATEGORY WINDOW
-						var catDiv = document.getElementById('categorydiv');	catDiv.style['zIndex']='9639';	catDiv.onclick = function(){REMOVE_blackGROUND();};
+						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
 						//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
 						document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
 						//INSERT OUR MESSAGE
-						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	//window.setTimeout('',4000);
+						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
 					}
-				} window.onload=myCategoryAlert();
+				} window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); };
 			</script>
 			<?php  //hide all other categories
 			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
