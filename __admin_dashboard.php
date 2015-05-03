@@ -88,8 +88,8 @@ if ( is_admin() ){
 					
 					<br/><br/>Those parameters are (At first,better reviewed this page fully, after that you will better understand the below terminology...):
 						<div id="pluginsparameters" style="zzzdisplay:none;">
-							&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">$GLOBALS['SiteLangs__MLSS']</span> [Returns array of all languages]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LNG</span> (CONSTANT) [Returns visitor's detected language's name, i.e. "<b>eng</b>" (can be modified,<a href="javascript:alert('this LNG parameter is detected by this plugin\u0027 own logic... \r\n However, in case you wish to pre-set that value with your own logic&function (i dont know, maybe you are programmer, and have your own functions to find out the language parameter yourself, on any page of your site), then you can pre-set the constant,named LNG_PASSED (but ensure, that constant\u0027s value should be correct, 3 official letters, as described previously), in functions.php or elsewhere, with  add_action(\u0027init\u0027,\u0027your_func\u0027,3);  \r\nSo, on every page load, our LNG constant will get that value, and not according to this plugin\u0027s own logic... BUT READ the 6th paragraph about initialization time.');">read more!</a>)]
+							&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">$GLOBALS['SiteLangs__MLSS']</span> or <span class="codee">LANGS__MLSS()</span>[Returns array of all used languages;]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LNG</span> (CONSTANT) [Returns visitor's detected language's name, i.e. "<b>eng</b>" (can be modified,<a href="javascript:alert('this LNG parameter is detected by this plugin\u0027s own logic... \r\n However, in case you wish to pre-set that value with your own logic&function (i dont know, maybe you are programmer, and have your own functions to find out the language parameter yourself, on any page of your site), then you can pre-set the constant,named LNG_PASSED (but ensure, that constant\u0027s value should be correct, 3 official letters, as described previously), in functions.php or elsewhere, with  add_action(\u0027init\u0027,\u0027your_func\u0027,3);  \r\nSo, on every page load, our LNG constant will get that value, and not according to this plugin\u0027s own logic... BUT READ the 6th paragraph about initialization time.');">read more!</a>)]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- Language Specific Widgets [<span style="color:red;">useful!!</span> you can output your pre-defined widgets for any language category.  ]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">echo apply_filters('MLSS','<span style="color:red;">my_HeadingMessage</span>', LNG);</span> [<span style="color:red;">useful!!</span> Returns/Outputs translation of any transaltion_phrase(you will set them in the left sidebar menu),  according to visitor's language. <b>LNG</b> will be auto detected by plugin. however, you can pass, for example: <b>"eng"</b>, instead of LNG, you can pass "eng"]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_phrase name="<span style="color:red;">my_HeadingMessage</span>"]</span> [Shortcode, to return that translation phrase.. can be used in widgets and posts]
@@ -290,7 +290,7 @@ if ( is_admin() ){
 						By Default, plugin's  LANGUAGE DETERMINATION+TYPE REGISTRATION starts at:
 						<br/> <span class="codee">add_action('init', ..., <span style="color:red;">7</span>);</span>
 						<br/> So, if you wish to change the <b>7</b> to any number(i.e. 15), then in <b>wp-config.php</b> insert:  <span class="codee">define('MLSS_INIT_POINT',15);</span>.
-						<br/><br/>p.s. For other opportunities, read the first popup, about functionalities.
+						<br/><br/>p.s. For other opportunities, read the popup in the top.
 					</div>
 
 
@@ -520,7 +520,7 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 				function myCategoryAlert(){
 					if (document.getElementById('taxonomy-category')){
 						//Show Black Background
-						SHOW_blackGROUND();
+						<?php if ('yes'!=get_option('optMLSS__DisableShowHideCatNotice')) { ?> SHOW_blackGROUND(); <?php } ?>
 						//POPUP-like CATEGORY WINDOW
 						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
 						//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
@@ -529,7 +529,7 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
 					}
 				}
-				<?php if ('yes'!=get_option('optMLSS__DisableShowHideCatNotice')) { ?> window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); }; <?php } ?>
+				window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); };
 			</script>
 			<?php  //hide all other categories
 			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 

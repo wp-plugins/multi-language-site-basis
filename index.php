@@ -246,7 +246,7 @@ function GetLanguagesFromBase__MLSS(){
 	$GLOBALS['SiteLangs__MLSS'] = $finall; 	return $GLOBALS['SiteLangs__MLSS'];
 }
 	
-	function LANGS__MLSS(){return $GLOBALS['SiteLangs__MLSS'];} 
+	function LANGS__MLSS(){return ($GLOBALS['SiteLangs__MLSS'] ? $GLOBALS['SiteLangs__MLSS'] : GetLanguagesFromBase__MLSS());} 
 	add_action('init','LANGS__MLSS',MLSS_initNumb);
 	
 	function Defines_MLSS(){ foreach (LANGS__MLSS() as $n=>$v) { define ($v.'__MLSS',$v); define($v.'_title__MLSS',$n);} }
