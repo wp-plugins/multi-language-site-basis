@@ -408,7 +408,7 @@ function registPTyps__MLSS() {
 					'hierarchical' => true,
 					'has_archive' => true,
 					'capability_type' => 'post',
-					'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes','post_tag', 'revisions','comments', ),
+					'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes','post_tag', 'revisions','comments','post-formats' ),
 					//'taxonomies' => array('category','post_tag','my_taxonomyy_'.$value),	
 					'rewrite' => array('with_front'=>true),			'can_export' => true,	
 					//'permalink_epmask'=>EP_PERMALINK, 
