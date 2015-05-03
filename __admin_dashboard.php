@@ -511,7 +511,8 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 			?> <?php include_once(__DIR__.'/flags/javascript_functions.php'); ?>
 			<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
 			<div style="display:none;"><div id="CatDrHeader">
-				<div style="margin:0 0 0 1px;"><span style="color:red;">Choose one Category.</span>
+				<div style="margin:0 0 0 1px;"><span style="color:red;">Choose one Category.</span> <span style="font-style:italic;">[dont remind me this anymore: <input type="hidden" name="showhidNotic__MLSS" value="no" /><input type="checkbox" name="showhidNotic__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__DisableShowHideCatNotice')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]</span>
+				<br/>
 				<br/>[From now,hide any other Language categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
 				</div>
 			</div></div>
@@ -527,7 +528,8 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 						//INSERT OUR MESSAGE
 						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
 					}
-				} window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); };
+				}
+				<?php if ('yes'!=get_option('optMLSS__DisableShowHideCatNotice')) { ?> window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); }; <?php } ?>
 			</script>
 			<?php  //hide all other categories
 			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
@@ -536,7 +538,10 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 			}
 		}
 	}
-} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{ if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } }
+} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
+		if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
+		if (!empty($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
+	}
 // =================================### Show/Hide other cats=================
 // =========================================================================
 
