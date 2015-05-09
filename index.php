@@ -3,9 +3,6 @@
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
  * Version: 1.42
- -- future to-do list: post alternatives, sticky posts query (http://goo.gl/otIDaA); tags; autors pages should contain only langs..; category is found on any 404 page, if basename meets category.. 
- ....... delete your post to delete it's slug !!
- global $wpdb; $zzzzzz = $wpdb->query(DELETE FROM `'.$wpdb->prefix.'` WHERE `meta_key` = '_wp_old_slug');
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -952,7 +949,7 @@ add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts)
 
 
 
-include(__dir__.'/__admin_dashboard.php');
+include(__dir__.'/____dashboard_options.php');
 
 
 
@@ -967,31 +964,32 @@ include(__dir__.'/__admin_dashboard.php');
 
 /*
 My TO-DO-LIST:::
+ 
+1) sticky posts query (http://goo.gl/otIDaA); 
+2)tags; autors pages should contain only langs..; 
+3) category is found on any 404 page, if basename meets category.. 
+4) post alternatives
+5) tu sxva custom-post-type-shi gamoqveynenbulia ori sxvadasxna enispostebi, mashin imis ARCHIVE_HOME-shi marto iuzeris ena iyos??
+6) sequence
+	i.e.  /eng/eng-sub
+	Homepage:
+	- custom post archive
+	- standard category
+	..
+	..
+	not-homepage (i.e. subpage):
 
-*post alternatives
-*horizontal flags
-4) tu sxva custom-post-type-shi gamoqveynenbulia ori sxvadasxna enispostebi, mashin imis ARCHIVE_HOME-shi marto iuzeris ena iyos?? ori variantia: 1) yvela sxva post_types home -ebis linki sheicvalos:  /lng/postype;   anda daematos query: /posttype?lng=xxx
-//to do list: tags permalinks structure?
-
-i.e.  /eng/eng-sub
-Homepage:
-- custom post archive
-- standard category
-..
-..
-not-homepage (i.e. subpage):
-
- wordpress default url_to_postid ( if enabled cposts: then custom-type; others 404 ; if not enabled cposts: then  page; others 404)
-if url_to_postid not found
-	//- cust.post.
-	- page
-	- post
-	==if post not detected==
-		//- cust.taxonomy.cat  (wp default 404)  created manually
-		- category	(wp default 404)   created manually
+	 wordpress default url_to_postid ( if enabled cposts: then custom-type; others 404 ; if not enabled cposts: then  page; others 404)
+	if url_to_postid not found
 		//- cust.post.
 		- page
 		- post
+		==if post not detected==
+			//- cust.taxonomy.cat  (wp default 404)  created manually
+			- category	(wp default 404)   created manually
+			//- cust.post.
+			- page
+			- post
 
 */	
 
