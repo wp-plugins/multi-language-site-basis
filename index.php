@@ -996,17 +996,19 @@ if url_to_postid not found
 */	
 
 //======================================== check for plugin updates =======================
-define('PluginName__MLSS', 'Multi-Language-Plugin-Simple'); define('PluginUrl__MLSS','http://plugins.svn.wordpress.org/multi-language-site-basis/trunk/index.php'); define('PluginDown__MLSS','https://wordpress.org/plugins/multi-language-site-basis/changelog/');
-add_action('admin_notices', 'check_updates__MLSS'); function check_updates__MLSS(){if (current_user_can('create_users')){
-		$OPTNAME_checktimee=PluginName__MLSS.'_updatechecktime';	$last_checktime=get_option($OPTNAME_checktimee,false); 	
-		if (!$last_checktime || $last_checktime<time()-5*86400){	$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
-			preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
-			if (trim($B[2]) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
-				echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS(download)</a> page and update on your site too</a>!</div>';
-}}}}
+if (is_admin()){
+	define('PluginName__MLSS', 'Multi-Language-Plugin-Simple'); define('PluginUrl__MLSS','http://plugins.svn.wordpress.org/multi-language-site-basis/trunk/index.php'); define('PluginDown__MLSS','https://wordpress.org/plugins/multi-language-site-basis/changelog/');
+	
+	add_action('admin_notices', 'check_updates__MLSS'); function check_updates__MLSS(){if (current_user_can('create_users')){
+			$OPTNAME_checktimee=PluginName__MLSS.'_updatechecktime';	$last_checktime=get_option($OPTNAME_checktimee,false); 	
+			if (!$last_checktime || $last_checktime<time()-5*86400){	$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
+				preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
+				if (trim($B[2]) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
+					echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS</a> page and update on your site too</a>!</div>'; return true;
+	}}}}
 	//=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================
 	function get_remote_data__MLSS($url, $post_paramtrs=false)	{
 	   $c = curl_init();curl_setopt($c, CURLOPT_URL, $url);curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);	if($post_paramtrs){curl_setopt($c, CURLOPT_POST,TRUE);	curl_setopt($c, CURLOPT_POSTFIELDS, "var1=bla&".$post_paramtrs );}	curl_setopt($c, CURLOPT_SSL_VERIFYHOST,false);curl_setopt($c, CURLOPT_SSL_VERIFYPEER,false);curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0"); curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;');	curl_setopt($c, CURLOPT_MAXREDIRS, 10);  $follow_allowed= ( ini_get('open_basedir') || ini_get('safe_mode')) ? false:true;  if ($follow_allowed){curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);}curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 9);curl_setopt($c, CURLOPT_REFERER, $url);curl_setopt($c, CURLOPT_TIMEOUT, 60);curl_setopt($c, CURLOPT_AUTOREFERER, true);  		curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');$data=curl_exec($c);$status=curl_getinfo($c);curl_close($c);preg_match('/(http(|s)):\/\/(.*?)\/(.*\/|)/si',  $status['url'],$link);$data=preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/|\/)).*?)(\'|\")/si','$1=$2'.$link[0].'$3$4$5', $data);$data=preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/)).*?)(\'|\")/si','$1=$2'.$link[1].'://'.$link[3].'$3$4$5', $data);if($status['http_code']==200) {return $data;} elseif($status['http_code']==301 || $status['http_code']==302) { if (!$follow_allowed){if(empty($redirURL)){if(!empty($status['redirect_url'])){$redirURL=$status['redirect_url'];}}	if(empty($redirURL)){preg_match('/(Location:|URI:)(.*?)(\r|\n)/si', $data, $m);if (!empty($m[2])){ $redirURL=$m[2]; } }	if(empty($redirURL)){preg_match('/href\=\"(.*?)\"(.*?)here\<\/a\>/si',$data,$m); if (!empty($m[1])){ $redirURL=$m[1]; } }	if(!empty($redirURL)){$t=debug_backtrace(); return call_user_func( $t[0]["function"], trim($redirURL), $post_paramtrs);}}} return "ERRORCODE22 with $url!!<br/>Last status codes<b/>:".json_encode($status)."<br/><br/>Last data got<br/>:$data";
 	}
-
+}
 ?>
