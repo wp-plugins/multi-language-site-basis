@@ -75,7 +75,17 @@ if ( is_admin() ){
 				
 																<form action="" method="POST">
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22">(<a href="javascript:alert('To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs! \r\n\r\n\r\n(Notes):\r\n1) To modify/design the output, read the 6th paragraph on this page.  \r\n2)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it.  \r\n3) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical page.. instead, it builds the separate language home site, and you can add separate posts&pages or etc..).  ');" class="readpopp">Read popup</a>!)</span></center> 
+		<center><span class="fakeH22">(<a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">Read popup</a>!)</span></center> 
+			<div id="pluginwelcome" style="display:none;">
+			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs!
+			 <br/><br/><br/>(Notes):
+			 <br/>1) at first, click here to publish the initial <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">example PAGES & CATEGORIES</a>;
+			 <br/>2) To modify/design the output, read the 6th paragraph on this page.  
+			 <br/>3)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it. 
+			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..).  ')
+			</div>
+		
+		
 					<br/><span class="smallnotic">(Visit <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
 					<br/><span class="smallnotic">(Visit <a href="http://j.mp/wpluginstt#mlss" target="_blank">other useful plugins</a>...)</span>
 					
@@ -548,9 +558,48 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 
 	
 	
-	
 
-	
+
+	// INSERT SAMPLE DATA after INSTALLATION
+	add_action('init','insert_sample_data__MLSS');function insert_sample_data__MLSS(){
+		if(isset($_GET['SAMPLE_DATA__MLSS'])) {
+			if (is_admin() && iss_admiiiiiin__MLSS()){
+				//=============================================================================
+				//================insert SAMPLE DATA: CATEGORIES and PAGES ====================
+				//=============================================================================
+				//categories
+					$slug= S_CategPrefix__MLSS;
+					if (!term_exists('eng'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
+						$parentt= wp_insert_term('eng'.$slug,'category', array());		$PT= get_term_by('slug', 'eng'.$slug, 'category');
+						$subb= wp_insert_term('samplecategoryyyy1',	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy2',	'category', array('parent'=>$PT->term_id)); 
+					}	
+					if (!term_exists('rus'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
+						$parentt= wp_insert_term('rus'.$slug,'category', array());		$PT= get_term_by('slug', 'rus'.$slug, 'category');
+						$subb= wp_insert_term('examplecategoryy',	'category', array('parent'=>$PT->term_id)); $subb= wp_insert_term('examplecategoryy42',	'category', array('parent'=>$PT->term_id)); 
+					}
+				//pages
+				$slug= PagePrefix__MLSS;
+					$page =get_page_by_path('eng'.$slug, OBJECT, 'page');
+					//see, if exists,but trashed
+					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
+					elseif(!$page){
+					  $parentt	= wp_insert_post(array('post_title'=>'eng'.$slug, 'post_name'=>'eng'.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
+					  $subb		= wp_insert_post(array('post_title'=>'sample1','post_name'=>'sample1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					  $subb		= wp_insert_post(array('post_title'=>'sample2','post_name'=>'sample2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					}
+				
+					$page =get_page_by_path('rus'.$slug, OBJECT, 'page');
+					//see, if exists,but trashed
+					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
+					elseif(!$page){
+					  $parentt	= wp_insert_post(array('post_title'=>'rus'.$slug,		'post_name'=>'rus'.$slug,  'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
+					  $subb		= wp_insert_post(array('post_title'=>'somethinggggg1',	'post_name'=>'somethinggggg1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					  $subb		= wp_insert_post(array('post_title'=>'somethinggggg2',	'post_name'=>'somethinggggg2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					}
+				die('<br/><br/>Sample Pages and Categories was published! <br/>Although you might never need those pages, just enter CATEGORIES page, and carefully look at their slugs&structure, to know, what slug names have the ROOT hierarchy CATEGORIES & Pages...');
+			}
+		}
+	}
 	
 	
 	

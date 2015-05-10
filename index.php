@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.42
+ * Version: 1.44
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -50,7 +50,7 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
 	update_option( 'optMLSS__NeedFlush','okk');
 	if (!get_option('optMLSS__Lngs')) {
-		update_option('ioptMLSS__OnOffMode','oon');
+		update_option('optMLSS__OnOffMode','oon');
 		update_option('optMLSS__Lngs','English{eng},Русский{rus},Japan{jpn},Dutch{nld}');	update_option('optMLSS__DefForOthers',	'dropdownn');
 		update_option('optMLSS__HiddenLangs',		'Japan{jpn},Dutch{nld},');				update_option('optMLSS__FirstMethod',	'dropddd');
 			//
@@ -90,45 +90,8 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 							array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
 	//flush-update permalinks for CUSTOM POST TYPES 
 	GetLanguagesFromBase__MLSS(); registPTyps__MLSS();	MyFlush__MLSS(false);  
-	
-	
-	//=============================================================================
-	//================insert SAMPLE DATA: CATEGORIES and PAGES ====================
-	//=============================================================================
-	//categories
-	$slug= S_CategPrefix__MLSS;
-	if (!term_exists('eng'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
-		$parentt= wp_insert_term('eng'.$slug,'category', array());
-			$PT= get_term_by('slug', 'eng'.$slug, 'category');
-		$subb= wp_insert_term('samplecategoryyyy1',	'category', array('parent'=>$PT->term_id)); 
-		$subb= wp_insert_term('samplecategoryyyy2',	'category', array('parent'=>$PT->term_id)); 
-	}	
-	if (!term_exists('rus'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
-		$parentt= wp_insert_term('rus'.$slug,'category', array());
-			$PT= get_term_by('slug', 'rus'.$slug, 'category');
-		$subb= wp_insert_term('examplecategoryy',	'category', array('parent'=>$PT->term_id)); 
-		$subb= wp_insert_term('examplecategoryy42',	'category', array('parent'=>$PT->term_id)); 
-	}
-	//pages
-	$slug= PagePrefix__MLSS;
-		$page =get_page_by_path('eng'.$slug, OBJECT, 'page');
-		//see, if exists,but trashed
-		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
-		elseif(!$page){
-		  $parentt	= wp_insert_post(array('post_title'=>'eng'.$slug, 'post_name'=>'eng'.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
-		  $subb		= wp_insert_post(array('post_title'=>'sample1','post_name'=>'sample1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-		  $subb		= wp_insert_post(array('post_title'=>'sample2','post_name'=>'sample2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-		}
-	
-		$page =get_page_by_path('rus'.$slug, OBJECT, 'page');
-		//see, if exists,but trashed
-		if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
-		elseif(!$page){
-		  $parentt	= wp_insert_post(array('post_title'=>'rus'.$slug,		'post_name'=>'rus'.$slug,  'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
-		  $subb		= wp_insert_post(array('post_title'=>'somethinggggg1',	'post_name'=>'somethinggggg1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-		  $subb		= wp_insert_post(array('post_title'=>'somethinggggg2',	'post_name'=>'somethinggggg2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-		}
 }
+
 register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
 	if (REMOVE_CAT_BASE_WpOption__MLSS) { update_option('category_base', get_option('optMLSS__Cat_base_BACKUP')); $GLOBALS['wp_rewrite']->set_category_base(get_option('optMLSS__Cat_base_BACKUP')); }      
 	MyFlush__MLSS(false); 
