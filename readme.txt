@@ -11,11 +11,10 @@ Build a Multi-Language Website.
 
 == Description ==
 
-**For building a Multi-Language Site.** 
+**For building a Multi-Language Site!** 
+It's better to read Full explanations on plugin's page, after activation.
 
-I avoided explanations here, it's better to read everything on plugin's page, after activation.
-
-`(P.S. Other MUST-HAVE plugins for everyone: http://bitly.com/MWPLUGINS )`
+>  (P.S. Note! This is a <a href="http://codesphpjs.blogspot.com/2014/10/nsp-non-slowing-plugins-for-wordpress.html" target="_blank">Non-Slowing</a> Plugin.  See OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
 
 == Installation ==
 

@@ -857,10 +857,9 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 
 //ADD classname to widget ..  THANKS to AUTHOR of "SIMPLE WIDGET CLASSES" ( http://markwilkinson.me/saythanks )
 class Simple_Widget_Classes__MLSS {
-	public function __construct() {	add_filter( 'widget_form_callback', array( $this, 'Form' ), 9, 2 );
-		add_filter( 'widget_update_callback', array ($this, 'Update' ), 9, 2 ); 	add_filter( 'dynamic_sidebar_params', array( $this, 'Apply' ), 9 ); }
-	//add form into ADMIN SIDEBARS
-	public function form( $instance, $widget ) {
+	public function __construct() {	add_filter( 'widget_form_callback', array($this,'myForm'),9,2);	add_filter('widget_update_callback', array($this,'myUpdate'),9,2); 	add_filter( 'dynamic_sidebar_params', array($this,'myApply'),9);   add_filter( 'dynamic_sidebar_params', array($this,'myApply2'),9);}
+	//add form into ADMIN SIDEBARS (add dropdown checkbox to each widget)
+	public function myForm( $instance, $widget ) {
 		if( !isset($instance['WidgetLang__MLSS']) ) { $instance['WidgetLang__MLSS'] = null; }	?>
 		<p><label for='widget-<?php echo $widget->id_base; ?>-<?php echo $widget->number; ?>-WidgetLang__MLSS'>(MLSS) Shown on Language:
 				<select class="widefat" id="<?php echo $instance[ 'WidgetLang__MLSS' ]; ?>" name="widget-<?php echo $widget->id_base; ?>[<?php echo $widget->number; ?>][WidgetLang__MLSS]">
@@ -870,25 +869,53 @@ class Simple_Widget_Classes__MLSS {
 				</select>
 		</label></p> <?php return $instance;
 	}
-	public function Update($instance,$new_instance) {$instance['WidgetLang__MLSS']=wp_strip_all_tags($new_instance['WidgetLang__MLSS']);return $instance;}
-	// implement on frontend or ??? add  input box to each widget in the ADMIN DASHBOARD
-	public function Apply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
-		if ( !( $widgetlogicfix = $widget['callback'][0]->option_name ) )
+	public function myUpdate($instance,$new_instance) {$instance['WidgetLang__MLSS']=wp_strip_all_tags($new_instance['WidgetLang__MLSS']);return $instance;}
+	// change front-end output 
+	public function myApply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
 			// because the Widget Logic plugin changes this structure - how selfish of it!
-			$widgetlogicfix = $widget['callback_wl_redirect'][0]->option_name;	$option_name = get_option( $widgetlogicfix );	$number = $widget['params'][0]['number'];
-			
+			if ( !( $default_name_fixed = $widget['callback'][0]->option_name ) ) { $default_name_fixed = $widget['callback_wl_redirect'][0]->option_name; }
+		$option_name = get_option( $default_name_fixed ); $number = $widget['params'][0]['number'];
 		if( isset( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) ) {
 			// find the end of the class= part and replace with new 
 			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widgetCL MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
-		} return $params;}	
+		} return $params;
+	}
+	//BASED ON CLASSNAME,  Hide Other Language Widgetssss
+	public function myApply2($params) {	global $wp_registered_widgets;
+		$incl_nm= $params[0]['before_widget'];
+		if (stripos($incl_nm,'MLSS_widget_') !== false && !is_admin() &&  (stripos($incl_nm,'MLSS_widget_ALL') === false && stripos($incl_nm,'MLSS_widget_'.LNG) === false)   ) { $params=array(); $params['blabla']=''; }  return $params;
+	}	
+		
 } $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
 
-
-//BASED ON CLASSNAME,  Hide Other Language Widgetssss
-add_filter( 'dynamic_sidebar_params', 'widget_visible__MLSS', 9); function widget_visible__MLSS($params) {	global $wp_registered_widgets;
-	$incl_nm= $params[0]['before_widget'];
-	if (stripos($incl_nm,'MLSS_widget_') !== false && !is_admin() &&  (stripos($incl_nm,'MLSS_widget_ALL') === false && stripos($incl_nm,'MLSS_widget_'.LNG) === false)   ) { $params=array(); $params['blabla']=''; }  return $params;
+//add "DISABLE THIS WIDGET" checkbox, to temporarily hide it.
+if (!class_exists('EnableDisableWidget__TT')){
+	class EnableDisableWidget__TT {
+		public function __construct() {	add_filter( 'widget_form_callback', array( $this, 'myForm' ), 6, 2 );	add_filter( 'widget_update_callback', array ($this, 'myUpdate' ), 9, 2 ); 	add_filter( 'dynamic_sidebar_params', array( $this, 'myApply' ), 9 );   add_filter( 'dynamic_sidebar_params', array( $this, 'myApply2' ), 9 ); }
+		//add form into ADMIN SIDEBARS
+		public function myform( $instance, $widget ) {  if( !isset($instance['wONOFF__TT']) ) { $instance['wONOFF__TT'] = null; }	?>	
+			<div style="font-size:0.8em;font-style:italic;background-color:#e7e7e7;margin:10px 0 0;padding:0 2px;text-align: right;">Disable this widget temporarily: <input type="checkbox" value="offf" name="widget-<?php echo $widget->id_base; ?>[<?php echo $widget->number; ?>][wONOFF__TT]" <?php if ('offf'==$instance['wONOFF__TT']){echo 'checked="checked"';}?>/> </div>	<?php return $instance;
+		}
+		public function myUpdate($instance,$new_instance) {$instance['wONOFF__TT']=wp_strip_all_tags($new_instance['wONOFF__TT']);return $instance;}
+		// change front-end output 
+		public function myApply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
+				// because the Widget Logic plugin changes this structure - how selfish of it!
+				if ( !( $default_name_fixed = $widget['callback'][0]->option_name ) ) { $default_name_fixed = $widget['callback_wl_redirect'][0]->option_name; }
+			$option_name = get_option( $default_name_fixed ); $number = $widget['params'][0]['number'];
+			if( isset( $option_name[$number][ 'wONOFF__TT' ] ) && !empty( $option_name[$number][ 'wONOFF__TT' ] ) ) {
+				// find the end of the class= part and replace with new 
+				$params[0]['before_widget'] = preg_replace('/"\>/', ' wONOFFvalue__TT_'.$option_name[$number]['wONOFF__TT'].'">', $params[0]['before_widget'], 1);
+			} 
+			return $params;
+		}			
+		//BASED ON FOUND CLASSNAME,  SHOW or HIDE
+		public function myApply2( $params ) {	global $wp_registered_widgets; 
+			$incl_nm= $params[0]['before_widget']; if (stripos($incl_nm,'wONOFFvalue__TT_offf') !== false && !is_admin())  { $params=array(); $params['blabla']=''; }  return $params;
+		}	
+	} $enabledisablewidget__TT = new EnableDisableWidget__TT();
 }
+
+
 		/*  add_action('wp_head','ShowHideWidgets1__MLSS'); function ShowHideWidgets1__MLSS(){
 		  $out=''; foreach (LANGS__MLSS() as $each) {	if ($each != LNG) { $out .= '.MLSS_widget_'.$each.'{display:none;}';}
 		  } echo '<style type="text/css">'.$out.'</style>';   $out=''; foreach (LANGS__MLSS() as $each) {
@@ -911,11 +938,8 @@ add_filter( 'dynamic_sidebar_params', 'widget_visible__MLSS', 9); function widge
 
 //add sample widget 
 add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() {
-	register_sidebar( array(
-		'name' => 'sample_sidebar1__MLSS',						'id' => 'widget1__MLSS',
-		'before_widget' => '<div class="sidebar1__MLSS">',		'after_widget' => '</div>',	
-		'before_title' => '<h2 class="h2class__MLSS">',			'after_title' => '</h2>',
-	) );
+	register_sidebar( array('name' => 'MLSS_sample_sidebar1','id' => 'mlss_221',
+		'before_widget'=>'<div class="MLSS_sideb1">','after_widget'=>'</div>','before_title'=>'<h2 class="MLSS_roundedd">','after_title'=>'</h2>',) );
 }
 
 add_filter( 'widget_text', 'do_shortcode' ); //enable SHORTCODES in widgets
