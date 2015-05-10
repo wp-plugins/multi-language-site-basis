@@ -131,7 +131,7 @@ if ( is_admin() ){
 			</div>
 			<div class="hiddenlngs">
 				Hidden Langs: (<i><a href="javascript:alert('later,if you will need to disable any above language, it is better to put its phraze here, rather than removing from the above list. Thus, that language will be just hidden from site(instead of REMOVING),because \u0022REMOVING\u0022 might also remove indexed pages from GOOGLE too..');" class="readpopp">Read popup!</a></i>)
-				<br/><input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="jap,fre," />
+				<br/><input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="Japan{jap},....." />
 			</div>
 		</div>
 		
@@ -360,7 +360,7 @@ if ( is_admin() ){
 	//===============================================SECOND SUBMENU(translated words)======================================
 	function my_submenu2__MLSS() {
 		global $wpdb;
-		$ALL_WORDS = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss`");
+		$ALL_WORDS = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss`"); $final_groups=array();
 		//group them based on title_indx
 		foreach ($ALL_WORDS as $eachBlockInd => $EachBlockContent)	{$final_groups[$EachBlockContent->title_indx][]=$EachBlockContent;	}
 		?>

@@ -40,9 +40,6 @@ define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alter
 		
 		
 		
-		
-		
-		
 //==================================================== ACTIVATION commands ===============================		
 //REDIRECT SETTINGS PAGE (after activation)
 add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); } }
@@ -71,23 +68,28 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__EnableQueryStrPosts',	'n');	update_option('optMLSS__EnableCustCat',	'n');
 		update_option('optMLSS__CatBaseRemoved',		'y');
 		//update_option('optMLSS__ShowHideOtherCats',		'n'); update_option('optMLSS__HidenEntriesIdSlug',	'post-');
-	}
-	
+		
+		
+		$InnoDB_or_MyISAM = ($wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'")[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
 		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
-		`IDD` int(11) NOT NULL AUTO_INCREMENT,
-		`title_indx` varchar(150) SET utf8 NOT NULL,
-		`lang` varchar(150) SET utf8 NOT NULL,
-		`translation` LONGTEXT SET utf8 NOT NULL DEFAULT '',
-		`mycolumn3` LONGTEXT CHARACTER SET utf8 NOT NULL DEFAULT '',
-		PRIMARY KEY (`IDD`),
-		UNIQUE KEY `IDD` (`IDD`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=10; ");
+			`IDD` int(11) NOT NULL AUTO_INCREMENT,
+			`title_indx` varchar(150) NOT NULL,
+			`lang` varchar(150) NOT NULL,
+			`translation` LONGTEXT  NOT NULL DEFAULT '',
+			`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
+			PRIMARY KEY (`IDD`),
+			UNIQUE KEY `IDD` (`IDD`)
+			) ENGINE=".$InnoDB_or_MyISAM." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+		);
 	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
 							array('translation'=>'Hii user!!!'),
 							array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
 	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
 							array('translation'=>'haи иуzer!'),
 							array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
+	}
+	
+		
 	//flush-update permalinks for CUSTOM POST TYPES 
 	GetLanguagesFromBase__MLSS(); registPTyps__MLSS();	MyFlush__MLSS(false);  
 }
@@ -97,15 +99,6 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 	MyFlush__MLSS(false); 
 }
 //=================================================== ### ACTIVATION commands===============================
-
-
-
-
-
-
-
-
-
 
 
 
@@ -140,8 +133,8 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 			$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key." = '".$value."'"; if(count($WhereArray)!=$i){$o .=' AND ';$i++;} }
 			$CheckIfExists = $wpdb->get_results("SELECT * from `".$tablename."` WHERE ".$o);
 		//check if already exist
-		if (!empty($CheckIfExists))   { $wpdb->update($tablename,  $NewArrayValues,	$WhereArray  				);}
-		else                          { $wpdb->insert($tablename,  array_merge($NewArrayValues,$WhereArray)		);}
+		if (!empty($CheckIfExists))   {return $wpdb->update($tablename,  $NewArrayValues,	$WhereArray  			);}
+		else                          {return $wpdb->insert($tablename,  array_merge($NewArrayValues,$WhereArray)	);}
 	}	
 // DETECT FLAG'S URLs
 	define('FlagFolder__MLSS', "/flags__MLSS");
