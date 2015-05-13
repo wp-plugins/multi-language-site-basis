@@ -405,7 +405,7 @@ if ( is_admin() ){
 			?>
 		<input name="mlss_update1" value="x" type="hidden" /><input type="hidden" name="inp_SecureNonce2" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
 		</form>	
-			<br/><span class="save_div_lexic" style=""><a href="javascript:UpdateSaveAjax();" class="lexic_SUBMIT" >SAVE CHANGES!!</a></span> 
+			<br/><span class="save_div_lexic" style=""><a href="javascript:UpdateSaveAjax();" class="lexic_SUBMIT" >SAVE CHANGES!!</a></span> <span style="float: right; background-color: #D7D7D7; padding: 5px; bottom: 10px; position: fixed; right: 10px; border: 1px solid;"><a href="<?php echo currentURL__MLSS;?>&mlss_export_translations" target="_blank">EXPORT</a></span>
 			<div class="addNEWlnBLOCK">
 				<span style="color:blue;text-decoration:none;">ADD NEW block (with unique INDEXNAME. for example: <b style="color:red;">MyFooterHello</b>):</span> 
 				<input type="text" id="newBlockTitle" value="" /> <a style="background-color:#00D8E0;" href="javascript:add_new_Block();"> Add </a>
@@ -486,7 +486,18 @@ if ( is_admin() ){
 			die("successfully updated");
 		}
 	}
+	// Export Translation Words
 	
+	add_action('init','export_translation_words__MLSS'); function export_translation_words__MLSS(){
+		if (isset($_GET['mlss_export_translations']) && is_admin() && iss_admiiiiiin__MLSS()){
+			//https://github.com/tazotodua/useful-php-scripts
+			function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false ){$mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }   if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); }	foreach($target_tables as $table){$result = $mysqli->query('SELECT * FROM '.$table);  $fields_amount=$result->field_count;  $rows_num=$mysqli->affected_rows;     $res = $mysqli->query('SHOW CREATE TABLE '.$table); $TableMLine=$res->fetch_row();$content = (!isset($content) ?  '' : $content) . "\n\n".$TableMLine[1].";\n\n";	for ($i = 0; $i < $fields_amount;   $i++, $st_counter=0) {	while($row = $result->fetch_row())  {if ($st_counter%100 == 0 || $st_counter == 0 )  {$content .= "\nINSERT INTO ".$table." VALUES";}$content .= "\n(";	for($j=0; $j<$fields_amount; $j++)  { $row[$j] = str_replace("\n","\\n", addslashes($row[$j]) ); if (isset($row[$j])){$content .= '"'.$row[$j].'"' ; }else {$content .= '""';}     if ($j<($fields_amount-1)){$content.= ',';} }	$content .=")";	if ( (($st_counter+1)%100==0 && $st_counter!=0) || $st_counter+1==$rows_num) {$content .= ";";} else {$content .= ",";} $st_counter=$st_counter+1;}	} $content .="\n\n\n";}	$backup_name = $backup_name ? $backup_name : $name."___(".date('H-i-s')."_".date('d-m-Y').")__rand".rand(1,11111111).".sql";header('Content-Type: application/octet-stream');   header("Content-Transfer-Encoding: Binary"); header("Content-disposition: attachment; filename=\"".$backup_name."\"");  echo $content; exit;}
+			EXPORT_TABLES(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME, array($GLOBALS['wpdb']->prefix.'translatedwords__mlss',) );
+			exit;
+		}
+	};
+
+
 	
 	//WHEN FLAG IMAGE IS UPLOADED
 	add_action('init','DetectFlagIsUploaded__MLSS');function DetectFlagIsUploaded__MLSS(){
