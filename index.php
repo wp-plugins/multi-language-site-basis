@@ -743,7 +743,7 @@ add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function
 			$out .= '</div></div></div>';	return $cont.$out;	
 }
 	//output
-	if (FullMode__MLSS){ 
+	if (FullMode__MLSS || isset($_GET['previewDropd__MLSS']) ){ 
 		add_action('wp','fnc134__MLSS'); function fnc134__MLSS(){ if (defined('SHOW_FT_POPUP_MLSS')) {echo apply_filters('MLSS__firsttimeselector',''); exit; }} 
 	}
 	
