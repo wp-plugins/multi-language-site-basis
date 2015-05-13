@@ -407,7 +407,7 @@ if ( is_admin() ){
 			?>
 		<input name="mlss_update1" value="x" type="hidden" /><input type="hidden" name="inp_SecureNonce2" value="<?php echo wp_create_nonce('fupd_mlss');?>" />
 		</form>	
-			<br/><span class="save_div_lexic" style=""><a href="javascript:UpdateSaveAjax();" class="lexic_SUBMIT" >SAVE CHANGES!!</a></span> <span style="float: right; background-color: #D7D7D7; padding: 5px; bottom: 10px; position: fixed; right: 10px; border: 1px solid;"><a href="<?php echo currentURL__MLSS;?>&mlss_export_translations" target="_blank">EXPORT</a></span>
+			<br/><span class="save_div_lexic" style=""><a href="javascript:UpdateSaveAjax();" class="lexic_SUBMIT" >SAVE CHANGES!!</a></span> <span style="float: right; background-color: #D7D7D7; padding: 5px; bottom: 10px; position: fixed; right: 10px; border: 1px solid;"><a href="<?php echo currentURL__MLSS;?>&mlss_export_translations" target="_blank">EXPORT BACKUP!</a></span>
 			<div class="addNEWlnBLOCK">
 				<span style="color:blue;text-decoration:none;">ADD NEW block (with unique INDEXNAME. for example: <b style="color:red;">MyFooterHello</b>):</span> 
 				<input type="text" id="newBlockTitle" value="" /> <a style="background-color:#00D8E0;" href="javascript:add_new_Block();"> Add </a>
@@ -439,7 +439,7 @@ if ( is_admin() ){
 			
 			<?php if (empty($GLOBALS['JS_SCRIPT__MLSS'])) {echo $GLOBALS['JS_SCRIPT__MLSS']='<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'/flags/javascript_functions.php?jstypee"></script>';}?>
 			<script type="text/javascript">
-			function UpdateSaveAjax()	{var data=serialize(document.getElementById("lexiconnn"));   myyAjaxRequest(data, "","POST", "alert(responseee);" ); }
+			function UpdateSaveAjax()	{var data=serialize(document.getElementById("lexiconnn"));   myyAjaxRequest(data, "","POST", "alert(responseee);",true ); }
 			</script>
 			
 		<?php 
