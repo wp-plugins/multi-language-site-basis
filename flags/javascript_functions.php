@@ -49,17 +49,17 @@ function HIDE_waiting(id){  var DIIV = document.getElementById('my_waiting_box')
 
 
 //##################### AJAX EXAMPLES  ############## https://github.com/tazotodua/useful-javascript/ ####################
-function myyAjaxRequest(parameters, url, method, passedFunction){
-	method = method.toLowerCase() || "get"; if (method  == "get") {url=url+'?'+parameters+'&MakeRandomValuedLinkToAvoidCache=' + Math.random();}
-	if(typeof SHOW_waiting === 'function') {SHOW_waiting();}	try{try{var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");} catch( e ){var xmlhttp=new ActiveXObject("Msxml2.XMLHTTP");}}catch(e){var xmlhttp = new XMLHttpRequest();}
-	xmlhttp.onreadystatechange=function(){if (xmlhttp.readyState==4){ if(typeof HIDE_waiting === 'function') {HIDE_waiting();} responseee ="STATE:"+ xmlhttp.readyState + ";\nSTATUS:" + xmlhttp.status +";\nRESPONSED:" +xmlhttp.responseText; 
-		eval(passedFunction); //execute any codes
+function myyAjaxRequest(parameters, url, method, YOUR_PASSED_CODES, ShowBlackground){ ShowBlackground= ShowBlackground || false;
+	method = method || "get";method=method.toLowerCase(); url = (url =='') ? window.location.href : url;  if (method  == "get") { url= url + ( (url.indexOf('?') <= -1) ? '?' : '&') +parameters+'&RandomInLinkToAvoidCache=' + Math.random();}
+	if(typeof SHOW_waiting === 'function' && ShowBlackground) {SHOW_waiting();}	try{try{var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");} catch( e ){var xmlhttp=new ActiveXObject("Msxml2.XMLHTTP");}}catch(e){var xmlhttp = new XMLHttpRequest();}
+	xmlhttp.onreadystatechange=function(){if (xmlhttp.readyState==4){ if(typeof HIDE_waiting === 'function' && ShowBlackground) {HIDE_waiting();}  responseee = xmlhttp.responseText; //xmlhttp.readyState + xmlhttp.status//
+		eval(YOUR_PASSED_CODES); //execute any codes
 		}
 	}; xmlhttp.open(method,url, true); 
 	if (method  == "post"){xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");xmlhttp.send(parameters);}
 	else if (method  == "get"){xmlhttp.send(null);}
 }
-//###################################################################################
+//########################################################################################################################
 
 
 
