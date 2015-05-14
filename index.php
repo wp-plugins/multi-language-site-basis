@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.45
+ * Version: 1.46
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -209,7 +209,7 @@ function GetLanguagesFromBase__MLSS(){
 	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; 
 		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".($lang ? $lang : LNG)."'");
 		return stripslashes($res[0]->translation);
-	} add_filter('MLSS','MLSS_PHRAZE');  //you can pass additional variables into this filter too.
+	} add_filter('MLSS','MLSS_PHRAZE',10,3);  //you can pass additional variables into this filter too.
 	
 	//DETERMINE TEMPORARY HIDDEN LANGUAGES
 	$hidden_langs__mlss= get_option('optMLSS__HiddenLangs', 'Nothing{none}'); //let's make query only once..
