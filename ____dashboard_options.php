@@ -378,7 +378,7 @@ if ( is_admin() ){
 		.addNEWlnBLOCK{position:relative;background-color:#B9B9B9;width:90%; padding:5px; margin: 10px;}
 		.save_div_lexic{position:fixed; bottom:15px; width:300px; margin:0 0 0 30%; z-index:101;}
 		span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}
-		span.idd_n{font-size:14px; position:relative; color:#BA7D00; border:1px solid; display:inline-block; font-style:italic; left:-3px; top:-2px; padding:0px 2px; margin:0px 15px 0px 2px;}
+		span.idd_n{font-size:14px; position:relative; color:red; border:1px solid; display:inline-block; font-style:italic; left:-3px; top:-2px; padding:0px 2px; margin:0px 15px 0px 2px;}
 		</style>
 		<?php if (empty($GLOBALS['JS_SCRIPT__MLSS'])) {echo $GLOBALS['JS_SCRIPT__MLSS']='<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'/flags/javascript_functions.php?jstypee"></script>';}?>
 		
