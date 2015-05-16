@@ -33,6 +33,7 @@ if ( is_admin() ){
 								update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
 								update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
 								update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
+								update_option('optMLSS__IncludeNamesDropd',	$_POST['drd_includeName']);
 								
 								//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
 								//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
@@ -184,11 +185,11 @@ if ( is_admin() ){
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="hhorizontal" <?php if ('hhorizontal'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Horizontal
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="vvertical" <?php if ('vvertical'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Vertical
 				&nbsp;&nbsp;&nbsp; <input type="radio" name="drp_in_header" value="ddropdown" <?php if ('ddropdown'==get_option('optMLSS__DropdHeader')) {echo 'checked="checked"';}?> />Dropdown
-			<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
+			<br/>*<B>Dropdown Position</B>:&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="drdn_aside" value="left" <?php if ('left'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />LEFT side &nbsp;&nbsp; <input type="radio" name="drdn_aside" value="right" <?php if ('right'==get_option('optMLSS__DropdSidePos')) {echo 'checked="checked"';}?> />RIGHT side
 			<br/>*<B>Dropdown Distance from</B>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOP:<input type="text" style="width:40px;" name="fromtop" value="<?php echo get_option('optMLSS__DropdDistanceTop');?>" />px &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Side:<input type="text" style="width:40px;" name="fromside" value="<?php echo get_option('optMLSS__DropdDistanceSide');?>" />px 
-			<br/>*<B>Make it Fixed Position Or Absolute</B>(<a href="javascript:alert('Stay it in FIXED position while you scrolling your site(beware on small resolution screens!)  or stay it as default, not fixed.');" class="readpopp">Read popup!</a>) :  
+			<br/>*<B>Fixed Position Or Absolute?</B>(<a href="javascript:alert('Stay it in FIXED position while you scrolling your site(beware on small resolution screens!)  or stay it as default, not fixed.');" class="readpopp">Read popup!</a>) :  
 				<input type="radio" name="drd_fixed_rel" value="absolute" <?php if ('absolute'==get_option('optMLSS__DropdDFixedOrAbs')) {echo 'checked="checked"';}?> />Absolute &nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" name="drd_fixed_rel" value="fixed" <?php if ('fixed'==get_option('optMLSS__DropdDFixedOrAbs')) {echo 'checked="checked"';}?> />Fixed
-			
+			<br/>*<B>With Flags(images) display LANGUAGE NAME:  <input type="radio" name="drd_includeName" value="y" <?php if ('y'==get_option('optMLSS__IncludeNamesDropd')) {echo 'checked="checked"';}?> />Yes &nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" name="drd_includeName" value="n" <?php if ('n'==get_option('optMLSS__IncludeNamesDropd')) {echo 'checked="checked"';}?> />No
 			
 		</div>
 		

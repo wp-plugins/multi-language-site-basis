@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.47
+ * Version: 1.48
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -62,7 +62,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
 		update_option('optMLSS__Target_'.'default',	'eng');
 		//
-		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50'); update_option('optMLSS__DropdDFixedOrAbs','absolute');
+		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50'); update_option('optMLSS__DropdDFixedOrAbs','absolute');  update_option('optMLSS__IncludeNamesDropd','y'); 
 		//
 		update_option('optMLSS__CategSlugname',	''); 			update_option('optMLSS__PageSlugname', '');
 		update_option('optMLSS__EnableQueryStrPosts',	'n');	update_option('optMLSS__EnableCustCat',	'n');
@@ -755,11 +755,11 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 		'<div id="LanguageSelector__MLSS" class="css_reset__MLSS">'.
 		 '<div class="'.Dtype__MLSS.'_LSTYPE__MLSS">';
 			//note:large php codes should not be inside <script...> tags, because NOTEPAD++ misunderstoods the scripting colors
-			$DisableCurrentLangClick = true; 	$SITE_LANGUAGES=LANGS__MLSS();
+			$DisableCurrentLangClick = true; $include_names= 'y'==get_option('optMLSS__IncludeNamesDropd');	$SITE_LANGUAGES=LANGS__MLSS(); 
 			//If language is set, then sort languages, as the first language FLAG should be the current language
 			if (defined('LNG')) {								function fix_1($i){return $i != LNG;}
 				$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);						 //remove current language
-				$SITE_LANGUAGES = array( constant(LNG."__MLSS") => LNG) + $SITE_LANGUAGES; 		 //insert current language in first place
+				$SITE_LANGUAGES = array( constant(LNG."_title__MLSS") => LNG) + $SITE_LANGUAGES; 		 //insert current language in first place
 			}	$out.=
 		  '<div id="LangDropMenu1__MLSS">'.
 		   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
@@ -767,7 +767,7 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 			$out.=
 			'<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
 				'<a class="ImgHolder1__MLSS" '.( ($DisableCurrentLangClick && $key_value==LNG) ? '':'href="'.homeURL__MLSS.'/'.$key_value.'"') .'>'.
-					'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. GetFlagUrl__MLSS($key_value). '" />'.
+					'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. GetFlagUrl__MLSS($key_value). '" />'. ( ($include_names) ? "<span class=\"Flag1_lname__MLSS\">$keyname</span>" : "" ).
 				'</a>'.
 			'</div>'.'<span class="clerboth2__MLSS"></span>';											}
 		}	$out.=  
@@ -844,7 +844,7 @@ class Simple_Widget_Classes__MLSS {
 		
 } $simple_widget_classes__MLSS = new Simple_Widget_Classes__MLSS();
 
-//add "DISABLE THIS WIDGET" checkbox, to temporarily hide it.
+//add "HIDE(disable) widget temporarily" checkbox, to temporarily hide it.
 if (!class_exists('EnableDisableWidget__TT')){
 	class EnableDisableWidget__TT {
 		public function __construct() {	add_filter( 'widget_form_callback', array( $this, 'myForm' ), 6, 2 );	add_filter( 'widget_update_callback', array ($this, 'myUpdate' ), 9, 2 ); 	add_filter( 'dynamic_sidebar_params', array( $this, 'myApply' ), 9 );   add_filter( 'dynamic_sidebar_params', array( $this, 'myApply2' ), 9 ); }
