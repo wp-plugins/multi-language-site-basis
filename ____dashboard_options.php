@@ -373,22 +373,25 @@ if ( is_admin() ){
 		.delete{padding:3px; background-color:#759C83; float:right; display:inline-block;}		
 		.lng_NAME{width:80px; display:inline-block;} 
 		input.inpVALUES{width:70%;}   	
-		.title{display: inline-block;}   
+		.title{display: inline-block; margin:0 0 0 20%;}   
 		.lexic_SUBMIT{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;}   
 		.addNEWlnBLOCK{position:relative;background-color:#B9B9B9;width:90%; padding:5px; margin: 10px;}
 		.save_div_lexic{position:fixed; bottom:15px; width:300px; margin:0 0 0 30%; z-index:101;}
 		span.crnt_keyn{display:inline-block;  color:red; background-color:black; padding:2px;font-weight:bold;}
+		span.idd_n{font-size:14px; position:relative; color:#BA7D00; border:1px solid; display:inline-block; font-style:italic; left:-3px; top:-2px; padding:0px 2px; margin:0px 15px 0px 2px;}
 		</style>
 		<?php if (empty($GLOBALS['JS_SCRIPT__MLSS'])) {echo $GLOBALS['JS_SCRIPT__MLSS']='<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'/flags/javascript_functions.php?jstypee"></script>';}?>
 		
 		<form action="" method="POST" class="fmr_lxcn" id="lexiconnn">
 			<br/>Below are listed variable INDEXNAMES with their suitable translations. To output any phrase in your theme, use code (like this): 
 			<br/><b><span class="codee">echo apply_filters('MLSS','<span style="color:red;">my_HeadingMessage</span>');</span></b> 			&nbsp;&nbsp;&nbsp;<i>(<a href="javascript:alert('1)Even more, you can make this command more shorter -  in your functions.php, create function i.e. function Z($var){return apply_filters...}\r\n\r\n\r\n2) You can use shortcodes too -in widgets,posts or etc...  For that, insert anywhere: [MLSS_phrase name=\u0022my_HeadingMessage\u0022]')">Read popup</a>!)</i>
+			
+			(<a href="javascript:show_my_popup('#mlsNotice')"> Read popup!</a>) <div id="mlsNotice">You can use this function anywhere (only after initialization of hooks). However,in case you deactivate this plugin, to avoid errors, you must insert this code in the top of your functions.php: <b><span class="codee">if(!function_exists('MLSS')) {function MLSS(){return 'PLUGIN NOT INSTALLED';}}</span></b></div> -->
 			<br/><br/>
 			<?php 
 			foreach ($final_groups as $each_group){ $BlockTitle=$each_group[0]->title_indx;	$output = 
-			'<div class="eachColumn" id="'.$BlockTitle.'"> 
-				<div class="title">NAME: <span class="crnt_keyn">'.$BlockTitle.'</span></div> 
+			'<div class="eachColumn" id="'.$BlockTitle.'"> <span class="idd_n">'.$each_group[0]->IDD.'</span>
+				<div class="title">identifier: <span class="crnt_keyn">'.$BlockTitle.'</span></div> 
 				<div class="delete"><a href="javascript:deleteThisBlock(\''.$BlockTitle.'\');">DELETE</a></div>';
 						foreach (LANGS__MLSS() as $keyIndex=>$value){ 
 					$trnsl= $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx` = '$BlockTitle' and `lang` = '$value' ");
