@@ -14,7 +14,7 @@
 	 #LanguageSelector__MLSS .LineHolder1__MLSS{}		
 	  #LanguageSelector__MLSS .LineHolder1__MLSS a.ImgHolder1__MLSS{}
 	   #LanguageSelector__MLSS img.FlagImg1__MLSS{height:25px; width:40px;  border:1px solid #000!important;}
-	   #LanguageSelector__MLSS span.Flag1_lname__MLSS{float: right;  clear: both; margin: 5px -3px 0px 2px; color: white; font-weight: bold;}
+	   #LanguageSelector__MLSS span.Flag1_lname__MLSS{float: right;  clear: both; margin: 5px 0px 0px 2px; color: white; font-weight: bold;}
 	 #LanguageSelector__MLSS a#RevealButton__MLSS{}
 		 
 			  .ddropdown_LSTYPE__MLSS #LangDropMenu1__MLSS{	height:27px;}
