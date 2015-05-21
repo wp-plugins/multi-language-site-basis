@@ -373,7 +373,7 @@ if ( is_admin() ){
 		.eachColumn{border:1px solid;margin:2px;}
 		.delete{padding:3px; background-color:#759C83; float:right; display:inline-block;}		
 		.lng_NAME{width:80px; display:inline-block;} 
-		input.inpVALUES{width:70%;}   	
+		input.inpVALUES{width:70%;padding: 0px 5px;}   	
 		.title{display: inline-block; margin:0 0 0 20%;}   
 		.lexic_SUBMIT{background-color:red; border-radius:5px; padding:5px; color:white; font-size:2em;}   
 		.addNEWlnBLOCK{position:relative;background-color:#B9B9B9;width:90%; padding:5px; margin: 10px;}
@@ -543,20 +543,21 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 				<br/>[From now,hide any other Language categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
 				</div>
 			</div></div>
+			<?php $Blackgr=get_option('optMLSS__DisableShowHideCatNotice');?>
 			<script type="text/javascript">
 				function myCategoryAlert(){
 					if (document.getElementById('taxonomy-category')){
 						//Show Black Background
-						<?php if ('yes'!=get_option('optMLSS__DisableShowHideCatNotice')) { ?> SHOW_blackGROUND(); <?php } ?>
+						<?php  if ('yes'!=$Blackgr) { echo 'SHOW_blackGROUND();';}?>
 						//POPUP-like CATEGORY WINDOW
-						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){REMOVE_blackGROUND();};
+						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>};
 						//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
 						document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
 						//INSERT OUR MESSAGE
 						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
 					}
 				}
-				window.onload=function(){ myCategoryAlert(); window.setTimeout('REMOVE_blackGROUND();',5000); };
+				window.onload=function(){ myCategoryAlert(); window.setTimeout('<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>',5000); };
 			</script>
 			<?php  //hide all other categories
 			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
