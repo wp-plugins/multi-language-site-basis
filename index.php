@@ -69,8 +69,8 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		update_option('optMLSS__CatBaseRemoved',		'y');
 		//update_option('optMLSS__ShowHideOtherCats',		'n'); update_option('optMLSS__HidenEntriesIdSlug',	'post-');
 		
-		
-		$InnoDB_or_MyISAM = ($wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'")[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
+							 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
+		$InnoDB_or_MyISAM = ($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
 		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
 			`IDD` int(11) NOT NULL AUTO_INCREMENT,
 			`title_indx` varchar(150) NOT NULL,
@@ -118,7 +118,7 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 //DETECT ROOT CATEGORY slug for current post
 	function PostRootCatDetect__MLSS ($postid=false, $catid=false) { $catParent='';
 		if (!$postid){$postid=$GLOBALS['post']->ID;}
-		if (!$catid) {$catid=get_the_category($postid)[0]->term_id ;}
+		if (!$catid) {$bla3423525=get_the_category($postid);    $catid=$bla3423525[0]->term_id ;}
 		// continue, untill a parent $catid will be null
 		while ($catid) 	{ $cat = get_category($catid);	$catid = $cat->category_parent;  $catParent=$cat->slug; }
 		return $catParent;
