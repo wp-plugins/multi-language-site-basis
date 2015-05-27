@@ -283,7 +283,7 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 					$FIRST_TIME_METHOD=get_option('optMLSS__FirstMethod');
 				if ($FIRST_TIME_METHOD=='dropddd')	{ define('SHOW_FT_POPUP_MLSS', true); return;}		
 				if ($FIRST_TIME_METHOD=='fixeddd')	{ define('LNG',get_option('optMLSS__FixedLang')); }  //no need to set cookie
-				if ($FIRST_TIME_METHOD=='ippp')		{ include( __DIR__ .'/flags/ip_country_detect/sample_test.php'); //gets $country_name
+				if ($FIRST_TIME_METHOD=='ippp')		{ include( dirname(__file__) .'/flags/ip_country_detect/sample_test.php'); //gets $country_name
 					if (!empty($country_name)){ 
 						foreach (LANGS__MLSS() as $name=>$value){
 							if (stristr(','.get_option('optMLSS__Target_'.$value).',', ','.$country_name.',')) {$xLang=$value;break;}
@@ -774,7 +774,7 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 		'</div>'. '</div>'. '</div>'.'</div>';
 		
 		
-		include_once(__DIR__ ."/flags/detect_platform.php");
+		include_once(dirname(__file__) ."/flags/detect_platform.php");
 		$out.= '<!-- ###LanguageSelector__MLSS### -->
 	<script type="text/javascript">
 		var langMenu__MLSS = document.getElementById("LanguageSelector__MLSS"); document.body.insertBefore(langMenu__MLSS, document.body.childNodes[0]);
@@ -929,7 +929,7 @@ add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts)
 
 
 
-include(__dir__.'/____dashboard_options.php');
+include(dirname(__file__).'/____dashboard_options.php');
 
 
 
