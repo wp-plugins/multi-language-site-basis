@@ -53,7 +53,7 @@ if ( is_admin() ){
 								update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 									if(get_option('optMLSS__CatBaseRemoved') != $_POST['RemoveCatBase']) { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__CatBaseRemoved',	 $_POST['RemoveCatBase']);
-								if (isset($NEEDS_FLUSH_REDIRECT)) { MyFlush__MLSS(true);}    
+								if (isset($NEEDS_FLUSH_REDIRECT)) {Create_Cats__MLSS(); MyFlush__MLSS(true);}    
 							}
 						}
 					}
@@ -593,7 +593,7 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 			}
 		}
 	}		function Create_Cats__MLSS(){
-				foreach (LANGS__MLSS as $EachLng){
+				foreach (GetLanguagesFromBase__MLSS() as $EachLng){
 					//categories
 						$slug= S_CategPrefix__MLSS;
 					if (!term_exists( $EachLng.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
@@ -603,7 +603,7 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 				}
 			}
 			function Create_Pages__MLSS(){
-				foreach (LANGS__MLSS as $EachLng){
+				foreach (GetLanguagesFromBase__MLSS() as $EachLng){
 					//pages
 						$slug= PagePrefix__MLSS;
 					$page =get_page_by_path($EachLng.$slug, OBJECT, 'page');
