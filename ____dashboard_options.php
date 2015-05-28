@@ -85,8 +85,8 @@ if ( is_admin() ){
 			 <br/>1) at first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES</a>;
 			 <br/>2) To modify/design the output, read the 6th paragraph on this page.  
 			 <br/>3)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it. 
-			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..).  ')
-			</div>
+			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..
+			</div> 
 		
 		
 					<br/><span class="smallnotic">(Visit <a href="http://codesphpjs.blogspot.com/2015/04/wordpress-multi-language-plugin-list.html" target="_blank">other MultiLang plugins</a>...)</span>
