@@ -78,7 +78,7 @@ if ( is_admin() ){
 				
 																<form action="" method="POST">
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22">(<a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">Read popup</a>!)</span></center> 
+		<center><span class="fakeH22">( Read this  <a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">FIRST-TIME Install popup</a>!)</span></center> 
 			<div id="pluginwelcome" style="display:none;">
 			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs!
 			 <br/><br/><br/>(Notes):
@@ -123,7 +123,9 @@ if ( is_admin() ){
 		
 		<div class="eachBlock"><span class="fakeH22"> 1) Languages</span> (<a href="javascript:show_my_popup('#enabledlanguages');" class="readpopp">Read popup!</a>)
 						<div id="enabledlanguages" style="display:none;">
-						<br/>To add a language,  Insert Language title (i.e: <b>Spanish</b>, and after it, in <b>CURLED BRACKETS</b>, insert it's official abbreviation  (Needs to be 3 latin characters,i.e. "<b>spa</b>"....   &nbsp;&nbsp;View  countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
+						<br/>To add a language,  Insert Language title (i.e: <b>Spanish</b>, and after it, in <b>CURLED BRACKETS</b>, insert it's official abbreviation  (Needs to be 3 latin characters,i.e. "<b>spa</b>"....   &nbsp;&nbsp;View countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
+						<br/><br/>
+						Also! While adding a new language (i.e. "<b>eng</b>"), you should create a root category too (named "<b>eng</b>"),otherwise, you cant add new posts to that language...
 						</div>
 						
 			<div class="enabled_langs">		
