@@ -80,12 +80,12 @@ if ( is_admin() ){
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
 		<center><span class="fakeH22">( Read this  <a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">FIRST-TIME Install popup</a>!)</span></center> 
 			<div id="pluginwelcome" style="display:none;">
-			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs!
+			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let's test this plugin well. Also, report me about bugs!
 			 <br/><br/><br/>(Notes):
 			 <br/>1) at first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES</a>;
 			 <br/>2) To modify/design the output, read the 6th paragraph on this page.  
 			 <br/>3)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it. 
-			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..).  ')
+			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..).  ')
 			</div>
 		
 		
