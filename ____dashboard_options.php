@@ -82,7 +82,7 @@ if ( is_admin() ){
 			<div id="pluginwelcome" style="display:none;">
 			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let\u0027 test this plugin well. Also, report me about bugs!
 			 <br/><br/><br/>(Notes):
-			 <br/>1) at first, click here to publish the initial <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">example PAGES & CATEGORIES</a>;
+			 <br/>1) at first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES</a>;
 			 <br/>2) To modify/design the output, read the 6th paragraph on this page.  
 			 <br/>3)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it. 
 			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. \u0022ALTERNATIVE\u0022 pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..).  ')
@@ -125,7 +125,7 @@ if ( is_admin() ){
 						<div id="enabledlanguages" style="display:none;">
 						<br/>To add a language,  Insert Language title (i.e: <b>Spanish</b>, and after it, in <b>CURLED BRACKETS</b>, insert it's official abbreviation  (Needs to be 3 latin characters,i.e. "<b>spa</b>"....   &nbsp;&nbsp;View countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
 						<br/><br/>
-						Also! While adding a new language (i.e. "<b>eng</b>"), you should create a root category too (named "<b>eng</b>"),otherwise, you cant add new posts to that language...
+						Also! While adding new language (i.e. "<b>eng</b>"), in categories you should create a root category too (named "<b>eng</b>"),otherwise, you cant add new posts to that language...
 						</div>
 						
 			<div class="enabled_langs">		
@@ -581,48 +581,41 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 
 
 	// INSERT SAMPLE DATA after INSTALLATION
-	add_action('init','insert_sample_data__MLSS');function insert_sample_data__MLSS(){
+	add_action('init','insert_sample_data__MLSS',99);function insert_sample_data__MLSS(){
 		if(isset($_GET['SAMPLE_DATA__MLSS'])) {
 			if (is_admin() && iss_admiiiiiin__MLSS()){
 				//=============================================================================
 				//================insert SAMPLE DATA: CATEGORIES and PAGES ====================
 				//=============================================================================
-				//categories
-					$slug= S_CategPrefix__MLSS;
-					if (!term_exists('eng'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
-						$parentt= wp_insert_term('eng'.$slug,'category', array());		$PT= get_term_by('slug', 'eng'.$slug, 'category');
-						$subb= wp_insert_term('samplecategoryyyy1',	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy2',	'category', array('parent'=>$PT->term_id)); 
-					}	
-					if (!term_exists('rus'.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
-						$parentt= wp_insert_term('rus'.$slug,'category', array());		$PT= get_term_by('slug', 'rus'.$slug, 'category');
-						$subb= wp_insert_term('examplecategoryy',	'category', array('parent'=>$PT->term_id)); $subb= wp_insert_term('examplecategoryy42',	'category', array('parent'=>$PT->term_id)); 
-					}
-				//pages
-				$slug= PagePrefix__MLSS;
-					$page =get_page_by_path('eng'.$slug, OBJECT, 'page');
-					//see, if exists,but trashed
-					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
-					elseif(!$page){
-					  $parentt	= wp_insert_post(array('post_title'=>'eng'.$slug, 'post_name'=>'eng'.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
-					  $subb		= wp_insert_post(array('post_title'=>'sample1','post_name'=>'sample1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-					  $subb		= wp_insert_post(array('post_title'=>'sample2','post_name'=>'sample2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-					}
-				
-					$page =get_page_by_path('rus'.$slug, OBJECT, 'page');
-					//see, if exists,but trashed
-					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
-					elseif(!$page){
-					  $parentt	= wp_insert_post(array('post_title'=>'rus'.$slug,		'post_name'=>'rus'.$slug,  'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
-					  $subb		= wp_insert_post(array('post_title'=>'somethinggggg1',	'post_name'=>'somethinggggg1','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-					  $subb		= wp_insert_post(array('post_title'=>'somethinggggg2',	'post_name'=>'somethinggggg2','post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-					}
+					Create_Cats__MLSS();
+					Create_Pages__MLSS();
 				die('<br/><br/>Sample Pages and Categories was published! <br/>Although you might never need those pages, just enter CATEGORIES page, and carefully look at their slugs&structure, to know, what slug names have the ROOT hierarchy CATEGORIES & Pages...');
 			}
 		}
-	}
-	
-	
-	
+	}		function Create_Cats__MLSS(){
+				foreach (LANGS__MLSS as $EachLng){
+					//categories
+						$slug= S_CategPrefix__MLSS;
+					if (!term_exists( $EachLng.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
+						$parentt= wp_insert_term( $EachLng.$slug,'category', array());		$PT= get_term_by('slug',  $EachLng.$slug, 'category');
+						$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id)); 
+					}	
+				}
+			}
+			function Create_Pages__MLSS(){
+				foreach (LANGS__MLSS as $EachLng){
+					//pages
+						$slug= PagePrefix__MLSS;
+					$page =get_page_by_path($EachLng.$slug, OBJECT, 'page');
+					//see, if exists,but trashed
+					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
+					elseif(!$page){
+					  $parentt	= wp_insert_post(array('post_title'=>$EachLng.$slug, 'post_name'=>$EachLng.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));									$a1= 'somethinggggg1_'.rand(1,1111111);
+					  $subb		= wp_insert_post(array('post_title'=>$a1,'post_name'=>$a1,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));									$a2= 'somethinggggg1_'.rand(1,1111111);
+					  $subb		= wp_insert_post(array('post_title'=>$a2,'post_name'=>$a2,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					}
+				}
+			}
 	
 	
 	
