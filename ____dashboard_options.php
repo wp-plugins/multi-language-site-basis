@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('DefaulHomeMsg__MLSS','By DEFAULT(if this field is empty),when a visitor visits Language\u0027s MAIN link (i.e. example.com/eng/), then the default homepage/listing is shown. \r\n However, You can insert any CUSTOM LINK in the field(for example, any post/page url), and visitor will be redirected(status \u0022302\u0022) to that LINK. (If you will insert a numeric ID of post, then that post will be set as homepage, instead of Redirection, but I think redirection is better)');
+define('DefaulHomeMsg__MLSS','By DEFAULT(if this field is empty),when a visitor visits Language\u0027s MAIN link (i.e. example.com/eng/), then the default homepage/listing is shown. \r\n However, You can insert any CUSTOM LINK in the field(for example, any post/page url), and visitor will be redirected(status \u0022302\u0022) to that LINK. (If you will insert a numeric ID of post, then that post will be set as homepage, instead of Redirection, but I think redirection is better, avoids duplication..)');
 
 
 
