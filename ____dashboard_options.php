@@ -1,6 +1,10 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+define('DefaulHomeMsg__MLSS','By DEFAULT(if this field is empty),when a visitor visits Language\u0027s MAIN link (i.e. example.com/eng/), then the default homepage/listing is shown. \r\n However, You can insert any CUSTOM LINK in the field(for example, any post/page url), and visitor will be redirected(status \u0022302\u0022) to that LINK. (If you will insert a numeric ID of post, then that post will be set as homepage, instead of Redirection, but I think redirection is better)');
+
+
+
 // START, if admin url
 if ( is_admin() ){
 	add_action('admin_menu', 'exec_pages__MLSS'); function exec_pages__MLSS() {
@@ -70,7 +74,7 @@ if ( is_admin() ){
 				<form action="" method="post" enctype="multipart/form-data" target="_blank" id="addflagimage" style="display:none;">
 					Most of flags are not added. Because, at first, you'd better to download <a href="https://ps.w.org/multi-language-site-basis/assets/unused_flags.zip" target="_blank">flags</a>, then name your desired image the <b>3 official letters</b> (as mentioned previously).  For example: <b>spa</b>.png,<b>rus</b>.png... (The image dimensions could be approximately 128px+.)
 					<br/><br/>Select image to upload (file will be uploaded in a new window, so, dont worry  - if havent yet saved any changes on current page, they <b>wont be lost</b>):
-					<div style="background-color:grey;">						
+					<div style="background-color:pink;">						
 						<br/><input type="file" name="ImgFile__mlss" /><input type="hidden" name="ImgUploadForm__mlss" value="OK" /> <input type="submit" value="Upload Image" name="submit"> <br/><i>(Will be stored in <?php echo dirname( PLUGIN_URL_nodomain__MLSS) .FlagFolder__MLSS;?>)</i>
 					</div>
 				</form>
@@ -249,7 +253,7 @@ if ( is_admin() ){
 					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
 					</span>
 				</span>
-			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('By DEFAULT, while the Language\u0027s MAIN page (i.e. example.com/eng/) is opened, the default homepage/listing is shown (to make it DEFAULT METHOD, then empty the field). \r\n However: \r\n- To set a static, typical post/page as a language\u0027s \u0022MAIN page\u0022,then input the Post\u0027s numeric ID. \r\n- To redirect visitor to any custom URL, then input the FULL LINK there, and plugin will make a redirection(\u0022302\u0022 ) for it.');" class="readpopp">Read popup!</a>) :
+			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('<?php echo DefaulHomeMsg__MLSS;?>');" class="readpopp">Read popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
 				echo $each.'&nbsp;<input type="text" style="width:45px;padding:2px;" name="homeID_'.$each.'" value="'.get_option('optMLSS__HomeID_'.$each).'" />&nbsp;&nbsp;&nbsp;&nbsp;';
 			} ?>
@@ -574,6 +578,45 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 	}
 // =================================### Show/Hide other cats=================
 // =========================================================================
+
+
+
+
+
+	//==========================Show notice on Language Dashboard page============================
+	add_action( 'admin_notices', 'lng_homepage__MLSS' );	function lng_homepage__MLSS() {	
+		$admin= str_ireplace(home_url(),'', admin_url('/edit.php?post_type=') );foreach(LANGS__MLSS() as $each){
+			if (stripos($_SERVER['REQUEST_URI'], $admin.$each) !== false ) {
+				$posttt = get_post(get_option('optMLSS__HomeID_'.$_GET['post_type'])); ?>
+				<div style="margin:30px 0 0 0;padding:10px;background-color:pink;color:black;font-size:1.4em;">
+						<div style="float:left;">
+							Homepage ID for <span style="color:red;font-size:1.6em; "><?php echo constant($_GET['post_type'].'_title__MLSS');?></span> (<a href="javascript:alert('<?php echo DefaulHomeMsg__MLSS;?>');"><i>Read this popup</i></a>): <input type="text" style="width:50px;" id="nw_home_postid" value="<?php echo get_option('optMLSS__HomeID_'.$_GET['post_type']);?>" /> <a href="<?php echo get_edit_post_link( $posttt->ID);?>" target="_blank" style="color:white;">
+							<b><?php if ($posttt->post_title) {echo '['. $posttt->post_title .']';}  ?></b></a>
+
+							<a style="border-radius:4px;padding:3px; background-color:#d4d4d4; border:2px solid; margin:0px 0px 0px 100px;" href="javascript:change_homepg__MLSS();">Save</a>
+							<script type="text/javascript">function change_homepg__MLSS()	{
+								window.open("<?php echo $_SERVER['REQUEST_URI'];?>&set_homepagee=" + encodeURIComponent(document.getElementById("nw_home_postid").value) + "&langg=<?php echo $_GET['post_type'];?>","_blank");			}
+							</script>
+						</div> <div style="clear:both;"></div>
+					</div>
+			<?php }
+		}
+	}
+		add_action( 'init', 'save_homepg_chng__MLSS',99);
+		function save_homepg_chng__MLSS() {if (isset($_GET['set_homepagee'])){
+			if (iss_admiiiiiin__MLSS()){   $new_value = urldecode( $_GET['set_homepagee']);
+				update_option('optMLSS__HomeID_'.$_GET['langg'], $new_value);
+				die('<head><meta http-equiv="content-type" content="text/html; charset=UTF-8"></head>'.$new_value .' <b>is set for:</b> '.constant($_GET['langg'].'_title__MLSS'));
+				//	global $wpdb;$p_EXCERPT = $wpdb->get_results("SELECT post_excerpt FROM $wpdb->posts WHERE ID = '$post_id'"); //$inrt= $wpdb->query($wpdb->prepare("UPDATE $wpdb->posts SET post_excerpt='$mydata' WHERE ID='%s'", $post_id));
+			}
+		}}
+	// ==================================================================================================	
+
+
+
+
+
+
 
 
 	

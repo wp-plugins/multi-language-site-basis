@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.50
+ * Version: 1.51
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -418,18 +418,22 @@ function registPTyps__MLSS() {
 
 
 
-
-
+	//this was in below  "query function", but i have inserted it here, in "init" too..
+	add_action('init','LangHomeRedirect__MLSS',99);function LangHomeRedirect__MLSS(){if (isLangHomeURI__MLSS) { 	
+		//when static ID is set for the language's STARTPAGE
+		if ($optValue= get_option('optMLSS__HomeID_'.LNG)){
+			//if custom URL is set, instead of ID, then simply redirect..
+			if (!is_numeric($optValue)) {REDIRECTTT__MLSS($optValue,'problem_823',302);}
+			}
+		}
+	}
 // ================================================================================================================= //
 // ===================================================== QUERY MODIFY ============================================== //
 // ================================================================================================================= //
 //difference between [$query->is_XXX=true    and   $query->set('is_XXX', true) [set_query_var() is 100% this]
 // http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
-
 					//$q->queried_object=$tr; $q->queried_object_id=$tr->term_id; $q->set('queried_object_id',.. 
-					
-					
 					
 if (FullMode__MLSS){ add_action( 'pre_get_posts', 'querymodify__MLSS'); } 
 function querymodify__MLSS($query) { $q=$query;
@@ -437,11 +441,13 @@ function querymodify__MLSS($query) { $q=$query;
 		//============================================================================================================================
 		//===============      QUERY TO SET STARPAGE (i.e. yoursite.com/ENG,   yoursite.com/CHN,..)===================================
 		//============================================================================================================================
+		//this is removed from here, and moved as a separate function
 		if (isLangHomeURI__MLSS) { 	
 			//when static ID is set for the language's STARTPAGE
 			if ($optValue= get_option('optMLSS__HomeID_'.LNG)){
+											//this moved into above separate function ----------->
 						//if custom URL is set, instead of ID, then simply redirect..
-						if (!is_numeric($optValue)) {REDIRECTTT__MLSS($optValue,'problem_823',302);}
+						//if (!is_numeric($optValue)) {REDIRECTTT__MLSS($optValue,'problem_823',302);}
 				$q->init();
 					$post = get_post( $optValue, OBJECT);
 					if($post->post_type==LNG ||is_post_type_archive() )	{
@@ -650,7 +656,12 @@ function my_append_query_string__MLSS( $permalink, $post) {
 	}
     return $permalink;
 }
-	
+//CSS CLASSES for BODY
+add_filter('body_class', 'my_body_class__MLSS'); function my_body_class__MLSS($classes){
+	if (defined('LNG')) 	{$classes[]='MLSSlang___'.LNG; }
+		//if (is_singular()) 		{$classes[]='MLSStype___'.$GLOBALS['post']->post_type;}
+	return $classes;
+}
 	
 	
 //Change category permalinks - REMOVE "/CATEGORY" base
@@ -720,9 +731,6 @@ if (FullMode__MLSS){
 		wp_enqueue_style( 'custom_styles__MLSS', STYLESHEETURL__MLSS );
 	}
 }
-
-
-
 
 //POPUP TO CHOOSE LANGUAGE -  ONLY FOR FIRST TIME VISITOR!
 add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function OutputFirstTimePopup__MLSS($cont){   $out = 
