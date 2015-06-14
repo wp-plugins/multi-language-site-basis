@@ -587,18 +587,18 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 	add_action( 'admin_notices', 'lng_homepage__MLSS' );	function lng_homepage__MLSS() {	
 		$admin= str_ireplace(home_url(),'', admin_url('/edit.php?post_type=') );foreach(LANGS__MLSS() as $each){
 			if (stripos($_SERVER['REQUEST_URI'], $admin.$each) !== false ) {
-				$posttt = get_post(get_option('optMLSS__HomeID_'.$_GET['post_type'])); ?>
+				$optVal = get_option('optMLSS__HomeID_'.$_GET['post_type']);
+				$posttt = $optVal ? get_post($optVal) : false; 
+				?>
 				<div style="margin:30px 0 0 0;padding:10px;background-color:pink;color:black;font-size:1.4em;">
-						<div style="float:left;">
-							Homepage ID for <span style="color:red;font-size:1.6em; "><?php echo constant($_GET['post_type'].'_title__MLSS');?></span> (<a href="javascript:alert('<?php echo DefaulHomeMsg__MLSS;?>');"><i>Read this popup</i></a>): <input type="text" style="width:50px;" id="nw_home_postid" value="<?php echo get_option('optMLSS__HomeID_'.$_GET['post_type']);?>" /> <a href="<?php echo get_edit_post_link( $posttt->ID);?>" target="_blank" style="color:white;">
-							<b><?php if ($posttt->post_title) {echo '['. $posttt->post_title .']';}  ?></b></a>
-
-							<a style="border-radius:4px;padding:3px; background-color:#d4d4d4; border:2px solid; margin:0px 0px 0px 100px;" href="javascript:change_homepg__MLSS();">Save</a>
-							<script type="text/javascript">function change_homepg__MLSS()	{
-								window.open("<?php echo $_SERVER['REQUEST_URI'];?>&set_homepagee=" + encodeURIComponent(document.getElementById("nw_home_postid").value) + "&langg=<?php echo $_GET['post_type'];?>","_blank");			}
-							</script>
-						</div> <div style="clear:both;"></div>
-					</div>
+					<div style="float:left;">
+						Homepage ID for <span style="color:red;font-size:1.6em; "><?php echo constant($_GET['post_type'].'_title__MLSS');?></span> (<a href="javascript:alert('<?php echo DefaulHomeMsg__MLSS;?>');"><i>Read this popup</i></a>): <input type="text" style="width:50px;" id="nw_home_postid" value="<?php echo ($optVal ? $optVal : "");?>" /> <?php echo ( $posttt? '<a href="'.get_edit_post_link( $posttt->ID).'" target="_blank" style="color:white;"><b>['. $posttt->post_title .']</b></a>' : '' ) ;?>
+						<a style="border-radius:4px;padding:3px; background-color:#d4d4d4; border:2px solid; margin:0px 0px 0px 100px;" href="javascript:change_homepg__MLSS();">Save</a>
+						<script type="text/javascript">function change_homepg__MLSS()	{
+							window.open("<?php echo $_SERVER['REQUEST_URI'];?>&set_homepagee=" + encodeURIComponent(document.getElementById("nw_home_postid").value) + "&langg=<?php echo $_GET['post_type'];?>","_blank");			}
+						</script>
+					</div> <div style="clear:both;"></div>
+				</div>
 			<?php }
 		}
 	}

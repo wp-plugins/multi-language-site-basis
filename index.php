@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.51
+ * Version: 1.52
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -42,7 +42,13 @@ define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alter
 		
 //==================================================== ACTIVATION commands ===============================		
 //REDIRECT SETTINGS PAGE (after activation)
-add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); } }
+add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { 
+	//if not "update" action
+	if (!get_option('optMLSS__Lngs')){
+		exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); 
+	}
+} }
+
 //ACTIVATION HOOK
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
 	update_option( 'optMLSS__NeedFlush','okk');
