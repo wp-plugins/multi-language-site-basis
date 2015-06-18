@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Multi-Language Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.52
+ * Version: 1.54
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -23,6 +23,7 @@ define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('STYLESHEETURL__MLSS',			plugin_dir_url(__FILE__).'flags/stylesheet.css');
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
+define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
 define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
@@ -51,33 +52,41 @@ add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_red
 
 //ACTIVATION HOOK
 register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
-	update_option( 'optMLSS__NeedFlush','okk');
-	if (!get_option('optMLSS__Lngs')) {
-		update_option('optMLSS__OnOffMode','oon');
-		update_option('optMLSS__Lngs','English{eng},Русский{rus},Japan{jpn},Dutch{nld}');	update_option('optMLSS__DefForOthers',	'dropdownn');
-		update_option('optMLSS__HiddenLangs',		'Japan{jpn},Dutch{nld},');				update_option('optMLSS__FirstMethod',	'dropddd');
-			//
+	update_option( 'optMLSS__NeedFlush','okk'); 
+	$InitialArray = array( 
+		'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
+		'optMLSS__HiddenLangs'		=> 'Japan{jpn},Dutch{nld},',
+		'optMLSS__HiddenFromQuery1' => '__start1' ,
+		'optMLSS__OnOffMode'		=> 'oon' ,
+		'optMLSS__DefForOthers'		=> 'dropdownn' ,
+		'optMLSS__FirstMethod'		=> 'dropddd' ,
+		'optMLSS__BuildType'		=> 'custom_p' ,
+		'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
+		'optMLSS__Target_'.'default'=> 'eng' ,
+		'optMLSS__DropdHeader'		=> 'ddropdown' ,
+		'optMLSS__DropdSidePos'		=> 'left' ,
+		'optMLSS__DropdDistanceTop'	=> '70' ,
+		'optMLSS__DropdDistanceSide'=> '50' ,
+		'optMLSS__IncludeNamesDropd'=> 'y' ,
+		'optMLSS__CategSlugname'	=> '' ,
+		'optMLSS__PageSlugname'		=> '' ,
+		'optMLSS__EnableQueryStrPosts'=> 'n' ,
+		//'optMLSS__ShowHideOtherCats'=> 'n' ,
+		//'optMLSS__HidenEntriesIdSlug'=> 'post-' ,
+		'optMLSS__EnableCustCat'	=> 'n' ,
+		'optMLSS__CatBaseRemoved'	=> 'y' ,
+		);
+	foreach($InitialArray as $name=>$value){	if (!get_option($name)){update_option($name,$value);}	}	
+
 			if (REMOVE_CAT_BASE_WpOption__MLSS) {
 				update_option('optMLSS__Cat_base_BACKUP', CatBaseWpOpt__MLSS );  $GLOBALS['wp_rewrite']->set_category_base('/.'); MyFlush__MLSS(false);  
 				//update_option('category_base',				'/.'); 	MyFlush__MLSS(false);  
 				//$wp_rewrite->set_permalink_structure('/%postname%/' );
 				//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
 			}
-			//
-		update_option('optMLSS__BuildType',			'custom_p');  
-		update_option('optMLSS__Target_'.'rus',		'Russian Federation,Belarus,Ukraine,Kyrgyzstan,');
-		update_option('optMLSS__Target_'.'default',	'eng');
-		//
-		update_option('optMLSS__DropdHeader','ddropdown'); update_option('optMLSS__DropdSidePos','left'); update_option('optMLSS__DropdDistanceTop','70');update_option('optMLSS__DropdDistanceSide','50'); update_option('optMLSS__DropdDFixedOrAbs','absolute');  update_option('optMLSS__IncludeNamesDropd','y'); 
-		//
-		update_option('optMLSS__CategSlugname',	''); 			update_option('optMLSS__PageSlugname', '');
-		update_option('optMLSS__EnableQueryStrPosts',	'n');	update_option('optMLSS__EnableCustCat',	'n');
-		update_option('optMLSS__CatBaseRemoved',		'y');
-		//update_option('optMLSS__ShowHideOtherCats',		'n'); update_option('optMLSS__HidenEntriesIdSlug',	'post-');
-		
 							 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
 		$InnoDB_or_MyISAM = ($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
-		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."translatedwords__mlss` (
+		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
 			`IDD` int(11) NOT NULL AUTO_INCREMENT,
 			`title_indx` varchar(150) NOT NULL,
 			`lang` varchar(150) NOT NULL,
@@ -87,17 +96,14 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 			UNIQUE KEY `IDD` (`IDD`)
 			) ENGINE=".$InnoDB_or_MyISAM." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 		);
-	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
-							array('translation'=>'Hii user!!!'),
-							array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
-	UPDATEE_OR_INSERTTT__MLSS($wpdb->prefix."translatedwords__mlss",
-							array('translation'=>'haи иуzer!'),
-							array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
+	if (!get_option('optMLSS_table1installed')){
+		$r1=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, array('translation'=>'Hii user!!!'),	array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
+		$r2=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS,array('translation'=>'haи иуzer!'),		array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
+		update_option('optMLSS_table1installed','y');
 	}
-	
 		
 	//flush-update permalinks for CUSTOM POST TYPES 
-	GetLanguagesFromBase__MLSS(); registPTyps__MLSS();	MyFlush__MLSS(false);  
+	GetLanguagesFromBase__MLSS(); registPTyps__MLSS(false);	MyFlush__MLSS(false);
 }
 
 register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
@@ -213,7 +219,7 @@ function GetLanguagesFromBase__MLSS(){
 	
 	//RETURN TRANSLATION OF ANY INDEX_PHRASE, according to visitor's detected language
 	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; 
-		$res = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx`= '$variable' AND `lang` = '".($lang ? $lang : LNG)."'");
+		$res = $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx`= '$variable' AND `lang` = '".($lang ? $lang : LNG)."'");
 		return stripslashes($res[0]->translation);
 	} add_filter('MLSS','MLSS_PHRAZE',10,3);  //you can pass additional variables into this filter too.
 	
@@ -350,7 +356,7 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 //==================================== POST TYPES ================================== //
 //================================================================================== //
 if (FullMode__MLSS){ add_action( 'init', 'registPTyps__MLSS',MLSS_initNumb); }
-function registPTyps__MLSS() {
+function registPTyps__MLSS($FullFlushAllowed=true) {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
 		foreach (LANGS__MLSS() as $name=>$value) {
@@ -392,7 +398,7 @@ function registPTyps__MLSS() {
 		add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
 	}
 	//FLUSH RULES !!! READ: http://www.andrezrv.com/2014/08/12/efficiently-flush-rewrite-rules-plugin-activation/
-	if ( get_option( 'optMLSS__NeedFlush' )) { MyFlush__MLSS(true);	delete_option('optMLSS__NeedFlush' ); }
+	if ($FullFlushAllowed){if ( get_option( 'optMLSS__NeedFlush' )) { MyFlush__MLSS(true);	delete_option('optMLSS__NeedFlush' ); } }
 	if (isset($_POST['mlss_FRRULES_AGAIN'])){ MyFlush__MLSS(false);   }
 }
 //================================= ##### POST TYPES =============================== //
@@ -436,19 +442,20 @@ function registPTyps__MLSS() {
 // ================================================================================================================= //
 // ===================================================== QUERY MODIFY ============================================== //
 // ================================================================================================================= //
-//difference between [$query->is_XXX=true    and   $query->set('is_XXX', true) [set_query_var() is 100% this]
+//difference between [$query->is_XXX=true    and   $query->set('is_XXX', true) [-----same as ----> set_query_var()]
 // http://wordpress.stackexchange.com/questions/130314/how-to-force-a-query-conditional
 //ALSO possible:  query_posts(array( 'post_type' => 'portfolio','tax_query' => array(array('taxonomy' => LNG,'terms' => $cat->term_id,'field' => 'term_id')),	'orderby' => 'title',));
-					//$q->queried_object=$tr; $q->queried_object_id=$tr->term_id; $q->set('queried_object_id',.. 
+					//$q->queried_object=$tr; //$q->queried_object_id=$tr->term_id; $q->set('queried_object_id',.. 
 					
-if (FullMode__MLSS){ add_action( 'pre_get_posts', 'querymodify__MLSS'); } 
+if (FullMode__MLSS){ add_action( 'pre_get_posts', 'querymodify__MLSS',88); } 
 function querymodify__MLSS($query) { $q=$query;
 	if( $q->is_main_query() && !is_admin() ) {
+		$excluded_posts = get_option("optMLSS__HiddenFromQuery1");
 		//============================================================================================================================
 		//===============      QUERY TO SET STARPAGE (i.e. yoursite.com/ENG,   yoursite.com/CHN,..)===================================
 		//============================================================================================================================
 		//this is removed from here, and moved as a separate function
-		if (isLangHomeURI__MLSS) { 	
+		if (isLangHomeURI__MLSS) { 	  
 			//when static ID is set for the language's STARTPAGE
 			if ($optValue= get_option('optMLSS__HomeID_'.LNG)){
 											//this moved into above separate function ----------->
@@ -456,12 +463,9 @@ function querymodify__MLSS($query) { $q=$query;
 						//if (!is_numeric($optValue)) {REDIRECTTT__MLSS($optValue,'problem_823',302);}
 				$q->init();
 					$post = get_post( $optValue, OBJECT);
-					if($post->post_type==LNG ||is_post_type_archive() )	{
-						$q->parse_query( array('post_type'=>array(LNG)) );	  $q->is_single = true;  $q->is_page = false; } 
-					elseif($post->post_type=='post'){
-						$q->parse_query( array('post_type'=>array('post')) ); $q->is_single = true;  $q->is_page = false; }
-					else {
-						$q->parse_query( array('post_type'=>array('page')) ); $q->is_single = false; $q->is_page = true;  }
+					if($post->post_type==LNG ||is_post_type_archive() )	{$q->parse_query( array('post_type'=>array(LNG)) );	  $q->is_single = true;  $q->is_page = false; } 
+					elseif($post->post_type=='post')					{$q->parse_query( array('post_type'=>array('post')) ); $q->is_single = true;  $q->is_page = false; }
+					else												{$q->parse_query( array('post_type'=>array('page')) ); $q->is_single = false; $q->is_page = true;  }
 				$q->is_home = false;
 				$q->is_singular = true;
 				$q->queried_object_id = $optValue; //get_post(get_option('page_on_front') ); 
@@ -473,16 +477,16 @@ function querymodify__MLSS($query) { $q=$query;
 			//NO static id ...
 			else{
 				//if CUSTOM POSTS   (is chosen as structure type by admin), then HOMEPAGE should display CUSTOM CATEGORY/TAXONOMY
-				if (get_option('optMLSS__BuildType') == 'custom_p'){
-					$q->init();	$q->parse_query(array('post_type'=>array(LNG)));
-					$q->is_home=true;  $q->is_page = false;  $q->is_archive = true;
+				if (get_option('optMLSS__BuildType') == 'custom_p'){ 	
+					$q->init(); $q->parse_query(array('post_type'=>array(LNG), 'post__not_in'=>array($excluded_posts) )); 
+					$q->is_home=true;  $q->is_page = false;  $q->is_archive = true; 
 					//$q->is_tax = false; $q->is_post_type_archive = true; 
 					return $q;
 				}
 				//if STANDARD POSTS (is chosen as structure type by admin), then HOMEPAGE should display STANDARD CATEGORY
 				elseif($tr = get_term_by('slug', basename(currentURL__MLSS) , 'category')){
 					$q->init();	
-					$q->parse_query(array('post_type' => array('post') ,
+					$q->parse_query(array('post_type' => array('post'), 'post__not_in'=>array($excluded_posts),
 										'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
 					$q->is_home=true;	$q->is_page = false; $q->is_archive = true;
 					$q->is_category=false; //$q->set('cat', $tr->term_id);	
@@ -525,7 +529,7 @@ function querymodify__MLSS($query) { $q=$query;
 						//$taxonomyName = get_query_var( 'taxonomy' );
 						//$current_term = get_term_by( 'slug', $term_slug, $taxonomyName );
 						$tr = get_term_by('slug', $BaseSLUG , LNG); if ($tr){  
-							$q->init();	$q->parse_query(array('post_type'=> array(LNG) ,
+							$q->init();	$q->parse_query(array('post_type'=> array(LNG) ,'post__not_in'=>array($excluded_posts),
 															  'tax_query'=>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
 							$q->is_home = false;	$q->is_single = false;	$q->is_archive = true;	$q->is_tax = true;	$q->is_post_type_archive=false;
 							return $q;
@@ -544,8 +548,8 @@ function querymodify__MLSS($query) { $q=$query;
 								}
 							}
 				// term_exists($BaseSLUG, 'category'); <-- this bugs, because  basename from /eng/mylink/smth is "smth", and "smth" may be categoryy too, so, post may become  overrided in this case..
-				$tr= get_category_by_path( $catPath, true );  if ($tr){   
-					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG: '') ) ,
+				$tr= get_category_by_path( $catPath, true ); if ($tr){   
+					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG: '') ) ,'post__not_in'=>array($excluded_posts),
 													   'tax_query'=>array(array('taxonomy'=>'category','terms'=>$tr->term_id, 'field'=>'term_id'))) );
 					$q->is_home = false;	$q->is_single = false;	$q->is_archive = true;	$q->is_tax = true;	$q->is_post_type_archive=false;
 					return $q;	
@@ -553,7 +557,7 @@ function querymodify__MLSS($query) { $q=$query;
 				
 				//===========CUSTOM post found===========//BUT IT SHOULD BE IN THE BASE (i.e. ENG) TYPE 
 								if (CustPostsIsChosenBuildType){ 
-				$post= get_page_by_path($PathAfterHome, OBJECT, LNG);	if ($post){ 
+				$post= get_page_by_path($PathAfterLangRoot, OBJECT, LNG);	if ($post){ 
 					$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	
 					$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
 					return $q;

@@ -369,7 +369,7 @@ if ( is_admin() ){
 	//===============================================SECOND SUBMENU(translated words)======================================
 	function my_submenu2__MLSS() {
 		global $wpdb;
-		$ALL_WORDS = $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss`"); $final_groups=array();
+		$ALL_WORDS = $wpdb->get_results("SELECT * from `".Table1__MLSS."`"); $final_groups=array();
 		//group them based on title_indx
 		foreach ($ALL_WORDS as $eachBlockInd => $EachBlockContent)	{$final_groups[$EachBlockContent->title_indx][]=$EachBlockContent;	}
 		?>
@@ -401,7 +401,7 @@ if ( is_admin() ){
 				<div class="title">identifier: <span class="crnt_keyn">'.$BlockTitle.'</span></div> 
 				<div class="delete"><a href="javascript:deleteThisBlock(\''.$BlockTitle.'\');">DELETE</a></div>';
 						foreach (LANGS__MLSS() as $keyIndex=>$value){ 
-					$trnsl= $wpdb->get_results("SELECT * from `".$wpdb->prefix."translatedwords__mlss` WHERE `title_indx` = '$BlockTitle' and `lang` = '$value' ");
+					$trnsl= $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx` = '$BlockTitle' and `lang` = '$value' ");
 					$output.= 
 				'<div class="eachLngWORD">
 							<span class="lng_NAME">'.$value.'</span>
@@ -488,7 +488,7 @@ if ( is_admin() ){
 			NonceCheck__MLSS($_POST['inp_SecureNonce2'],'fupd_mlss');
 			foreach($_POST['titlee'] as $name1=>$Value1){
 				foreach($Value1 as $name2=>$Value2){
-					UPDATEE_OR_INSERTTT__MLSS($GLOBALS['wpdb']->prefix."translatedwords__mlss", 
+					UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, 
 												array('translation'=>$Value2),
 												array('title_indx'=>$name1, 'lang'=> $name2) );
 				}
@@ -501,8 +501,8 @@ if ( is_admin() ){
 		if (isset($_GET['mlss_export_translations']) && is_admin() && iss_admiiiiiin__MLSS()){
 			//https://github.com/tazotodua/useful-php-scripts
 			function EXPORT_TABLES__MLSS($host,$user,$pass,$name,  $tables=false, $backup_name=false ){$mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }   if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); }	foreach($target_tables as $table){$result = $mysqli->query('SELECT * FROM '.$table);  $fields_amount=$result->field_count;  $rows_num=$mysqli->affected_rows;     $res = $mysqli->query('SHOW CREATE TABLE '.$table); $TableMLine=$res->fetch_row();$content = (!isset($content) ?  '' : $content) . "\n\n".$TableMLine[1].";\n\n";	for ($i = 0; $i < $fields_amount;   $i++, $st_counter=0) {	while($row = $result->fetch_row())  {if ($st_counter%100 == 0 || $st_counter == 0 )  {$content .= "\nINSERT INTO ".$table." VALUES";}$content .= "\n(";	for($j=0; $j<$fields_amount; $j++)  { $row[$j] = str_replace("\n","\\n", addslashes($row[$j]) ); if (isset($row[$j])){$content .= '"'.$row[$j].'"' ; }else {$content .= '""';}     if ($j<($fields_amount-1)){$content.= ',';} }	$content .=")";	if ( (($st_counter+1)%100==0 && $st_counter!=0) || $st_counter+1==$rows_num) {$content .= ";";} else {$content .= ",";} $st_counter=$st_counter+1;}	} $content .="\n\n\n";}	$backup_name = $backup_name ? $backup_name : $name."___(".date('H-i-s')."_".date('d-m-Y').")__rand".rand(1,11111111).".sql";header('Content-Type: application/octet-stream');   header("Content-Transfer-Encoding: Binary"); header("Content-disposition: attachment; filename=\"".$backup_name."\"");  echo $content; exit;}
-			EXPORT_TABLES__MLSS(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME, array($GLOBALS['wpdb']->prefix.'translatedwords__mlss',) );
-			exit;
+			
+			EXPORT_TABLES__MLSS(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME, array(Table1__MLSS,) );   exit;
 		}
 	};
 
@@ -573,13 +573,37 @@ add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHid
 		}
 	}
 } 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
-		if (!empty($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
-		if (!empty($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
+		if (isset($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
+		if (isset($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
 	}
 // =================================### Show/Hide other cats=================
 // =========================================================================
 
-
+// Hide this post from query
+add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery__MLSS(){ global $post;
+	if (in_array($post->post_type, LANGS__MLSS())){
+		$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
+		?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
+			</div></div>
+		<script type="text/javascript">
+			window.onload=function(){ myShowPostCheckbox(); };
+			function myShowPostCheckbox(){
+				if (document.getElementById('submitpost')){
+					var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
+				}
+			}
+		</script>
+	<?php 
+	}
+} 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
+		if (isset($_POST['HideTpstq__MLSS'])) {
+			$ar= get_option("optMLSS__HiddenFromQuery1"); 
+			if ("no"==$_POST['HideTpstq__MLSS'])	{	update_option("optMLSS__HiddenFromQuery1", array_diff($ar, [$post_id])  ); }
+			if ("yes"==$_POST['HideTpstq__MLSS'])	{	if(!in_array($post_id,$ar)) {$ar[]=$post_id;  update_option("optMLSS__HiddenFromQuery1", $ar); }}
+		} 
+	}
+// =================================### Show/Hide other cats=================
+// =========================================================================
 
 
 
