@@ -1,4 +1,4 @@
-=== Multi-Language Site===
+=== MultiLanguage Site===
 Contributors: selnomeria
 Tags: wordpress,multi,language,multilanguage,site,plugin,website,
 Requires at least: 3.7

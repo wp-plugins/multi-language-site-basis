@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Multi-Language Site
+ * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
  * Version: 1.54
  */
