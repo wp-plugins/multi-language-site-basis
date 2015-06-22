@@ -56,7 +56,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	$InitialArray = array( 
 		'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
 		'optMLSS__HiddenLangs'		=> 'Japan{jpn},Dutch{nld},',
-		'optMLSS__HiddenFromQuery1' => '__start1' ,
+		'optMLSS__HiddenFromQuery1' => array('__start1',) ,
 		'optMLSS__OnOffMode'		=> 'oon' ,
 		'optMLSS__DefForOthers'		=> 'dropdownn' ,
 		'optMLSS__FirstMethod'		=> 'dropddd' ,
