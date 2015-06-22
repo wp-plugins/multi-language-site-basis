@@ -598,7 +598,7 @@ add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery
 } 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
 		if (isset($_POST['HideTpstq__MLSS'])) {
 			$ar= get_option("optMLSS__HiddenFromQuery1"); 
-			if ("no"==$_POST['HideTpstq__MLSS'])	{ if(in_array($post_id,$ar))	{$ar=array_diff($ar, [$post_id]);	update_option("optMLSS__HiddenFromQuery1", $ar);} }
+			if ("no"==$_POST['HideTpstq__MLSS'])	{ if(in_array($post_id,$ar))	{$ar=array_diff($ar, array($post_id));	update_option("optMLSS__HiddenFromQuery1", $ar);} }
 			if ("yes"==$_POST['HideTpstq__MLSS'])	{ if(!in_array($post_id,$ar))	{$ar[]=$post_id;					update_option("optMLSS__HiddenFromQuery1", $ar);} }
 		} 
 	}
