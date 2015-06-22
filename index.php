@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.54
+ * Version: 1.55
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -509,32 +509,41 @@ function querymodify__MLSS($query) { $q=$query;
 		elseif (!isLangHomeURI__MLSS) {  			 if (is_search() || $q->is_search) {return;} //i have search filter below separately
 			define('CustPostsIsChosenBuildType',   'custom_p'==get_option('optMLSS__BuildType') ?     true:false );
 			define('CustTaxonomiesIsEnabledToo',   'y'		 ==get_option('optMLSS__EnableCustCat') ? true:false );
-			
+
 			//url details
 			$PostOrPageDetectedByWp = url_to_postid(currentURL__MLSS); //detects only for post and page (or custom post)
-			
+
 			$UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray));
-			$PathAfterHome=requestURIfromHomeWithoutParameters__MLSS;
-			$PathAfterLangRoot=substr($PathAfterHome, 4);
-			$BaseSLUG=basename(currentURL__MLSS);  //i.e. "TORNADOO"
+			$PathAfterHome		=requestURIfromHomeWithoutParameters__MLSS;
+			$PathAfterLangRoot	=substr($PathAfterHome, 4);
+			$PathAfterCustPost	=substr($PathAfterHome, strlen($GLOBALS['post']->post_type));
+			$BaseSLUG			=basename(currentURL__MLSS);  //i.e. "TORNADOO"
 
 			if (1==1) { //if (!$PostOrPageDetectedByWp)
-				
-			
+
+
 				//===========post using GUID SHORTURL  (i.e. site.com/?p=362&post_type=mytype )
 				if (isset($_GET['p'])) {
 					//if (isset($_GET['post_type'])){$tp=get_post($_GET['p']); if ($tp->post_type == $_GET['post_type']) {$post=$tp;}  }
-					$post=get_post($_GET['p']);
+					  $post=get_post($_GET['p']);
 					}	
 					if ($post){ $passed=true; 
 					$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	
 					$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
 					return $q;
 				}
-		
-			
-			
-			
+				//===========PAGED post    i.e. site.com/yourpost/3/
+				$page_part= get_query_var('page',1); if(!empty($page_part)){
+					$pageNUM= str_replace('/','', $page_part);
+					$final_cpURL = substr($PathAfterCustPost,0, - strlen($page_part));
+					$post= get_page_by_path($final_cpURL, OBJECT, get_post_types());	if ($post){  
+						$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	 $q->set('page', $pageNUM);
+						$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
+						return $q;
+					}
+				}
+
+
 				//============if CUSTOM TAXONOMY found=============== 
 				if (CustPostsIsChosenBuildType){ //IF ENABLED
 					if (CustTaxonomiesIsEnabledToo){ //IF ENABLED
@@ -578,6 +587,7 @@ function querymodify__MLSS($query) { $q=$query;
 					$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
 					return $q;
 				}
+				
 								}
 				//===========STANDARD page found===========
 				$post=get_page_by_path($PathAfterHome, OBJECT, 'page');	if ($post){ 
@@ -586,7 +596,7 @@ function querymodify__MLSS($query) { $q=$query;
 					return $q;
 				}
 				//===========STANDARD post found ===========//BUT IT SHOULD BE IN THE BASE (i.e. ENG) CATEGORY 
-				$post=get_page_by_path($PathAfterHome, OBJECT, 'post');  	if ($post){ $passed=true; 
+				$post=get_page_by_path($PathAfterHome, OBJECT, 'post');  	if ($post){ $passed=true;  
 					for($i=0; $i<count($k)-1; $i++){ $cat = get_term_by('slug', $k[$i], 'category'); 
 						if(!(in_category($cat->term_id,$post->ID) || post_is_in_descendant_category(array($cat->term_id),$post->ID))){ $passed=false; break; }
 					} if ($passed){ 
@@ -596,9 +606,6 @@ function querymodify__MLSS($query) { $q=$query;
 					return $q;
 					}
 				}
-
-				
-				
 
 				
 			//---------------------------------------------------------------------------------//
