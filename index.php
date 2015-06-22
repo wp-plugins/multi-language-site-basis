@@ -533,15 +533,15 @@ function querymodify__MLSS($query) { $q=$query;
 					return $q;
 				}
 				//===========PAGED post    i.e. site.com/yourpost/3/
-				$page_part= get_query_var('page',1); if(!empty($page_part)){
-					$pageNUM= str_replace('/','', $page_part);
-					$final_cpURL = substr($PathAfterCustPost,0, - strlen($page_part));
-					$post= get_page_by_path($final_cpURL, OBJECT, get_post_types());	if ($post){  
-						$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	 $q->set('page', $pageNUM);
-						$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
-						return $q;
-					}
-				}
+			//	$page_part= get_query_var('page',1); if(!empty($page_part)){
+			//		$pageNUM= trim($page_part, '/') ;
+			//		$final_cpURL = substr($PathAfterCustPost,0, - strlen($page_part));
+			//		$post= get_page_by_path($final_cpURL, OBJECT, get_post_types());	if ($post){  
+			//			$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	 $q->set('page', $pageNUM);
+			//			$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
+			//			return $q;
+			//		}
+			//	}
 
 
 				//============if CUSTOM TAXONOMY found=============== 
@@ -642,14 +642,15 @@ function querymodify__MLSS($query) { $q=$query;
 	if ( ! function_exists( 'post_is_in_descendant_category' ) ) { function post_is_in_descendant_category( $cats, $_post = null ) {
 			foreach ( (array) $cats as $cat ) {	$descendants = get_term_children( (int) $cat, 'category' );
 				if ( $descendants && in_category( $descendants, $_post ) ) {return true;}				
-			}return false;
+			} return false;
 		}
 	}	
 
 	
 	
 //================== SEARCH FILTER ===================
-if (FullMode__MLSS){ add_action('pre_get_posts','search_filterr__MLSS'); }    function search_filterr__MLSS($q) { 
+if (FullMode__MLSS){ add_action('pre_get_posts','search_filterr__MLSS'); }   
+function search_filterr__MLSS($q) { 
 	if ( !is_admin() && $q->is_main_query() && $q->is_search() ) 	{ 
 		$arrs= array_merge(array(), array());
 		$RootCat	= get_term_by('slug', LNG, 'category');
