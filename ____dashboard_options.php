@@ -112,6 +112,7 @@ if ( is_admin() ){
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_phrase name="<span style="color:red;">my_HeadingMessage</span>"]</span> [Shortcode, to return that translation phrase.. can be used in widgets and posts]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isHomeURI__MLSS</span>     [Returns true or false, whether opened url is exactly home: <b>http://site.com/</b> ]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">isLangHomeURI__MLSS</span> [Returns true or false, whether opened url is exactly any Language's  StartPage: <b>http://site.com/eng/</b>]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">LastCookiedLanguage__MLSS</span> [Returns the last Language, cought using COOKIE (only usable for using in separate projects) ]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">GetFlagUrl('eng')</span> [Returns Flag url for desired language]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">STYLESHEETURL__MLSS</span> [Returns plugin's stylesheet url]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">DetectedPostLang__MLSS($GLOBALS['post']-&gt;ID);</span> [Returns language slug for current post]

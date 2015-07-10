@@ -35,7 +35,7 @@ define('CatBaseWpOpt__MLSS',			get_option('category_base') );
 define('REMOVE_CAT_BASE_FUNC__MLSS', ('y'==$x ? true : false) ); 
 define('REMOVE_CAT_BASE_WpOption__MLSS', false);   //this is just a backup alternative for me..
 		define('CAT_BASE_NOT_USED__MLSS', ((REMOVE_CAT_BASE_FUNC__MLSS || REMOVE_CAT_BASE_WpOption__MLSS || CAT_BASE_WpOption_IS_EMPTY__MLSS) ? true:false)   );
-
+$GLOBALS['MLSS_VARS'] =array();
 		
 		
 		
@@ -130,7 +130,7 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 //DETECT ROOT CATEGORY slug for current post
 	function PostRootCatDetect__MLSS ($postid=false, $catid=false) { $catParent='';
 		if (!$postid){$postid=$GLOBALS['post']->ID;}
-		if (!$catid) {$bla3423525=get_the_category($postid);    $catid=$bla3423525[0]->term_id ;}
+		if (!$catid) {$bla3423525=get_the_category($postid);    if (!empty($bla3423525[0])) {$catid=$bla3423525[0]->term_id;} }
 		// continue, untill a parent $catid will be null
 		while ($catid) 	{ $cat = get_category($catid);	$catid = $cat->category_parent;  $catParent=$cat->slug; }
 		return $catParent;
@@ -166,13 +166,27 @@ register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivat
 	}
 
 //REDIRECT function (301,302 or 404)
-	function        REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
+	function  REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
 		header("Cache-Control: no-store, no-cache, must-revalidate"); header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); $RedirCodee = $RedirCodee ? $RedirCodee:301;   header("location:" . $url, true, $RedirCodee ) or die('File:'.dirname(__file__).'['.($SomethingWord ? $SomethingWord : '' ) .']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$url .') BACKTRACE:<br/>'.debug_print_backtrace()); exit; //echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit; 
 	} //FIX for WP BUG,, w hile site loaded in: Appearence>customize.php:
 		if (stripos(currentURL__MLSS, str_replace(home_url(),'',admin_url('customize.php'))) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);} else {setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 	//Children of above
 	function TRIGGERR_REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (FullMode__MLSS) {REDIRECTTT__MLSS($url,$SomethingWord,$RedirCodee);} }
 	
+//DETECT PLATFORM ===(check Updates:::: https://github.com/tazotodua/useful-php-scripts/ )
+function get_OperatingSystem__MLSS() { 
+	$user_agent=$_SERVER['HTTP_USER_AGENT']; $final =array(); $final['os_namee']="_Unknown_OS_";  $final['os_typee']="_Unknown_OS_";
+	$os_array=array(
+		'MOUSED'	=> array('/windows nt 6.3/i'=>'Windows 8.1', '/windows nt 6.2/i'=>'Windows 8', '/windows nt 6.1/i'=>'Windows 7',	'/windows nt 6.0/i'=>'Windows Vista','/windows nt 5.2/i'=>'Windows Server 2003/XP x64', '/windows nt 5.1/i'=>'Windows XP', '/windows xp/i'=>'Windows XP','/windows nt 5.0/i'=>'Windows 2000','/windows me/i'=>'Windows ME','/win98/i'=>'Windows 98','/win95/i'=>'Windows 95','/win16/i'=>'Windows 3.11',
+			'/macintosh|mac os x/i' =>'Mac OS X','/mac_powerpc/i'=>'Mac OS 9', '/linux/i'=>'Linux','/ubuntu/i'=>'Ubuntu',	),
+		'NOMOUSED'	=> array('/iphone/i'=>'iPhone','/ipod/i'=>'iPod','/ipad/i'=>'iPad','/android/i'=>'Android','/blackberry/i'=>'BlackBerry', '/webos/i'=>'Mobile'	)
+	);
+	foreach($os_array as $namee=>$valuee) { foreach ($valuee as $regex => $value1) {	if(preg_match($regex, $user_agent)){$final['os_namee']=$value1;  $final['os_typee'] = $namee;}		} } 	return $final;
+}
+$zz = get_OperatingSystem__MLSS();
+$GLOBALS['MLSS_VARS']['isMobile'] = ( $zz['os_typee'] != 'MOUSED' ?    true : false );
+
+
 //Redirect from NOTFOUND WP pages, but currently not used, because 404 redirection inside "add_action" may cause problems in custom pages (i.e. where include(..'/wp-load.php');). So, it's better,that this function was in header.php
 	function errorrrr_404__MLSS(){if (is_404() && WP_USE_THEMES === true )	{REDIRECTTT__MLSS(homURL,'problemm_702',404);}}
 //================================================= ##### SEVERAL USEFUL FUNCTIONS ===============================
@@ -220,14 +234,15 @@ function GetLanguagesFromBase__MLSS(){
 	//RETURN TRANSLATION OF ANY INDEX_PHRASE, according to visitor's detected language
 	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; 
 		$res = $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx`= '$variable' AND `lang` = '".($lang ? $lang : LNG)."'");
-		return stripslashes($res[0]->translation);
+		return ( !empty($res[0]) ? stripslashes($res[0]->translation) : '_____'.$variable.'_____') ;
 	} add_filter('MLSS','MLSS_PHRAZE',10,3);  //you can pass additional variables into this filter too.
 	
 	//DETERMINE TEMPORARY HIDDEN LANGUAGES
 	$hidden_langs__mlss= get_option('optMLSS__HiddenLangs', 'Nothing{none}'); //let's make query only once..
 	function isHiddenLang__MLSS($abbr){	return ( stripos($GLOBALS['hidden_langs__mlss'],'{'.$abbr.'}')!== false    ? true:false) ;}
 	
-
+	//to get the last COOKIE-d language value
+	DEFINE("LastCookiedLanguage__MLSS", $_COOKIE[cookienameLngs__MLSS]);
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
@@ -804,8 +819,8 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 			$DisableCurrentLangClick = true; $include_names= 'y'==get_option('optMLSS__IncludeNamesDropd');	$SITE_LANGUAGES=LANGS__MLSS(); 
 			//If language is set, then sort languages, as the first language FLAG should be the current language
 			if (defined('LNG')) {								function fix_1($i){return $i != LNG;}
-				$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  fix_1);						 //remove current language
-				$SITE_LANGUAGES = array( constant(LNG."_title__MLSS") => LNG) + $SITE_LANGUAGES; 		 //insert current language in first place
+				$SITE_LANGUAGES = array_filter($SITE_LANGUAGES,  "fix_1");							//remove current language
+				$SITE_LANGUAGES = array( constant(LNG."_title__MLSS") => LNG) + $SITE_LANGUAGES;	//insert current language in first place
 			}	$out.=
 		  '<div id="LangDropMenu1__MLSS">'.
 		   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
@@ -828,7 +843,7 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 		var ALines__MLSS=document.getElementById("AllLines1__MLSS");
 		var ALines_startHEIGHT__MLSS= ALines__MLSS.clientHeight; //overflow maybe  hidden white started
 		//For mobile devices, instead of hover, we need "onclick" action to be triggered (already injected into that button)
-			var isMobile__MLSS='.( $MLSS_VARS['isMobile'] ? "true":"false" ).';
+			var isMobile__MLSS='.( $GLOBALS['MLSS_VARS']['isMobile'] ? "true":"false" ).';
 			function MyMobileFunc__MLSS(){	if (isMobile__MLSS){ HideShowAllLines1__MLSS(); }  }	//langmnSelcr__MLSS.addEventListener("click", .....
 			Shown__MLSS=false;	function HideShowAllLines1__MLSS()	{
 				if (Shown__MLSS===true)	{ Shown__MLSS=false; ALines__MLSS.style.overflow="hidden";   ALines__MLSS.style.height=ALines_startHEIGHT__MLSS + "px";}
