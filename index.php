@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.56
+ * Version: 1.57
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -962,28 +962,39 @@ add_action( 'widgets_init', 'widg_sample__MLSS' );	function widg_sample__MLSS() 
 
 add_filter( 'widget_text', 'do_shortcode' ); //enable SHORTCODES in widgets
 
-//http://codex.wordpress.org/Function_Reference/shortcode_atts
-add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
-	//http://codex.wordpress.org/Function_Reference/wp_nav_menu
-	//http://codex.wordpress.org/Function_Reference/wp_get_nav_menu_items
-	echo wp_nav_menu( array('theme_location'=>'',    'menu'=> str_replace('AUTODETECT_',LNG.'_',$atts['name']),
-		'container'       => 'div',			'container_class' => 'sideMyBox',    'container_id'=> 'my_SideMenuTreeee',
-		'menu_class'      => 'menu',		'menu_id'         => '',
-		'echo'            => 0,				'fallback_cb'     => 'wp_page_menu',
-			'before'=>'', 'after'=>'', 'link_before'=>'', 'link_after'=>'',
-			'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-		'depth'           => 0,	'walker'          => ''
-	));
-}
 add_shortcode( 'MLSS_phrase', 'wordOutp__MLSS' ); function wordOutp__MLSS($atts){
 	echo '<span class="mlss__WidgetText">'.apply_filters("MLSS",$atts['name']).'</span>';
 }
 
 
+//http://codex.wordpress.org/Function_Reference/shortcode_atts
+add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp__MLSS($atts){
+	//http://codex.wordpress.org/Function_Reference/wp_nav_menu
+	//http://codex.wordpress.org/Function_Reference/wp_get_nav_menu_items
+	if (stripos($atts['name'],'AUTODETECT') !== false) {	$menu_name =str_replace('_AUTODETECT','', str_replace('AUTODETECT_','',$atts['name']) )  . '_' . LNG ;	}
+	else {$menu_name = $atts['name']; }
+	
+	$menu_exists = wp_get_nav_menu_object($menu_name);
+	if($menu_exists){
+		echo wp_nav_menu( array('theme_location'=>'',    'menu'=> $menu_name,
+			'container'       => 'div',			'container_class' => 'sideMyBox',    'container_id'=> 'my_SideMenuTreeee',
+			'menu_class'      => 'menu',		'menu_id'         => '',
+			'echo'            => 0,				'fallback_cb'     => 'wp_page_menu',
+				'before'=>'', 'after'=>'', 'link_before'=>'', 'link_after'=>'',
+				'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+			'depth'           => 0,	'walker'          => ''
+		));
+	}
+}
 
-
-
-
+//register navigation menus
+add_action( 'init', 'my_menu_registers__MLSS',91 ); function my_menu_registers__MLSS() {
+	register_nav_menus(array(
+		'mlss_menu_sidebarr1' =>'MLSS MenuBar1',
+		'mlss_menu_sidebarr2' =>'MLSS MenuBar2',
+		'mlss_menu_sidebarr3' =>'MLSS MenuBar3'
+	));
+}
 
 
 

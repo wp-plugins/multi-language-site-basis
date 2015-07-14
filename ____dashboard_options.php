@@ -82,14 +82,13 @@ if ( is_admin() ){
 				
 																<form action="" method="POST">
 		<center><h1><b>MLSS</b> Plugin - MultiLanguage Simple Site</h1></center>
-		<center><span class="fakeH22">( Read this  <a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">FIRST-TIME Install popup</a>!)</span></center> 
+		<center><span class="fakeH22">( Read this FIRST-TIME popup  - <a href="javascript:show_my_popup('#pluginwelcome');" class="readpopp">Inserting example DATA</a>!)</span></center> 
 			<div id="pluginwelcome" style="display:none;">
 			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let's test this plugin well. Also, report me about bugs!
 			 <br/><br/><br/>(Notes):
-			 <br/>1) at first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES</a>;
-			 <br/>2) To modify/design the output, read the 6th paragraph on this page.  
-			 <br/>3)This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it. 
-			 <br/>4) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..
+			 <br/>1) At first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES & menus</a>;
+			 <br/>2) To modify/design/style the output of this plugin, read the 6th paragraph on this page. This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it! 
+			 <br/>3) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..
 			</div> 
 		
 		
@@ -117,7 +116,7 @@ if ( is_admin() ){
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">STYLESHEETURL__MLSS</span> [Returns plugin's stylesheet url]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">DetectedPostLang__MLSS($GLOBALS['post']-&gt;ID);</span> [Returns language slug for current post]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">apply_filters('MLSS__firsttimeselector',0);</span> [Returns output of "Select FirstTime Language" popup's list]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_navigation name="<span style="color:red;">your_menus_base_slug</span>"]</span> [read the 6th paragraph on this page]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_navigation name="<span style="color:red;">your_menu_slug</span>"]</span> [read the 6th paragraph on this page]
 						</div>
 					</div>
 			</div>
@@ -278,13 +277,14 @@ if ( is_admin() ){
 			<br/>*<b>Tree-Like menus in sidebars of your site</b> - <a href="javascript:show_my_popup('#TreeLikeMenus');" class="readpopp">Read popup!</a>
 					<div id="TreeLikeMenus" style="display:none;">
 						In case, you want to display the "tree-like" menu (for pages,categories, etc...) on your website(in Sidebar or elsewhere), then click "APPEARENCE &gt; Menus" and there create separate custom menu for Each language. <i>(Note, that in the top of that screen,click "<b>SCREEN OPTIONS</b>" to include all available categories.)</i>
-						<br/> Then, go to <b>WIDGES</b> and insert each custom menu into widget. 
-						<br/><br/><br/>(p.s. if you wish to <b>integrate them within PHP files</b>,then <a href="javascript:show_my_popup('#TreemenuShortcod');" class="readpopp">Read popup!</a>)
-						<div id="TreemenuShortcod" style="display:none;">
 						   in such case, read this:
-						  <br/> on CUSTOM MENUS page, name those custom menus similar names, for example: <span class="codee"><b>eng_</b><span style="color:red;">MyyRightMenuu</span> </span>, <span class="codee"><b>rus_</b><span style="color:red;">MyyRightMenuu</span></span>...
-						  <br/>Then, use echo this do_shortcode in your <b>php</b> files : <span class="codee">[MLSS_navigation name="<b>AUTODETECT_</b><span style="color:red;">MyyRightMenuu</span>"]</span>
-						</div>
+						  <br/> on CUSTOM MENUS page, name those custom menus same slugs, but with changed language suffix, like this: <span class="codee"><span style="color:red;">Example_MENU_1</span><b>_eng</b></span>, <span class="codee"><span style="color:red;">Example_MENU_1</span><b>_rus</b></span>...
+						  <br/> Then, on <b>Widgets</b> page, insert a <b>Custom Menu</b> widget and choose the desired menu and desired language from dropdowns. 
+						  <br/><br/> p.s. To use them as shortcodes in <b>php</b> files, <a href="javascript:show_my_popup('#TreeLikeMenusShortc');" class="readpopp">Read popup!</a>
+						  <div id="TreeLikeMenusShortc" style="display:none;">
+							<br/>To output those custom menus, use this text shorcode: <span class="codee">[MLSS_navigation name="<span style="color:red;">Example_MENU_1</span><b>_AUTODETECT</b>"]</span>, and the plugin will handle the <b>AUTODETECT</b> itself.
+							<br/> (p.s. also, you can use <b>echo do_shortcode</b> in your <b>php</b> files. )
+						  </div>
 					</div>
 			
 			<br/>*<b>How to style/modify LANGUAGE Dropdowns,SELECTERS and etc.. output of this plugin? </b> -   <a href="javascript:show_my_popup('#StyleFlagsOutput');" class="readpopp">Read popup!</a>
@@ -649,7 +649,7 @@ add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery
 
 
 	// INSERT SAMPLE DATA after INSTALLATION
-	add_action('init','insert_sample_data__MLSS',99);function insert_sample_data__MLSS(){
+	add_action('init','insert_sample_data__MLSS',89);function insert_sample_data__MLSS(){
 		if(isset($_GET['SAMPLE_DATA__MLSS'])) {
 			if (is_admin() && iss_admiiiiiin__MLSS()){
 				//=============================================================================
@@ -657,7 +657,8 @@ add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery
 				//=============================================================================
 					Create_Cats__MLSS();
 					Create_Pages__MLSS();
-				die('<br/><br/>Sample Pages and Categories was published! <br/>Although you might never need those pages, just enter CATEGORIES page, and carefully look at their slugs&structure, to know, what slug names have the ROOT hierarchy CATEGORIES & Pages...');
+					Create_NavMenus__MLSS();
+				die('<br/><br/>Sample Pages and Categories were published! <br/>Although you might never need those pages, just enter CATEGORIES page, and carefully look at their slugs&structure, to know, what slug names have the ROOT hierarchy CATEGORIES & Pages...');
 			}
 		}
 	}		function Create_Cats__MLSS(){
@@ -678,13 +679,27 @@ add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery
 					//see, if exists,but trashed
 					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
 					elseif(!$page){
-					  $parentt	= wp_insert_post(array('post_title'=>$EachLng.$slug, 'post_name'=>$EachLng.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));									$a1= 'somethinggggg1_'.rand(1,1111111);
-					  $subb		= wp_insert_post(array('post_title'=>$a1,'post_name'=>$a1,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));									$a2= 'somethinggggg1_'.rand(1,1111111);
-					  $subb		= wp_insert_post(array('post_title'=>$a2,'post_name'=>$a2,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
+					  $parentt	= wp_insert_post(array('post_title'=>$EachLng.$slug,'post_name'=>$EachLng.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));									$a1= 'somethinggggg1_'.rand(1,1111111);
+					  $subb		= wp_insert_post(array('post_title'=>$a1,	'post_name'=>$a1,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));										$a2= 'somethinggggg1_'.rand(1,1111111);
+					  $subb		= wp_insert_post(array('post_title'=>$a2,	'post_name'=>$a2,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
 					}
 				}
 			}
-	
+			
+			function Create_NavMenus__MLSS(){		
+				foreach ($GLOBALS['SiteLangs__MLSS'] as $name=>$value){
+					$menu_name='Example_MENU_1_'.$value;
+					$menu_exists = wp_get_nav_menu_object($menu_name);
+					if( !$menu_exists){
+						$menu_id = wp_create_nav_menu($menu_name);
+						// Set up default menu items  - http://www.acousticwebdesign.net/wordpress/how-to-create-wordpress-3-navigation-menus-in-your-theme-or-plugin-code/
+						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Home Page',		 'menu-item-status'=>'publish', 'menu-item-url' => home_url('/') ));
+						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample Categoryy','menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/mycateg1") ));
+						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample Pagee',	 'menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/my-page1")	));
+						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample LinKk',	 'menu-item-status'=>'publish', 'menu-item-url' => 'http://google.com'	));
+					}
+				}
+			}
 	
 	
 	
