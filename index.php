@@ -64,6 +64,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 		'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
 		'optMLSS__Target_'.'default'=> 'eng' ,
 		'optMLSS__DropdHeader'		=> 'ddropdown' ,
+		'optMLSS__DropdDFixedOrAbs'	=> 'fixed' ,
 		'optMLSS__DropdSidePos'		=> 'left' ,
 		'optMLSS__DropdDistanceTop'	=> '70' ,
 		'optMLSS__DropdDistanceSide'=> '50' ,
@@ -215,7 +216,7 @@ define('MLSS_initNumb', (defined('MLSS_INIT_POINT') ? MLSS_INIT_POINT : 7));
 //==================================================== pre-define languages ===============================
 add_action('init','GetLanguagesFromBase__MLSS',MLSS_initNumb);
 function GetLanguagesFromBase__MLSS(){
-	// see COUNTRY_NAME abbreviations here (should be 639-3 type)  - http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=g ( OR http://en.wikipedia.org/wiki/ISO_639:k ) 
+	// see COUNTRY_NAME abbreviations here (should be 639-3 type https://en.wikipedia.org/wiki/ISO_639-3 ) 
 	$aarray = explode(',',  get_option('optMLSS__Lngs','None{none}') ); 
 	foreach ($aarray as $value)	{ 	$value=trim($value);				//re-create array with KEYNAMES
 		if (!empty($value))	{	preg_match('/(.*?)\{(.*)\}/si',$value,$nnn); 	//var_dump($nnn);exit;
@@ -1043,7 +1044,7 @@ if (is_admin()){
 			if (!$last_checktime || $last_checktime<time()-5*86400){	$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
 				preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
 				if (trim($B[2]) && trim($B[2])!=trim($A[2])){ update_option($OPTNAME_checktimee,time());
-					echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS</a> page and update on your site too</a>!</div>'; return true;
+					echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS</a> page and <a href="'.admin_url("plugins.php").'" target="_blank">update</a> on your site too</a>!</div>'; return true;
 	}}}}
 	//=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================
 	function get_remote_data__MLSS($url, $post_paramtrs=false)	{
