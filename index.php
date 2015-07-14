@@ -190,6 +190,7 @@ $GLOBALS['MLSS_VARS']['isMobile'] = ( $zz['os_typee'] != 'MOUSED' ?    true : fa
 
 //Redirect from NOTFOUND WP pages, but currently not used, because 404 redirection inside "add_action" may cause problems in custom pages (i.e. where include(..'/wp-load.php');). So, it's better,that this function was in header.php
 	function errorrrr_404__MLSS(){if (is_404() && WP_USE_THEMES === true )	{REDIRECTTT__MLSS(homURL,'problemm_702',404);}}
+	add_action( 'init', 'add_some_supportss_MLSS', 1); function add_some_supportss_MLSS() {  add_theme_support('post-thumbnails');  }
 //================================================= ##### SEVERAL USEFUL FUNCTIONS ===============================
 
 
