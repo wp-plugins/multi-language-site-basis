@@ -47,8 +47,8 @@
 #FirstTimeLanguage1__MLSS {z-index: 9970; position: absolute; background-color: #B7B7B7; padding: 5px; border: 2px solid; border-radius: 5px; float: left; margin: 0 0 0 40%; top: 20%;}
 	#FirstTimeLanguage1__MLSS #popup_CHOOSER2__MLSS{ }
 	 #FirstTimeLanguage1__MLSS .LineHolder2__MLSS{background-color:grey;}
-	 #FirstTimeLanguage1__MLSS a.ImgHolder2__MLSS {display:block; margin: 10px 0; }
+	 #FirstTimeLanguage1__MLSS a.ImgHolder2__MLSS {display:block; margin: 10px 0; text-decoration:none; }
 		#FirstTimeLanguage1__MLSS img.FlagImg2__MLSS{height:50px; width:80px; vertical-align: middle; }
-		#FirstTimeLanguage1__MLSS span.lnmenuSpn2__MLSS{font-size:25px; margin: 0 0 0 6px; } 
+		#FirstTimeLanguage1__MLSS span.lnmenuSpn2__MLSS{font-size:25px; margin: 0 0 0 6px; color: #FFDEA3; } 
 		 
 		 
