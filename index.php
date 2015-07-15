@@ -55,7 +55,7 @@ register_activation_hook( __FILE__, 'activation__MLSS' );function activation__ML
 	update_option( 'optMLSS__NeedFlush','okk'); 
 	$InitialArray = array( 
 		'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
-		'optMLSS__HiddenLangs'		=> 'Japan{jpn},Dutch{nld},',
+		'optMLSS__HiddenLangs'		=> '',
 		'optMLSS__HiddenFromQuery1' => array('__start1','') ,
 		'optMLSS__OnOffMode'		=> 'oon' ,
 		'optMLSS__DefForOthers'		=> 'dropdownn' ,
