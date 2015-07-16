@@ -6,9 +6,9 @@ define('DefaulHomeMsg__MLSS','By DEFAULT(if this field is empty),when a visitor 
 
 
 // START, if admin url
-if ( is_admin() ){
+if ( IS_ADMIN__MLSS ){
 	add_action('admin_menu', 'exec_pages__MLSS'); function exec_pages__MLSS() {
-		add_menu_page('MultiLang Simple', 'MultiLang Simple', 'manage_options','my-mlss-slug', 'my_submenu1__MLSS',  PLUGIN_URL_nodomain__MLSS.'/flags/a_main.png', "29.4342423" );
+		add_menu_page('MultiLang (MLSS)', 'MultiLang (MLSS)', 'manage_options','my-mlss-slug', 'my_submenu1__MLSS',  PLUGIN_URL_nodomain__MLSS.'/flags/a_main.png', "29.4342423" );
 		add_submenu_page('my-mlss-slug', 'MLSS Settings',	'MLSS Settings',	'manage_options', 'my-mlss-slug',  'my_submenu1__MLSS');
 		add_submenu_page('my-mlss-slug', 'Translated Words','Translated Words',	'manage_options', 'my-mlss-slug2', 'my_submenu2__MLSS');
 	}  //NonceCheck__MLSS()  is in main file
@@ -86,7 +86,7 @@ if ( is_admin() ){
 			<div id="pluginwelcome" style="display:none;">
 			 To set-up the Multi-Language website using this plugin, please read all notes on this page...  They are not hard to understand, if you will be a bit skilful and familiar with Wordpress functionalities. Let's test this plugin well. Also, report me about bugs!
 			 <br/><br/><br/>(Notes):
-			 <br/>1) At first, click here to publish the initial base <a href="<?php echo currentURL__MLSS.'&SAMPLE_DATA__MLSS';?>" target="_blank">PAGES & CATEGORIES & menus</a>;
+			 <br/>1) Note, that the initial CATEGORIES,PAGES and CUSTOM MENUS were created. Although you might never need those pages, just look though them, and carefully look at their slugs&structure, to know, how the ROOT hierarchy of CATEGORIES/Pages are made...
 			 <br/>2) To modify/design/style the output of this plugin, read the 6th paragraph on this page. This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it! 
 			 <br/>3) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..
 			</div> 
@@ -140,10 +140,11 @@ if ( is_admin() ){
 			</div>
 			<div class="hiddenlngs">
 				Hidden Langs: (<i><a href="javascript:document.getElementById('hiddn_langs_div').style.display='block'; alert('later,if you will need to disable any above language, it is better to put its phraze here, rather than removing from the above list. Thus, that language will be just hidden from site(instead of REMOVING),because \u0022REMOVING\u0022 might also remove indexed pages from GOOGLE too..');" class="readpopp">Read popup!</a></i>)
-				<div style="display:none;" id="hiddn_langs_div">
-					<br/><input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="Japan{jap},....." />
-				</div>
 				
+				<div style="display:none;" id="hiddn_langs_div">
+					<br/><input name="inp_HiddenLangs" type="text" class="inpt hiddenlangs" value="<?php echo get_option('optMLSS__HiddenLangs');?>" placeholder="Japan{jap},....." />		
+				</div>
+					
 			</div>
 		</div>
 		
@@ -456,32 +457,24 @@ if ( is_admin() ){
 			
 		<?php 
 	}
-}
+	
+	
+	
+	
+	
+	
+	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 //===================================== OTHER FUNCTIONS FOR DASHBOARD
 
@@ -515,7 +508,7 @@ if ( is_admin() ){
 	//WHEN FLAG IMAGE IS UPLOADED
 	add_action('init','DetectFlagIsUploaded__MLSS');function DetectFlagIsUploaded__MLSS(){
 		if (!empty($_POST['ImgUploadForm__mlss'])){
-			if (is_admin() && iss_admiiiiiin__MLSS()){
+			if (iss_admiiiiiin__MLSS()){
 				//if directory doesnt exists
 				if (!file_exists(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS)) {  mkdir(dirname(PLUGIN_DIR__MLSS).FlagFolder__MLSS, 0755, true); }
 				$filename	 = basename($_FILES["ImgFile__mlss"]["name"]);
@@ -537,77 +530,77 @@ if ( is_admin() ){
 	
 	
 	
-	
+		
 
-//=======================================================================================================
-// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
-//========================================================================================================
-add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
-	if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
-		if (in_array($_GET['post_type'], LANGS__MLSS())){
-			?> <?php if (empty($GLOBALS['JS_SCRIPT__MLSS'])) {echo $GLOBALS['JS_SCRIPT__MLSS']='<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'/flags/javascript_functions.php?jstypee"></script>';}?>
-			<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
-			<div style="display:none;"><div id="CatDrHeader">
-				<div style="margin:0 0 0 1px;"><span style="color:red;">Choose one Category.</span> <span style="font-style:italic;">[dont remind me this anymore: <input type="hidden" name="showhidNotic__MLSS" value="no" /><input type="checkbox" name="showhidNotic__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__DisableShowHideCatNotice')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]</span>
-				<br/>
-				<br/>[From now,hide any other Language categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
-				</div>
-			</div></div>
-			<?php $Blackgr=get_option('optMLSS__DisableShowHideCatNotice');?>
-			<script type="text/javascript">
-				function myCategoryAlert(){
-					if (document.getElementById('taxonomy-category')){
-						//Show Black Background
-						<?php  if ('yes'!=$Blackgr) { echo 'SHOW_blackGROUND();';}?>
-						//POPUP-like CATEGORY WINDOW
-						var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>};
-						//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
-						document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
-						//INSERT OUR MESSAGE
-						var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
+	//=======================================================================================================
+	// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
+	//========================================================================================================
+	add_action('admin_footer','ShowOrHideOtherLangCategs__MLSS'); function ShowOrHideOtherLangCategs__MLSS(){
+		if (stristr(currentURL__MLSS,admin_url('post-new.php?post_type='))) {
+			if (in_array($_GET['post_type'], LANGS__MLSS())){
+				?> <?php if (empty($GLOBALS['JS_SCRIPT__MLSS'])) {echo $GLOBALS['JS_SCRIPT__MLSS']='<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'/flags/javascript_functions.php?jstypee"></script>';}?>
+				<style type="text/css">	#Z_categorydiv{z-index:2339;} #Z_category-adder{display:none;} #Z_category-tabs{display:none;}	</style>
+				<div style="display:none;"><div id="CatDrHeader">
+					<div style="margin:0 0 0 1px;"><span style="color:red;">Choose one Category.</span> <span style="font-style:italic;">[dont remind me this anymore: <input type="hidden" name="showhidNotic__MLSS" value="no" /><input type="checkbox" name="showhidNotic__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__DisableShowHideCatNotice')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]</span>
+					<br/>
+					<br/>[From now,hide any other Language categories <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" name="showhidcat__MLSS" value="yes" <?php if ('yes'==get_option('optMLSS__ShowHideOtherCats')){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  />]
+					</div>
+				</div></div>
+				<?php $Blackgr=get_option('optMLSS__DisableShowHideCatNotice');?>
+				<script type="text/javascript">
+					function myCategoryAlert(){
+						if (document.getElementById('taxonomy-category')){
+							//Show Black Background
+							<?php  if ('yes'!=$Blackgr) { echo 'SHOW_blackGROUND();';}?>
+							//POPUP-like CATEGORY WINDOW
+							var cDiv = document.getElementById('categorydiv');	cDiv.style['zIndex']='9639';	cDiv.onclick = function(){<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>};
+							//remove "ADD CATEGORY" button from that page, because they MUST set categories on normal page..
+							document.getElementById('category-adder').style.display='none';	document.getElementById('category-tabs').style.display='none';
+							//INSERT OUR MESSAGE
+							var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(document.getElementById('CatDrHeader'), xDiv.childNodes[0]); 	
+						}
 					}
+					window.onload=function(){ myCategoryAlert(); window.setTimeout('<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>',5000); };
+				</script>
+				<?php  //hide all other categories
+				if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
+						'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
+					</style> <?php
 				}
-				window.onload=function(){ myCategoryAlert(); window.setTimeout('<?php  if ('yes'!=$Blackgr) { echo 'REMOVE_blackGROUND();';}?>',5000); };
-			</script>
-			<?php  //hide all other categories
-			if ('yes'==get_option('optMLSS__ShowHideOtherCats')) { ?> <style type="text/css"> 	<?php foreach (LANGS__MLSS() as $each) { 	 if ($each != $_GET['post_type']){echo 
-					'#categorychecklist li#category-'. get_category_by_path($each,true) ->term_id.' {display:none;}';	}} ?>
-				</style> <?php
 			}
 		}
-	}
-} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
-		if (isset($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
-		if (isset($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
-	}
-// =================================### Show/Hide other cats=================
-// =========================================================================
+	} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
+			if (isset($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
+			if (isset($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
+		}
+	// =================================### Show/Hide other cats=================
+	// =========================================================================
 
-// Hide this post from query
-add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery__MLSS(){ global $post;
-	if (in_array($post->post_type, LANGS__MLSS())){
-		$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
-		?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
-			</div></div>
-		<script type="text/javascript">
-			window.onload=function(){ myShowPostCheckbox(); };
-			function myShowPostCheckbox(){
-				if (document.getElementById('submitpost')){
-					var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
+	// Hide this post from query
+	add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery__MLSS(){ global $post;
+		if (in_array($post->post_type, LANGS__MLSS())){
+			$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
+			?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
+				</div></div>
+			<script type="text/javascript">
+				window.onload=function(){ myShowPostCheckbox(); };
+				function myShowPostCheckbox(){
+					if (document.getElementById('submitpost')){
+						var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
+					}
 				}
-			}
-		</script>
-	<?php 
-	}
-} 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
-		if (isset($_POST['HideTpstq__MLSS'])) {
-			$ar= get_option("optMLSS__HiddenFromQuery1"); 
-			if ("no"==$_POST['HideTpstq__MLSS'])	{ if(in_array($post_id,$ar))	{$ar=array_diff($ar, array($post_id));	update_option("optMLSS__HiddenFromQuery1", $ar);} }
-			if ("yes"==$_POST['HideTpstq__MLSS'])	{ if(!in_array($post_id,$ar))	{$ar[]=$post_id;					update_option("optMLSS__HiddenFromQuery1", $ar);} }
-		} 
-	}
-// =================================### Show/Hide other cats=================
-// =========================================================================
+			</script>
+		<?php 
+		}
+	} 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
+			if (isset($_POST['HideTpstq__MLSS'])) {
+				$ar= get_option("optMLSS__HiddenFromQuery1"); 
+				if ("no"==$_POST['HideTpstq__MLSS'])	{ if(in_array($post_id,$ar))	{$ar=array_diff($ar, array($post_id));	update_option("optMLSS__HiddenFromQuery1", $ar);} }
+				if ("yes"==$_POST['HideTpstq__MLSS'])	{ if(!in_array($post_id,$ar))	{$ar[]=$post_id;					update_option("optMLSS__HiddenFromQuery1", $ar);} }
+			} 
+		}
+	// =================================### Show/Hide other cats=================
+	// =========================================================================
 
 
 
@@ -644,68 +637,36 @@ add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery
 
 
 
-
-
-
-	
-	
-
-
-	// INSERT SAMPLE DATA after INSTALLATION
-	add_action('init','insert_sample_data__MLSS',89);function insert_sample_data__MLSS(){
-		if(isset($_GET['SAMPLE_DATA__MLSS'])) {
-			if (is_admin() && iss_admiiiiiin__MLSS()){
-				//=============================================================================
-				//================insert SAMPLE DATA: CATEGORIES and PAGES ====================
-				//=============================================================================
-					Create_Cats__MLSS();
-					Create_Pages__MLSS();
-					Create_NavMenus__MLSS();
-				die('<br/><br/>Sample Pages and Categories were published! <br/>Although you might never need those pages, just enter CATEGORIES page, and carefully look at their slugs&structure, to know, what slug names have the ROOT hierarchy CATEGORIES & Pages...');
-			}
-		}
-	}		function Create_Cats__MLSS(){
-				foreach (GetLanguagesFromBase__MLSS() as $EachLng){
-					//categories
-						$slug= S_CategPrefix__MLSS;
-					if (!term_exists( $EachLng.$slug, 'category')){       // https://codex.wordpress.org/Function_Reference/wp_insert_term
-						$parentt= wp_insert_term( $EachLng.$slug,'category', array());		$PT= get_term_by('slug',  $EachLng.$slug, 'category');
-						$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id)); 
-					}	
-				}
-			}
-			function Create_Pages__MLSS(){
-				foreach (GetLanguagesFromBase__MLSS() as $EachLng){
-					//pages
-						$slug= PagePrefix__MLSS;
-					$page =get_page_by_path($EachLng.$slug, OBJECT, 'page');
-					//see, if exists,but trashed
-					if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
-					elseif(!$page){
-					  $parentt	= wp_insert_post(array('post_title'=>$EachLng.$slug,'post_name'=>$EachLng.$slug,	'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));									$a1= 'somethinggggg1_'.rand(1,1111111);
-					  $subb		= wp_insert_post(array('post_title'=>$a1,	'post_name'=>$a1,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));										$a2= 'somethinggggg1_'.rand(1,1111111);
-					  $subb		= wp_insert_post(array('post_title'=>$a2,	'post_name'=>$a2,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish','post_parent'=> $parentt));
-					}
-				}
-			}
-			
-			function Create_NavMenus__MLSS(){		
-				foreach ($GLOBALS['SiteLangs__MLSS'] as $name=>$value){
-					$menu_name='Example_MENU_1_'.$value;
-					$menu_exists = wp_get_nav_menu_object($menu_name);
-					if( !$menu_exists){
-						$menu_id = wp_create_nav_menu($menu_name);
-						// Set up default menu items  - http://www.acousticwebdesign.net/wordpress/how-to-create-wordpress-3-navigation-menus-in-your-theme-or-plugin-code/
-						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Home Page',		 'menu-item-status'=>'publish', 'menu-item-url' => home_url('/') ));
-						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample Categoryy','menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/mycateg1") ));
-						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample Pagee',	 'menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/my-page1")	));
-						wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Sample LinKk',	 'menu-item-status'=>'publish', 'menu-item-url' => 'http://google.com'	));
-					}
-				}
-			}
 	
 	
 	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //===================================================================================//
 //===================================== END# DASHBOARD ============================= //
 ?>

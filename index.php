@@ -27,6 +27,7 @@ define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
 define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
+define('IS_ADMIN__MLSS',				IS_ADMIN() ); //'_'.get_option('optMLSS__PageSlugname', 'pages')
 //
 define('CatBaseWpOpt__MLSS',			get_option('category_base') );
 		define('CAT_BASE_WpOption_IS_EMPTY__MLSS', ( in_array(CatBaseWpOpt__MLSS, array('.','/.','\.')) ? true:false)   );
@@ -41,75 +42,135 @@ $GLOBALS['MLSS_VARS'] =array();
 		
 		
 		
-//==================================================== ACTIVATION commands ===============================		
-//REDIRECT SETTINGS PAGE (after activation)
-add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { 
-	//if not "update" action
-	if (!get_option('optMLSS__Lngs')){
-		exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); 
+//==================================================== ACTIVATION commands ===============================	
+if (IS_ADMIN__MLSS) {
+	
+	//REDIRECT SETTINGS PAGE (after activation)
+	add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { 
+		//if not "update" action
+		if (!get_option('optMLSS__Lngs')){
+			exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); 
+		}
+	} }
+
+	//ACTIVATION HOOK
+	register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
+		update_option( 'optMLSS__NeedFlush','okk'); 
+		$InitialArray = array( 
+			'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
+			'optMLSS__HiddenLangs'		=> '',
+			'optMLSS__HiddenFromQuery1' => array('__start1','') ,
+			'optMLSS__OnOffMode'		=> 'oon' ,
+			'optMLSS__DefForOthers'		=> 'dropdownn' ,
+			'optMLSS__FirstMethod'		=> 'dropddd' ,
+			'optMLSS__BuildType'		=> 'custom_p' ,
+			'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
+			'optMLSS__Target_'.'default'=> 'eng' ,
+			'optMLSS__DropdHeader'		=> 'ddropdown' ,
+			'optMLSS__DropdDFixedOrAbs'	=> 'fixed' ,
+			'optMLSS__DropdSidePos'		=> 'left' ,
+			'optMLSS__DropdDistanceTop'	=> '70' ,
+			'optMLSS__DropdDistanceSide'=> '50' ,
+			'optMLSS__IncludeNamesDropd'=> 'y' ,
+			'optMLSS__CategSlugname'	=> '' ,
+			'optMLSS__PageSlugname'		=> '' ,
+			'optMLSS__EnableQueryStrPosts'=> 'n' ,
+			//'optMLSS__ShowHideOtherCats'=> 'n' ,
+			//'optMLSS__HidenEntriesIdSlug'=> 'post-' ,
+			'optMLSS__EnableCustCat'	=> 'n' ,
+			'optMLSS__CatBaseRemoved'	=> 'y' ,
+			);
+		foreach($InitialArray as $name=>$value){	if (!get_option($name)){update_option($name,$value);}	}	
+
+				if (REMOVE_CAT_BASE_WpOption__MLSS) {
+					update_option('optMLSS__Cat_base_BACKUP', CatBaseWpOpt__MLSS );  $GLOBALS['wp_rewrite']->set_category_base('/.'); MyFlush__MLSS(false);  
+					//update_option('category_base',				'/.'); 	MyFlush__MLSS(false);  
+					//$wp_rewrite->set_permalink_structure('/%postname%/' );
+					//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
+				}
+								 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
+			$InnoDB_or_MyISAM = ($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
+			$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
+				`IDD` int(11) NOT NULL AUTO_INCREMENT,
+				`title_indx` varchar(150) NOT NULL,
+				`lang` varchar(150) NOT NULL,
+				`translation` LONGTEXT  NOT NULL DEFAULT '',
+				`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
+				PRIMARY KEY (`IDD`),
+				UNIQUE KEY `IDD` (`IDD`)
+				) ENGINE=".$InnoDB_or_MyISAM." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+			);
+		if (!get_option('optMLSS_table1installed')){
+			$r1=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, array('translation'=>'Hii user!!!'),	array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
+			$r2=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS,array('translation'=>'haи иуzer!'),		array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
+			update_option('optMLSS_table1installed','y');
+		}
+		if (!get_option('optMLSS_InitDataInstalled')){	
+			Create_initials__MLSS();  pdate_option('optMLSS_InitDataInstalled','y'); 
+		}
+			
+		//flush-update permalinks for CUSTOM POST TYPES 
+		GetLanguagesFromBase__MLSS(); registPTyps__MLSS(false);	MyFlush__MLSS(false);
 	}
-} }
 
-//ACTIVATION HOOK
-register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
-	update_option( 'optMLSS__NeedFlush','okk'); 
-	$InitialArray = array( 
-		'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
-		'optMLSS__HiddenLangs'		=> '',
-		'optMLSS__HiddenFromQuery1' => array('__start1','') ,
-		'optMLSS__OnOffMode'		=> 'oon' ,
-		'optMLSS__DefForOthers'		=> 'dropdownn' ,
-		'optMLSS__FirstMethod'		=> 'dropddd' ,
-		'optMLSS__BuildType'		=> 'custom_p' ,
-		'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
-		'optMLSS__Target_'.'default'=> 'eng' ,
-		'optMLSS__DropdHeader'		=> 'ddropdown' ,
-		'optMLSS__DropdDFixedOrAbs'	=> 'fixed' ,
-		'optMLSS__DropdSidePos'		=> 'left' ,
-		'optMLSS__DropdDistanceTop'	=> '70' ,
-		'optMLSS__DropdDistanceSide'=> '50' ,
-		'optMLSS__IncludeNamesDropd'=> 'y' ,
-		'optMLSS__CategSlugname'	=> '' ,
-		'optMLSS__PageSlugname'		=> '' ,
-		'optMLSS__EnableQueryStrPosts'=> 'n' ,
-		//'optMLSS__ShowHideOtherCats'=> 'n' ,
-		//'optMLSS__HidenEntriesIdSlug'=> 'post-' ,
-		'optMLSS__EnableCustCat'	=> 'n' ,
-		'optMLSS__CatBaseRemoved'	=> 'y' ,
-		);
-	foreach($InitialArray as $name=>$value){	if (!get_option($name)){update_option($name,$value);}	}	
 
-			if (REMOVE_CAT_BASE_WpOption__MLSS) {
-				update_option('optMLSS__Cat_base_BACKUP', CatBaseWpOpt__MLSS );  $GLOBALS['wp_rewrite']->set_category_base('/.'); MyFlush__MLSS(false);  
-				//update_option('category_base',				'/.'); 	MyFlush__MLSS(false);  
-				//$wp_rewrite->set_permalink_structure('/%postname%/' );
-				//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
-			}
-							 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
-		$InnoDB_or_MyISAM = ($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
-		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
-			`IDD` int(11) NOT NULL AUTO_INCREMENT,
-			`title_indx` varchar(150) NOT NULL,
-			`lang` varchar(150) NOT NULL,
-			`translation` LONGTEXT  NOT NULL DEFAULT '',
-			`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
-			PRIMARY KEY (`IDD`),
-			UNIQUE KEY `IDD` (`IDD`)
-			) ENGINE=".$InnoDB_or_MyISAM." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
-		);
-	if (!get_option('optMLSS_table1installed')){
-		$r1=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, array('translation'=>'Hii user!!!'),	array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
-		$r2=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS,array('translation'=>'haи иуzer!'),		array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
-		update_option('optMLSS_table1installed','y');
+				
+				function Create_initials__MLSS(){    Create_Cats__MLSS();    Create_Pages__MLSS();    Create_NavMenus__MLSS();   }
+				function Create_Cats__MLSS(){
+					foreach (GetLanguagesFromBase__MLSS() as $EachLng){      $slug= S_CategPrefix__MLSS;
+						//categories
+						if (!term_exists( $EachLng.$slug, 'category')){  // https://codex.wordpress.org/Function_Reference/wp_insert_term
+							$parentt= wp_insert_term( $EachLng.$slug,'category', array());		$PT= get_term_by('slug',  $EachLng.$slug, 'category');
+							$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id)); 
+						}	
+					}
+				}
+				function Create_Pages__MLSS(){
+					foreach (GetLanguagesFromBase__MLSS() as $EachLng){
+							$slug= PagePrefix__MLSS; $RandSlug1='somethinggggg_'.rand(1,1111111).rand(1,1111111); $RandSlug2='somethinggggg_'.rand(1,1111111).rand(1,1111111);
+						//pages
+						$page =get_page_by_path($EachLng.$slug, OBJECT, 'page');
+						//see, if exists,but trashed
+						if($page && 'trash'==$page->post_status){wp_update_post(array('ID'=>$page->ID,'post_status'=>'publish'));}
+						elseif(!$page){
+			$parentt= wp_insert_post(array('post_title'=>$EachLng.$slug,'post_name'=>$EachLng.$slug,'post_type'=>'page','post_content'=>'samplee','post_status'=>'publish'));
+			$subb	= wp_insert_post(array('post_title'=>$RandSlug1, 'post_name'=>$RandSlug1, 'post_type'=>'page', 'post_content'=>'samplee', 'post_status'=>'publish','post_parent'=> $parentt));
+			$subb	= wp_insert_post(array('post_title'=>$RandSlug2, 'post_name'=>$RandSlug2, 'post_type'=>'page', 'post_content'=>'samplee', 'post_status'=>'publish','post_parent'=> $parentt));
+						}
+					}
+				}
+				
+				function Create_NavMenus__MLSS(){		
+					foreach ($GLOBALS['SiteLangs__MLSS'] as $name=>$value){
+						$menu_name='Example_MENU_1_'.$value;
+						$menu_exists = wp_get_nav_menu_object($menu_name);
+						if( !$menu_exists){
+							$menu_id = wp_create_nav_menu($menu_name);
+							// Set up default menu items  - http://goo.gl/5h8eJU
+			wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Home Page',		 'menu-item-status'=>'publish', 'menu-item-url' => home_url('/') ));
+			wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Samplee Categoryy','menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/mycateg1") ));
+			wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Samplee Pagee',	 'menu-item-status'=>'publish', 'menu-item-url' => home_url("/$value/my-page1")	));
+			wp_update_nav_menu_item($menu_id, 0, array('menu-item-title'=>'Samplee LinKk',	 'menu-item-status'=>'publish', 'menu-item-url' => 'http://google.com'	));
+						}
+					}
+				}
+
+	register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
+		if (REMOVE_CAT_BASE_WpOption__MLSS) { update_option('category_base', get_option('optMLSS__Cat_base_BACKUP')); $GLOBALS['wp_rewrite']->set_category_base(get_option('optMLSS__Cat_base_BACKUP')); }      
+		MyFlush__MLSS(false); 
 	}
-		
-	//flush-update permalinks for CUSTOM POST TYPES 
-	GetLanguagesFromBase__MLSS(); registPTyps__MLSS(false);	MyFlush__MLSS(false);
-}
 
-register_deactivation_hook( __FILE__, 'deactivation__MLSS' ); function deactivation__MLSS() { 
-	if (REMOVE_CAT_BASE_WpOption__MLSS) { update_option('category_base', get_option('optMLSS__Cat_base_BACKUP')); $GLOBALS['wp_rewrite']->set_category_base(get_option('optMLSS__Cat_base_BACKUP')); }      
-	MyFlush__MLSS(false); 
+
+	//add action link in PLUGINS list (beside ACIVATE/DEACTIVATE)
+	add_filter( 'plugin_action_links', 'add_action_link__MLSS', 10, 5 );		
+	function add_action_link__MLSS( $actions, $plugin_file ) 	{		
+		static $plugin; 	if (!isset($plugin)) $plugin = plugin_basename(__FILE__);		
+		if ($plugin == $plugin_file) {		
+			$settings = array('settings' => '<a href="admin.php?page=my-mlss-slug">' . __('Settings', 'General') . '</a>');		
+			$actions = array_merge($settings, $actions);		
+		}		
+		return $actions;		
+	}
 }
 //=================================================== ### ACTIVATION commands===============================
 
@@ -798,7 +859,7 @@ add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function
 				foreach (LANGS__MLSS() as $keyname => $value){		if (!isHiddenLang__MLSS($value) ) {  //not included in "HIDDEN LANGS"
 				$out .= '<div class="LineHolder2__MLSS">'.
 								'<a class="ImgHolder2__MLSS"  href="'.homeURL__MLSS.'/'.$value.'">'.
-									'<img class="FlagImg2__MLSS '.$value.'_flagg2__MLSS" src="'. GetFlagUrl__MLSS($value).'" alt="'. strtoupper($keyname) .'" />'.
+									'<img class="FlagImg2__MLSS '.$value.'_flagg2__MLSS" src="'. GetFlagUrl__MLSS($value).'" alt="'. $keyname .'" />'.
 									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 								'</a>'.
 						'</div>';										}
