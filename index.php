@@ -142,7 +142,7 @@ if (IS_ADMIN__MLSS) {
 				
 				function Create_NavMenus__MLSS(){		
 					foreach ($GLOBALS['SiteLangs__MLSS'] as $name=>$value){
-						$menu_name='Example_MENU_1_'.$value;
+						$menu_name='Example_MyMENUUU_1_'.$value;
 						$menu_exists = wp_get_nav_menu_object($menu_name);
 						if( !$menu_exists){
 							$menu_id = wp_create_nav_menu($menu_name);
@@ -251,7 +251,7 @@ $GLOBALS['MLSS_VARS']['isMobile'] = ( $zz['os_typee'] != 'MOUSED' ?    true : fa
 
 //Redirect from NOTFOUND WP pages, but currently not used, because 404 redirection inside "add_action" may cause problems in custom pages (i.e. where include(..'/wp-load.php');). So, it's better,that this function was in header.php
 	function errorrrr_404__MLSS(){if (is_404() && WP_USE_THEMES === true )	{REDIRECTTT__MLSS(homURL,'problemm_702',404);}}
-	add_action( 'init', 'add_some_supportss_MLSS', 1); function add_some_supportss_MLSS() {  add_theme_support('post-thumbnails');  }
+	add_action( 'init', 'add_some_supportss__MLSS', 1); function add_some_supportss__MLSS() {  add_theme_support('post-thumbnails');  }
 //================================================= ##### SEVERAL USEFUL FUNCTIONS ===============================
 
 
@@ -1049,8 +1049,9 @@ add_shortcode( 'MLSS_navigation', 'treemenuOutp__MLSS' ); function treemenuOutp_
 	}
 }
 
-//register navigation menus
-add_action( 'init', 'my_menu_registers__MLSS',91 ); function my_menu_registers__MLSS() {
+//register navigation menus  (shown in   /wp-admin/nav-menus.php?action=locations  )
+//add_action( 'init', 'my_menu_registers__MLSS',91 ); 
+function my_menu_registers__MLSS() {
 	register_nav_menus(array(
 		'mlss_menu_sidebarr1' =>'MLSS MenuBar1',
 		'mlss_menu_sidebarr2' =>'MLSS MenuBar2',
