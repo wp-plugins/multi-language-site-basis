@@ -106,7 +106,7 @@ if (IS_ADMIN__MLSS) {
 			update_option('optMLSS_table1installed','y');
 		}
 		if (!get_option('optMLSS_InitDataInstalled')){	
-			Create_initials__MLSS();  pdate_option('optMLSS_InitDataInstalled','y'); 
+			Create_initials__MLSS();  update_option('optMLSS_InitDataInstalled','y'); 
 		}
 			
 		//flush-update permalinks for CUSTOM POST TYPES 
