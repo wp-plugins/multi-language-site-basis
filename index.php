@@ -601,18 +601,18 @@ function querymodify__MLSS($query) { $q=$query;
 			$UrlArray=explode('/',requestURIfromHome__MLSS); $k=array_values(array_filter($UrlArray));
 			$PathAfterHome		=requestURIfromHomeWithoutParameters__MLSS;
 			$PathAfterLangRoot	=substr($PathAfterHome, 4);
-			$PathAfterCustPost	=substr($PathAfterHome, strlen($GLOBALS['post']->post_type));
+			$PathAfterCustPost	=isset($GLOBALS['post']) ? substr($PathAfterHome, strlen($GLOBALS['post']->post_type)) : '';
 			$BaseSLUG			=basename(currentURL__MLSS);  //i.e. "TORNADOO"
 
 			if (1==1) { //if (!$PostOrPageDetectedByWp)
 
 
 				//===========post using GUID SHORTURL  (i.e. site.com/?p=362&post_type=mytype )
-				if (isset($_GET['p'])) {
+					if (isset($_GET['p'])) {
 					//if (isset($_GET['post_type'])){$tp=get_post($_GET['p']); if ($tp->post_type == $_GET['post_type']) {$post=$tp;}  }
 					  $post=get_post($_GET['p']);
-					}	
-					if ($post){ $passed=true; 
+					}
+				if (!empty($post)){ $passed=true; 
 					$q->init();	$q->parse_query( array('post_type'=>array($post->post_type)) ) ;	
 					$q->is_single=true; $q->is_page=false; $q->is_home=false; $q->is_singular=true; $q->queried_object_id=$post->ID; $q->set('page_id',$post->ID);
 					return $q;
