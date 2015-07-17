@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.57
+ * Version: 1.58
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -320,7 +320,7 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 			//if LNG parameter is already defined by developer (i dont know, maybe with his own functions)
 			if (defined('LNG_PASSED'))	{define ('LNG',LNG_PASSED); return; } //{  $x = LNG_PASSED; } 
 	//if ADMIN PANEL
-		if (!$x && is_admin() && !empty($_COOKIE[cookienameLngs__MLSS]))			{ $x = $_GET['lng'];}
+		if (!$x && is_admin() && !empty($_COOKIE[cookienameLngs__MLSS]))			{ $x = $_COOKIE[cookienameLngs__MLSS];}
 	//PARAMTERED URL 					(example.com/mypagee?lng=ENG)
 		if	(!$x && !empty($_GET['lng']) && in_array($_GET['lng'], LANGS__MLSS()) )	{ $x = $_GET['lng'];}
 	//CUSTOM POST inside category		(example.com/ENG-categories2/my-post
@@ -402,15 +402,17 @@ function DetectLangUsingUrl__MLSS(){ $hom=str_replace('/','\/', homeFOLD__MLSS);
 	//--------------------------------------------------------------------------------------
 	//lets add one additional, luxury trick - if STANDARD(or unknown cutom) POST is published under language category.. (i.e. site.com/my-post), then detect it's language, and redirect
 	add_action('template_redirect','postrootCat__MLSS');function postrootCat__MLSS(){
-		if ($catslug= DetectedPostLang__MLSS(url_to_postid(currentURL__MLSS))) {}
-		elseif ($p1 = get_page_by_path(requestURIfromHomeWithoutParameters__MLSS, OBJECT, get_post_types(array('_builtin'=>true))))  { $catslug= DetectedPostLang__MLSS($p1->ID); }
-		elseif ($catslug= DetectedPostLang__MLSS()) {}
-		if ( $catslug) {
-			//if language constant incorrectly is set for this post
-			if ( (defined('LNG') && $catslug != LNG) || !defined('LNG')){  
-				setcookie(cookienameLngs__MLSS, $catslug, time()+100000000, homeFOLD__MLSS);
-				//$final_req = str_ireplace('lng='.$_SERVER['REQUEST_URI']);
-				TRIGGERR_REDIRECTTT__MLSS($_SERVER['REQUEST_URI'], 'problemm_714' );	
+		if (is_singular()) {
+			if ($catslug= DetectedPostLang__MLSS(url_to_postid(currentURL__MLSS))) {}
+			elseif ($p1 = get_page_by_path(requestURIfromHomeWithoutParameters__MLSS, OBJECT, get_post_types(array('_builtin'=>true))))  { $catslug= DetectedPostLang__MLSS($p1->ID); }
+			elseif ($catslug= DetectedPostLang__MLSS()) {}
+			if ( $catslug) {
+				//if language constant incorrectly is set for this post
+				if ( (defined('LNG') && $catslug != LNG) || !defined('LNG')){  
+					setcookie(cookienameLngs__MLSS, $catslug, time()+100000000, homeFOLD__MLSS);
+					//$final_req = str_ireplace('lng='.$_SERVER['REQUEST_URI']);
+					TRIGGERR_REDIRECTTT__MLSS($_SERVER['REQUEST_URI'], 'problemm_714' );	
+				}
 			}
 		}
 	}
@@ -534,6 +536,11 @@ function querymodify__MLSS($query) { $q=$query;
 		//============================================================================================================================
 		//this is removed from here, and moved as a separate function
 		if (isLangHomeURI__MLSS) { 	  
+		
+			//change title
+			add_filter( 'wp_title', 'my_title_filter__MLSS', 19, 2 ); function my_title_filter__MLSS($title, $sep){ return constant(LNG.'_title__MLSS').' | '.get_option('blogname'); }
+			
+			
 			//when static ID is set for the language's STARTPAGE
 			if ($optValue= get_option('optMLSS__HomeID_'.LNG)){
 											//this moved into above separate function ----------->
