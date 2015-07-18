@@ -578,19 +578,21 @@ if ( IS_ADMIN__MLSS ){
 
 	// Hide this post from query
 	add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery__MLSS(){ global $post;
-		if (in_array($post->post_type, LANGS__MLSS())){
-			$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
-			?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
-				</div></div>
-			<script type="text/javascript">
-				window.onload=function(){ myShowPostCheckbox(); };
-				function myShowPostCheckbox(){
-					if (document.getElementById('submitpost')){
-						var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
+		if (!empty($post)) {
+			if (in_array($post->post_type, LANGS__MLSS())){
+				$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
+				?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
+					</div></div>
+				<script type="text/javascript">
+					window.onload=function(){ myShowPostCheckbox(); };
+					function myShowPostCheckbox(){
+						if (document.getElementById('submitpost')){
+							var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
+						}
 					}
-				}
-			</script>
-		<?php 
+				</script>
+			<?php 
+			}
 		}
 	} 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
 			if (isset($_POST['HideTpstq__MLSS'])) {
