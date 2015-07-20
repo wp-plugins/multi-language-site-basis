@@ -51,6 +51,7 @@ if ( IS_ADMIN__MLSS ){
 								update_option('optMLSS__OnOffMode', $_POST['ioptMLSS__OnOffMode']);	
 									if(get_option('optMLSS__Lngs') 	!= $_POST['inp_Langs'])				 { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__Lngs',      str_replace(array('{ ',' }'), array('{','}'),$_POST['inp_Langs']));	
+								UpdateNewLangsColumns__MLSS();
 									if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		 { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
 									if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) { $NEEDS_FLUSH_REDIRECT=true;}
@@ -88,7 +89,7 @@ if ( IS_ADMIN__MLSS ){
 			 <br/><br/><br/>(Notes):
 			 <br/>1) Note, that the initial CATEGORIES,PAGES and CUSTOM MENUS were created. Although you might never need those pages, just look though them, and carefully look at their slugs&structure, to know, how the ROOT hierarchy of CATEGORIES/Pages are made...
 			 <br/>2) To modify/design/style the output of this plugin, read the 6th paragraph on this page. This plugin is coded simply, using only 1 file! So, if you are a developer, you can easily re-produce it! 
-			 <br/>3) At this moment (I will try to do in near future) this plugin doesnt provide a.k.a. "ALTERNATIVE" pages for 1 typical post.. instead, the plugin builds the separate language home site, and you can add separate posts&pages or etc..
+			 <br/>3) NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I can keep this plugin maintained.. So, if someone interested, help me to maintain this plugin (see <b>contact</b> details).
 			</div> 
 		
 		
@@ -130,6 +131,7 @@ if ( IS_ADMIN__MLSS ){
 						<br/>To add a language,  Insert Language title (i.e: <b>Spanish</b>, and after it, in <b>CURLED BRACKETS</b>, insert it's official abbreviation  (Needs to be 3 latin characters,i.e. "<b>spa</b>"....   &nbsp;&nbsp;View countries' official <a href="http://www-01.sil.org/iso639-3/codes.asp?order=reference_name&letter=%25" target="_blank">3 symbols</a><a href="http://en.wikipedia.org/wiki/List_of_countries_by_spoken_languages#Spanish)" target="_blank">.</a>)
 						<br/><br/>
 						Also! While adding new language (i.e. "<b>eng</b>"), in categories you should create a root category too (named "<b>eng</b>"),otherwise, you cant add new posts to that language...
+						<br/><br/><br/><br/>p.s. if you ever change the language symbol, then <a href="javascript:alert('If you want to change the 3-letter letter symbol of already created language (and while using that language symbol, you have filled \u0022ALTERNATIVE POST ID\u0022 fields, then you might have to rename the column-name in database to, otherwise, you will have to re-set the \u0022ALTERNATIVE POST ID\u0022s for the new 3-letter language. ) ');">read this popup!</a>.
 						</div>
 						
 			<div class="enabled_langs">		
@@ -635,9 +637,30 @@ if ( IS_ADMIN__MLSS ){
 		}}
 	// ==================================================================================================	
 
+	
+	
+	
+	
+	//  "POST ALTERNATIVE TRANSLATION"  MetaBoxes( for CUSTOM POSTS)
+	add_action( 'add_meta_boxes','post_relations__MLSS'); function post_relations__MLSS() {
+		$AllLangs = GetLanguagesFromBase__MLSS(); foreach($AllLangs as $each) {  add_meta_box('html_MLSSid11','(MLSS) Translations for this post','transl_posts__MLSS', $each,'normal');  } 
+	}
+	function transl_posts__MLSS($post){ global $wpdb,$pagenow;
+		echo '<style type="text/css"></style>
+			Include this post into GROUP ID: ';
+			$group_array = GetGroupByPostID__MLSS($post->ID);
+		echo '<input type="text" name="mlss_group_id" value="'.$group_array->groupId.'" placeholder="'.$post->ID.'" /> (<a href="javascript:alert(\'In this field, you should insert the unique GROUP ID number.. for example, when you open several different language posts as alternatives of each another, then use the same GROUP ID for them. So, when your visitor clicks the LANGUAGE FLAG in the dropdown, he will not be redirected simply to the chosen LANGUAGE MAIN-PAGE, but directly to the translated ALTERNATIVE page.\r\n\r\n\r\np.s. If this is a completely new post, and the field is empty, then you should see the recommended UNIQUE ID. So, you can actually use that ID as new UNIQUE INDEX ...\');">Read This Popup!</a>)';
+	}
+	//  "POST ALTERNATIVE TRANSLATION"  MetaBoxes( for Typical POSTS)
+	
+	add_action( 'save_post', 'savpst_22__MLSS',95);	
+	function savpst_22__MLSS( $post_id ){ if ($post_id==$_POST['post_ID'] && isset($_POST['mlss_group_id']) ) {  global $wpdb;
+		UPDATEE_OR_INSERTTT__MPCC(OldTablePostsRel__MLSS,   array($_POST['post_type'] => $post_id ), array('groupId'=> $_POST['mlss_group_id'])   );
+	} }
+	
 
-
-
+	
+	
 
 	
 	

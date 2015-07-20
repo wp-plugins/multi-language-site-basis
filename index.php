@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: MultiLanguage Site
- * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
- * Version: 1.58
+ * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
+ * Version: 1.59
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -23,7 +23,11 @@ define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('STYLESHEETURL__MLSS',			plugin_dir_url(__FILE__).'flags/stylesheet.css');
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
-define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
+define('OldTable1__MLSS',				$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
+define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'_mlss_translatedwords');
+define('TableGroupIDs__MLSS',			$GLOBALS['wpdb']->prefix.'_mlss_postgroups');
+define('TablePostsRel__MLSS',			$GLOBALS['wpdb']->prefix.'_mlss_postrelations');
+define('OldTablePostsRel__MLSS',		$GLOBALS['wpdb']->prefix.'_mlss_postrelationsOld');
 define('C_CategPrefix__MLSS',			''); //'_'.get_option('optMLSS__CategSlugname', 'categories')
 define('S_CategPrefix__MLSS',			'');
 define('PagePrefix__MLSS',				''); //'_'.get_option('optMLSS__PageSlugname', 'pages')
@@ -88,21 +92,98 @@ if (IS_ADMIN__MLSS) {
 					//$wp_rewrite->set_permalink_structure('/%postname%/' );
 					//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
 				}
-								 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
-			$InnoDB_or_MyISAM = ($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ;
-			$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
+				
+				
+		// ============================  IF UPDATING OLD VERSION ===============================
+		//rename old tables 
+		$NewExists = $wpdb->query("show tables like '".Table1__MLSS."'") > 0 ;
+		$OldExists = $wpdb->query("show tables like '".OldTable1__MLSS."'") > 0 ;
+		if (!$NewExists && $OldExists)  {  $d = $wpdb->query("RENAME TABLE `" . OldTable1__MLSS . "` TO `" .  Table1__MLSS. "`");  } 
+		// ============================ ### IF UPDATING OLD VERSION =============================
+
+		
+		
+		
+		
+
+		//=================================== create tables		===============================
+							 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
+		//1 (for phrazes)
+		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
+			`IDD` int(11) NOT NULL AUTO_INCREMENT,
+			`title_indx` varchar(150) NOT NULL,
+			`lang` varchar(150) NOT NULL,
+			`translation` LONGTEXT  NOT NULL DEFAULT '',
+			`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
+			PRIMARY KEY (`IDD`),
+			UNIQUE KEY `IDD` (`IDD`)
+			) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM'  ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+		);
+		
+		
+		//2 (for post IDS)
+		$ExtraSql="\r\n";
+		$langs = GetLanguagesFromBase__MLSS();
+		foreach($langs as $name=>$value){ $ExtraSql .= "`$value` varchar(255) NOT NULL DEFAULT '', \r\n"; }
+		
+		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".OldTablePostsRel__MLSS."` (
+			`IDD` int(11) NOT NULL AUTO_INCREMENT,
+			`groupId` TINYTEXT NOT NULL DEFAULT '',
+			`InitPostid` int(20) NOT NULL,"
+			.$ExtraSql.
+			"`extra1_` MEDIUMTEXT  NOT NULL DEFAULT '',
+			`extra2_` MEDIUMTEXT  NOT NULL DEFAULT '',
+			`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
+			PRIMARY KEY (`IDD`),
+			UNIQUE KEY `IDD` (`IDD`)
+			) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+		);
+		//If updating, check if some languages dont exist.. if so, insert new column
+		UpdateNewLangsColumns__MLSS();
+
+		
+		
+		// ============= for future use =============
+		$enabled = false;
+		if ($enabled) {
+			
+		//3 (for post groups)
+			$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".TableGroupIDs__MLSS."` (
 				`IDD` int(11) NOT NULL AUTO_INCREMENT,
-				`title_indx` varchar(150) NOT NULL,
-				`lang` varchar(150) NOT NULL,
-				`translation` LONGTEXT  NOT NULL DEFAULT '',
-				`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
+				`gourpId` varchar(150) NOT NULL,
+				`ids` TINYTEXT NOT NULL,
+				`extra1_urls` MEDIUMTEXT  NOT NULL DEFAULT '',
+				`extra2_` MEDIUMTEXT  NOT NULL DEFAULT '',
+				`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
 				PRIMARY KEY (`IDD`),
 				UNIQUE KEY `IDD` (`IDD`)
-				) ENGINE=".$InnoDB_or_MyISAM." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+				) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+			);		
+			//4 (for post IDS)
+			$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".TablePostsRel__MLSS."` (
+				`IDD` int(11) NOT NULL AUTO_INCREMENT,
+				`postid` int(20) NOT NULL,
+				`groupID` TINYTEXT NOT NULL,
+				`extra1_` MEDIUMTEXT  NOT NULL DEFAULT '',
+				`extra2_` MEDIUMTEXT  NOT NULL DEFAULT '',
+				`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
+				PRIMARY KEY (`IDD`),
+				UNIQUE KEY `IDD` (`IDD`)
+				) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 			);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		if (!get_option('optMLSS_table1installed')){
 			$r1=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, array('translation'=>'Hii user!!!'),	array('title_indx'=>'my_HeadingMessage', 'lang'=>'eng'));
-			$r2=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS,array('translation'=>'haи иуzer!'),		array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
+			$r2=UPDATEE_OR_INSERTTT__MLSS(Table1__MLSS, array('translation'=>'haи иуzer!'),		array('title_indx'=>'my_HeadingMessage', 'lang'=>'rus'));
 			update_option('optMLSS_table1installed','y');
 		}
 		if (!get_option('optMLSS_InitDataInstalled')){	
@@ -176,9 +257,6 @@ if (IS_ADMIN__MLSS) {
 
 
 
-
-
-
 //========================================= SEVERAL USEFUL FUNCTIONS ===============================
 //CHECK IF USER IS ADMIN
 	function iss_admiiiiiin__MLSS()   {require_once(ABSPATH.'wp-includes/pluggable.php'); return (current_user_can('create_users')? true:false);}
@@ -202,14 +280,14 @@ if (IS_ADMIN__MLSS) {
 		$catRoot = PostRootCatDetect__MLSS($postid); if (in_array($catRoot, LANGS__MLSS())){return $catRoot;} else {return false;}
 	}
 //INSERT VALUE IN DATABASE  ===(check Updates:::: https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php )
-	function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
-			//convert array to STRING
-			$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key." = '".$value."'"; if(count($WhereArray)!=$i){$o .=' AND ';$i++;} }
-			$CheckIfExists = $wpdb->get_results("SELECT * from `".$tablename."` WHERE ".$o);
+	function UPDATEE_OR_INSERTTT__MLSS($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
+		//convert array to STRING
+		$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $value= is_numeric($value) ? $value : "'".addslashes($value)."'"; $o .= $key . " = $value"; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
 		//check if already exist
-		if (!empty($CheckIfExists))   {return $wpdb->update($tablename,  $NewArrayValues,	$WhereArray  			);}
-		else                          {return $wpdb->insert($tablename,  array_merge($NewArrayValues,$WhereArray)	);}
-	}	
+		$CheckIfExists = $wpdb->get_var($wpdb->prepare("SELECT $arrayNames[0] FROM $tablename WHERE $o",1) );
+		if (!empty($CheckIfExists))	{	$wpdb->update($tablename,	$NewArray,	$WhereArray	);}
+		else						{	$wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	}
+	}
 // DETECT FLAG'S URLs
 	define('FlagFolder__MLSS', "/flags__MLSS");
 	function GetFlagUrl__MLSS($lang){
@@ -226,6 +304,29 @@ if (IS_ADMIN__MLSS) {
 		//DUE TO WORDPRESS BUG ( https://core.trac.wordpress.org/ticket/32023 ) , i use this: (//USE ECHO ONLY! because code maybe executed before other PHP functions.. so, we shouldnt stop&redirect, but  we should redirect from already executed PHP output )
 		if($RedirectFlushToo) {echo '<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>';}
 	}
+
+	
+// WHEN INSERTING a NEW COLUMN in POST_RELATION table
+	function UpdateNewLangsColumns__MLSS(){ global $wpdb;
+		$langs = GetLanguagesFromBase__MLSS();
+		foreach($langs as $name=>$value){ 
+			$your_column =  $value;  $your_table = OldTablePostsRel__MLSS;
+			if (!in_array($your_column, $wpdb->get_col( "DESC " . $your_table , 0 ) )){  $result= $wpdb->query(
+				"ALTER     TABLE $your_table     ADD $your_column     VARCHAR(100)     CHARACTER SET utf8     NOT NULL    AFTER InitPostid" 
+			);}
+		}
+	}
+// GET GROUP ID by POST_ID
+	function GetGroupByPostID__MLSS($pID){ global $post;
+		if (!empty($post)){
+			$group_id= $GLOBALS['wpdb']->get_results("SELECT * from `".OldTablePostsRel__MLSS."` WHERE `".$post->post_type."` = '".$post->ID."'");
+			$LastIdx	= count($group_id)-1;
+			if (!empty($group_id[$LastIdx])) {return $group_id[$LastIdx];}
+		}
+		return '';
+	}
+
+	
 
 //REDIRECT function (301,302 or 404)
 	function  REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
@@ -881,7 +982,9 @@ add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function
 
 
 //DEFAULT LANGUAGE SELECTOR, WHICH IS SEEN ON THE TOP OF PAGE	
-add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont){     $out = 
+add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont){  global $wpdb,$post;
+
+	$out = 
 	'<!-- LanguageSelector__MLSS --><style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px; '.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px; position:'.get_option('optMLSS__DropdDFixedOrAbs').';}</style>'.
 		'<div id="LanguageSelector__MLSS" class="css_reset__MLSS">'.
 		 '<div class="'.Dtype__MLSS.'_LSTYPE__MLSS">';
@@ -894,13 +997,28 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 			}	$out.=
 		  '<div id="LangDropMenu1__MLSS">'.
 		   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
-		foreach ($SITE_LANGUAGES as $keyname => $key_value){  	    if (!isHiddenLang__MLSS($key_value)) { //not included in "HIDDEN LANGS"
-			$out.=
-			'<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
-				'<a class="ImgHolder1__MLSS" '.( ($DisableCurrentLangClick && $key_value==LNG) ? '':'href="'.homeURL__MLSS.'/'.$key_value.'"') .'>'.
-					'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. GetFlagUrl__MLSS($key_value). '" />'. ( ($include_names) ? "<span class=\"Flag1_lname__MLSS\">$keyname</span>" : "" ).
-				'</a>'.
-			'</div>'.'<span class="clerboth2__MLSS"></span>';											}
+		   
+		 if (is_singular()) {  $groupArray= GetGroupByPostID__MLSS($post->ID);	 }
+				
+		foreach ($SITE_LANGUAGES as $keyname => $key_value){  	    
+			//not included in "HIDDEN LANGS"
+			if (!isHiddenLang__MLSS($key_value)) {
+				$target_url = homeURL__MLSS.'/'.$key_value;
+				//If Group ID is found
+				if (!empty($groupArray->groupId)){   $PostIdOfTargetLang = $groupArray->$key_value;
+					//If Alternative Post Id is found
+					if (!empty($PostIdOfTargetLang)){ 
+						$url = get_permalink($PostIdOfTargetLang); if (!empty($url)) { $target_url = $url;}
+					}
+				}
+
+				$out.=
+				'<div class="LineHolder1__MLSS" id="lnh_'.$key_value.'">'.
+					'<a class="ImgHolder1__MLSS" '.( ($DisableCurrentLangClick && $key_value==LNG) ? '':'href="'.$target_url.'"') .'>'.
+						'<img class="FlagImg1__MLSS '.$key_value.'_flagg1__MLSS" src="'. GetFlagUrl__MLSS($key_value). '" />'. ( ($include_names) ? "<span class=\"Flag1_lname__MLSS\">$keyname</span>" : "" ).
+					'</a>'.
+				'</div>'.'<span class="clerboth2__MLSS"></span>';											
+			}
 		}	$out.=  
 		'</div>'. '</div>'. '</div>'.'</div>';
 		
