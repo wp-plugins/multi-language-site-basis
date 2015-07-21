@@ -649,7 +649,7 @@ if ( IS_ADMIN__MLSS ){
 		echo '<style type="text/css"></style>
 			Include this post into GROUP ID: ';
 			$group_array = GetGroupByPostID__MLSS($post->ID);
-		echo '<input type="text" name="mlss_group_id" value="'. ($group_array ? $group_array->groupId : '' ) .'" placeholder="'.$post->ID.'" /> (<a href="javascript:alert(\'In this field, you should insert the unique GROUP ID number.. for example, when you open several different language posts as alternatives of each another, then use the same GROUP ID for them. So, when your visitor clicks the LANGUAGE FLAG in the dropdown, he will not be redirected simply to the chosen LANGUAGE MAIN-PAGE, but directly to the translated ALTERNATIVE page.\r\n\r\n\r\np.s. If this is a completely new post, and the field is empty, then you should see the recommended UNIQUE ID. So, you can actually use that ID as new UNIQUE INDEX ...\');">Read This Popup!</a>)';
+		echo '<input type="text" name="mlss_group_id" value="'. ($group_array ? $group_array->groupId : '' ) .'" placeholder="'.(($post->ID)*3+31).'" /> (<a href="javascript:alert(\'In this field, you should insert the unique GROUP ID number.. for example, when you open several different language posts as alternatives of each another, then use the same GROUP ID for them. So, when your visitor clicks the LANGUAGE FLAG in the dropdown, he will not be redirected simply to the chosen LANGUAGE MAIN-PAGE, but directly to the translated ALTERNATIVE page.\r\n\r\n\r\np.s. If this is a completely new post, and the field is empty, then you should see the recommended UNIQUE ID. So, you can actually use that ID as new UNIQUE INDEX ...\');">Read This Popup!</a>)';
 	}
 	//  "POST ALTERNATIVE TRANSLATION"  MetaBoxes( for Typical POSTS)
 	
@@ -657,7 +657,14 @@ if ( IS_ADMIN__MLSS ){
 	function savpst_22__MLSS( $post_id ){  global $wpdb; 
 		if(isset($_POST['post_ID']) && isset($_POST['mlss_group_id']) ) {
 			if ($post_id==$_POST['post_ID']){
-				UPDATEE_OR_INSERTTT__MLSS(OldTablePostsRel__MLSS,   array($_POST['post_type'] => $post_id ), array('groupId'=> $_POST['mlss_group_id']) );
+				//if group id empty, then remove THIS post id from table
+				if (empty($_POST['mlss_group_id'])){
+					UPDATEE_OR_INSERTTT__MLSS(OldTablePostsRel__MLSS,   array($_POST['post_type'] => '' ), array($_POST['post_type'] => $post_id ) );
+				}
+				else{
+					UPDATEE_OR_INSERTTT__MLSS(OldTablePostsRel__MLSS,   array($_POST['post_type'] => $post_id ), array('groupId'=> $_POST['mlss_group_id']) );
+				}
+					
 			}
 		}
 	}

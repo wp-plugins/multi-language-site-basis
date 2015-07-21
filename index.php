@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.60
+ * Version: 1.61
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -23,6 +23,7 @@ define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
 define('STYLESHEETURL__MLSS',			plugin_dir_url(__FILE__).'flags/stylesheet.css');
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
+define('EnableAlternativePosts__MLSS',	true);
 define('OldTable1__MLSS',				$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
 define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'_mlss_translatedwords');
 define('TableGroupIDs__MLSS',			$GLOBALS['wpdb']->prefix.'_mlss_postgroups');
@@ -998,14 +999,14 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 		  '<div id="LangDropMenu1__MLSS">'.
 		   '<div id="AllLines1__MLSS"> <a href="javascript:MyMobileFunc__MLSS();" id="RevealButton__MLSS">&#8897;</a>';
 		   
-		 if (is_singular()) {  $groupArray= GetGroupByPostID__MLSS($post->ID);	 }
+		 if (EnableAlternativePosts__MLSS && is_singular()) {  $groupArray= GetGroupByPostID__MLSS($post->ID);	 }
 				
 		foreach ($SITE_LANGUAGES as $keyname => $key_value){  	    
 			//not included in "HIDDEN LANGS"
 			if (!isHiddenLang__MLSS($key_value)) {
 				$target_url = homeURL__MLSS.'/'.$key_value;
 				//If Group ID is found
-				if ($groupArray){   $PostIdOfTargetLang = $groupArray->$key_value;
+				if (!empty($groupArray)){   $PostIdOfTargetLang = $groupArray->$key_value;
 					//If Alternative Post Id is found
 					if (!empty($PostIdOfTargetLang)){ 
 						$url = get_permalink($PostIdOfTargetLang); if (!empty($url)) { $target_url = $url;}
