@@ -657,7 +657,7 @@ if ( IS_ADMIN__MLSS ){
 	function savpst_22__MLSS( $post_id ){  global $wpdb; 
 		if(isset($_POST['post_ID']) && isset($_POST['mlss_group_id']) ) {
 			if ($post_id==$_POST['post_ID']){
-				UPDATEE_OR_INSERTTT__MPCC(OldTablePostsRel__MLSS,   array($_POST['post_type'] => $post_id ), array('groupId'=> $_POST['mlss_group_id']) );
+				UPDATEE_OR_INSERTTT__MLSS(OldTablePostsRel__MLSS,   array($_POST['post_type'] => $post_id ), array('groupId'=> $_POST['mlss_group_id']) );
 			}
 		}
 	}
