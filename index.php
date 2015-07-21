@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.59
+ * Version: 1.60
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
@@ -323,7 +323,7 @@ if (IS_ADMIN__MLSS) {
 			$LastIdx	= count($group_id)-1;
 			if (!empty($group_id[$LastIdx])) {return $group_id[$LastIdx];}
 		}
-		return '';
+		return false;
 	}
 
 	
@@ -1005,7 +1005,7 @@ add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function Output
 			if (!isHiddenLang__MLSS($key_value)) {
 				$target_url = homeURL__MLSS.'/'.$key_value;
 				//If Group ID is found
-				if (!empty($groupArray->groupId)){   $PostIdOfTargetLang = $groupArray->$key_value;
+				if ($groupArray){   $PostIdOfTargetLang = $groupArray->$key_value;
 					//If Alternative Post Id is found
 					if (!empty($PostIdOfTargetLang)){ 
 						$url = get_permalink($PostIdOfTargetLang); if (!empty($url)) { $target_url = $url;}
