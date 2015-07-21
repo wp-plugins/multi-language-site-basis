@@ -406,7 +406,7 @@ function GetLanguagesFromBase__MLSS(){
 	function isHiddenLang__MLSS($abbr){	return ( stripos($GLOBALS['hidden_langs__mlss'],'{'.$abbr.'}')!== false    ? true:false) ;}
 	
 	//to get the last COOKIE-d language value
-	DEFINE("LastCookiedLanguage__MLSS", $_COOKIE[cookienameLngs__MLSS]);
+	DEFINE("LastCookiedLanguage__MLSS", !empty($_COOKIE[cookienameLngs__MLSS]) ? $_COOKIE[cookienameLngs__MLSS] : ''   );
 //============================================================================================= //	
 //======================================== SET LANGUAGE for visitor =========================== //	
 //============================================================================================= //	
