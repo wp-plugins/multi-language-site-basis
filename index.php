@@ -284,7 +284,7 @@ if (IS_ADMIN__MLSS) {
 		//convert array to STRING
 		$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $value= is_numeric($value) ? $value : "'".addslashes($value)."'"; $o .= $key . " = $value"; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
 		//check if already exist
-		$CheckIfExists = $wpdb->get_var($wpdb->prepare("SELECT $arrayNames[0] FROM $tablename WHERE $o",1) );
+		$CheckIfExists = $wpdb->get_var($wpdb->prepare("SELECT %s FROM %s WHERE $o", $arrayNames[0], $tablename) );
 		if (!empty($CheckIfExists))	{	$wpdb->update($tablename,	$NewArray,	$WhereArray	);}
 		else						{	$wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	}
 	}
