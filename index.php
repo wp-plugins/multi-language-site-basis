@@ -1083,7 +1083,7 @@ class Simple_Widget_Classes__MLSS {
 		$option_name = get_option( $default_name_fixed ); $number = $widget['params'][0]['number'];
 		if( isset( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) && !empty( $option_name[ $number ][ 'WidgetLang__MLSS' ] ) ) {
 			// find the end of the class= part and replace with new 
-			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widgetCL MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
+			$params[0]['before_widget'] = preg_replace('/"\>/', ' MLSS_widget_'.$option_name[$number]['WidgetLang__MLSS'].'">', $params[0]['before_widget'], 1);
 		} return $params;
 	}
 	//BASED ON CLASSNAME,  Hide Other Language Widgetssss
@@ -1104,19 +1104,26 @@ if (!class_exists('EnableDisableWidget__TT')){
 		}
 		public function myUpdate($instance,$new_instance) {$instance['wONOFF__TT']=wp_strip_all_tags($new_instance['wONOFF__TT']);return $instance;}
 		// change front-end output 
-		public function myApply( $params ) {	global $wp_registered_widgets;	$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
-				// because the Widget Logic plugin changes this structure - how selfish of it!
-				if ( !( $default_name_fixed = $widget['callback'][0]->option_name ) ) { $default_name_fixed = $widget['callback_wl_redirect'][0]->option_name; }
-			$option_name = get_option( $default_name_fixed ); $number = $widget['params'][0]['number'];
-			if( isset( $option_name[$number][ 'wONOFF__TT' ] ) && !empty( $option_name[$number][ 'wONOFF__TT' ] ) ) {
-				// find the end of the class= part and replace with new 
-				$params[0]['before_widget'] = preg_replace('/"\>/', ' wONOFFvalue__TT_'.$option_name[$number]['wONOFF__TT'].'">', $params[0]['before_widget'], 1);
-			} 
+		public function myApply( $params ) {
+			if (!empty($params[0])){
+				global $wp_registered_widgets;	
+				$widget_id = $params[0][ 'widget_id' ];	$widget = $wp_registered_widgets[ $widget_id ];
+					// because the Widget Logic plugin changes this structure - how selfish of it!
+					if ( !( $default_name_fixed = $widget['callback'][0]->option_name ) ) { $default_name_fixed = $widget['callback_wl_redirect'][0]->option_name; }
+				$option_name = get_option( $default_name_fixed ); $number = $widget['params'][0]['number'];
+				if( isset( $option_name[$number][ 'wONOFF__TT' ] ) && !empty( $option_name[$number][ 'wONOFF__TT' ] ) ) {
+					// find the end of the class= part and replace with new 
+					$params[0]['before_widget'] = preg_replace('/"\>/', ' wONOFFvalue__TT_'.$option_name[$number]['wONOFF__TT'].'">', $params[0]['before_widget'], 1);
+				} 
+			}
 			return $params;
 		}			
 		//BASED ON FOUND CLASSNAME,  SHOW or HIDE
-		public function myApply2( $params ) {	global $wp_registered_widgets; 
-			$incl_nm= $params[0]['before_widget']; if (stripos($incl_nm,'wONOFFvalue__TT_offf') !== false && !is_admin())  { $params=array(); $params['blabla']=''; }  return $params;
+		public function myApply2( $params ) {
+			if (!empty($params[0])){
+				global $wp_registered_widgets; 
+				$incl_nm= $params[0]['before_widget']; if (stripos($incl_nm,'wONOFFvalue__TT_offf') !== false && !is_admin())  { $params=array(); $params['blabla']=''; }  return $params;
+			}
 		}	
 	} $enabledisablewidget__TT = new EnableDisableWidget__TT();
 }
