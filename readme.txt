@@ -35,6 +35,10 @@ NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I 
 
 == Changelog ==
 
+= 1.61 =
+* Added Alternate Posts opportunity
+* fixed some bugs
+
 = 1.39 =
 * fixed dozen of issues (Search+Category Queries)
 * Added Some features.
