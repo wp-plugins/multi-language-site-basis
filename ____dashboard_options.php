@@ -63,6 +63,7 @@ if ( IS_ADMIN__MLSS ){
 						}
 					}
 	function my_submenu1__MLSS() { 
+		if (isset($_GET['update_d'])) {die('<script type="text/javascript">window.location="'.admin_url('plugins.php').'";</script>');}
 		//update options are in separate function,because they needed flush inside INIT
 		$ChosenSelectorType = get_option('optMLSS__FirstMethod');
 		$PluginOnOffMode = get_option('optMLSS__OnOffMode');

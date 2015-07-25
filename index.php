@@ -52,10 +52,10 @@ if (IS_ADMIN__MLSS) {
 	
 	//REDIRECT SETTINGS PAGE (after activation)
 	add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { 
-		//if not "update" action
-		if (!get_option('optMLSS__Lngs')){
-			exit( wp_redirect( admin_url( 'admin.php?page=my-mlss-slug' ) ) ); 
-		}
+		//if not "update" action 
+		$g= get_option('optMLSS__Lngs');
+		$update= !empty($g) ?  true : false;
+		exit(wp_redirect( admin_url('admin.php?page=my-mlss-slug'. ($update? "&update_d=y" :'')) ) ); 
 	} }
 
 	//ACTIVATION HOOK
