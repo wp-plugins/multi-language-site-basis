@@ -390,7 +390,7 @@ function GetLanguagesFromBase__MLSS(){
 	$GLOBALS['SiteLangs__MLSS'] = $finall; 	return $GLOBALS['SiteLangs__MLSS'];
 }
 	
-	function LANGS__MLSS(){return ($GLOBALS['SiteLangs__MLSS'] ? $GLOBALS['SiteLangs__MLSS'] : GetLanguagesFromBase__MLSS());} 
+	function LANGS__MLSS(){return ( isset($GLOBALS['SiteLangs__MLSS']) ? $GLOBALS['SiteLangs__MLSS'] : GetLanguagesFromBase__MLSS());} 
 	add_action('init','LANGS__MLSS',MLSS_initNumb);
 	
 	function Defines_MLSS(){ foreach (LANGS__MLSS() as $n=>$v) { define ($v.'__MLSS',$v); define($v.'_title__MLSS',$n);} }
@@ -761,7 +761,7 @@ function querymodify__MLSS($query) { $q=$query;
 							}
 				// term_exists($BaseSLUG, 'category'); <-- this bugs, because  basename from /eng/mylink/smth is "smth", and "smth" may be categoryy too, so, post may become  overrided in this case..
 				$tr= get_category_by_path( $catPath, true ); if ($tr){   
-					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG: '') ) ,'post__not_in'=>array($excluded_posts),
+					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG : '') ) ,'post__not_in'=>array($excluded_posts),
 													   'tax_query'=>array(array('taxonomy'=>'category','terms'=>$tr->term_id, 'field'=>'term_id'))) );
 					$q->is_home = false;	$q->is_single = false;	$q->is_archive = true;	$q->is_tax = true;	$q->is_post_type_archive=false;
 					return $q;	
