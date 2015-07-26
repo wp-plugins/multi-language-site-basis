@@ -62,6 +62,7 @@ if (IS_ADMIN__MLSS) {
 	register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
 		update_option( 'optMLSS__NeedFlush','okk'); 
 		$InitialArray = array( 
+			'optMLSS__installed'		=> 'y',
 			'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
 			'optMLSS__HiddenLangs'		=> '',
 			'optMLSS__HiddenFromQuery1' => array('__start1','') ,
@@ -69,6 +70,7 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__DefForOthers'		=> 'dropdownn' ,
 			'optMLSS__FirstMethod'		=> 'dropddd' ,
 			'optMLSS__BuildType'		=> 'custom_p' ,
+			'optMLSS__CP_builtin_type'	=> 'y',
 			'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
 			'optMLSS__Target_'.'default'=> 'eng' ,
 			'optMLSS__DropdHeader'		=> 'ddropdown' ,
@@ -85,6 +87,10 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__EnableCustCat'	=> 'n' ,
 			'optMLSS__CatBaseRemoved'	=> 'y' ,
 			);
+			
+		//if updating from 1.61(or lower) version
+		if (get_option('optMLSS__Lngs') && !get_option('optMLSS__CP_builtin_type'))	{update_option('optMLSS__CP_builtin_type','n');}
+		
 		foreach($InitialArray as $name=>$value){	if (!get_option($name)){update_option($name,$value);}	}	
 
 				if (REMOVE_CAT_BASE_WpOption__MLSS) {
@@ -285,7 +291,7 @@ if (IS_ADMIN__MLSS) {
 		//convert array to STRING
 		$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $value= is_numeric($value) ? $value : "'".addslashes($value)."'"; $o .= $key . " = $value"; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
 		//check if already exist
-		$CheckIfExists = $wpdb->get_var($wpdb->prepare("SELECT ".$arrayNames[0]." FROM $tablename WHERE $o" ) );
+		$CheckIfExists = $wpdb->get_var("SELECT ".$arrayNames[0]." FROM $tablename WHERE $o");
 		if (!empty($CheckIfExists))	{	$wpdb->update($tablename,	$NewArray,	$WhereArray	);}
 		else						{	$wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	}
 	}
@@ -541,6 +547,8 @@ if (FullMode__MLSS){ add_action( 'init', 'registPTyps__MLSS',MLSS_initNumb); }
 function registPTyps__MLSS($FullFlushAllowed=true) {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
+		//$builtin_or_not =    "y"==get_option('optMLSS__CP_builtin_type') ? true : false ;
+		
 		foreach (LANGS__MLSS() as $name=>$value) {
 			// http://codex.wordpress.org/Function_Reference/register_post_type
 			register_post_type($value, array( 	'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
@@ -558,6 +566,7 @@ function registPTyps__MLSS($FullFlushAllowed=true) {
 					'supports' => array( 'title', 'editor', 'thumbnail' ,'page-attributes','post_tag', 'revisions','comments','post-formats' ),
 					//'taxonomies' => array('category','post_tag','my_taxonomyy_'.$value),	
 					'rewrite' => array('with_front'=>true),			'can_export' => true,	
+					//'_builtin' =>  $builtin_or_not
 					//'permalink_epmask'=>EP_PERMALINK, 
 			));
 

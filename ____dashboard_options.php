@@ -54,6 +54,8 @@ if ( IS_ADMIN__MLSS ){
 								UpdateNewLangsColumns__MLSS();
 									if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		 { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
+								//	if(get_option('optMLSS__CP_builtin_type') != $_POST['cpost_build'])	 { $NEEDS_FLUSH_REDIRECT=true;}
+								//update_option('optMLSS__CP_builtin_type', $_POST['cpost_build']);
 									if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 									if(get_option('optMLSS__CatBaseRemoved') != $_POST['RemoveCatBase']) { $NEEDS_FLUSH_REDIRECT=true;}
@@ -223,6 +225,20 @@ if ( IS_ADMIN__MLSS ){
 								<br/>
 								<br/>p.s.4) In case, you are a programmer and you will need CODING modifications, note, that this plugin modifies queries. So, you can look through the plugin file (<i>pre_get_posts</i> function), to see what and how it behaves.
 							</div>
+							
+				
+						<?php /* 
+						
+						<span class="cpost_others" style="margin:0 0 0 20px;">
+							[default their permalinks <i>(<a href="javascript:show_my_popup('#cp_buildin_type');" class="readpopp">Read popup!</a>)</i>
+							<div id="cp_buildin_type" style="display:none;">
+								Maybe you dont know what is "_buildin" parameter:   If you enable this checkbox, then CUSTOM POST's permalink will be:  i.e.<span class="codee">site.com/eng/main_category/subcategory/POST-NAME</span> instead of <span class="codee">site.com/eng/POST-NAME</span>
+							</div> <input type="hidden" name="cpost_build" value="n" /> <input type="checkbox" name="cpost_build" value="y" <?php if ('y'==get_option('optMLSS__CP_builtin_type')) {echo 'checked="checked"';} ?> />] 
+						</span>
+						
+						*/ ?>
+				
+				
 				<span class="cpost_others" style="margin:0 0 0 20px;">
 					[enable CUSTOM CATEGORIES too <i>(<a href="javascript:show_my_popup('#EnableCustomCatsss');" class="readpopp">Read popup!</a>)</i>
 					<div id="EnableCustomCatsss" style="display:none;">
@@ -230,6 +246,8 @@ if ( IS_ADMIN__MLSS ){
 						<br/><br/>p.s. However, if you dont need them very very much, then maybe there is no need to implement them, but you can simply use <B>standard</b> categories.. 
 					</div> <input type="hidden" name="EnableCustCats" value="n" /> <input type="checkbox" name="EnableCustCats" value="y" <?php if ('y'==get_option('optMLSS__EnableCustCat')) {echo 'checked="checked"';} ?> />] 
 				</span>
+				
+				
 			<br/> <input type="radio" name="lang_rebuild" value="standard_p" <?php if ('standard_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /> <b>Standard Posts  </b> <i>(<a href="javascript:show_my_popup('#buildtypeSpost');" class="readpopp">Read popup!</a>)</i>
 					<div id="buildtypeSpost" style="display:none;">
 						In this case i.e. <b>YOURSITE.COM/<span style="color:red;">eng</span></b>/ is opened, all STANDARD posts will be shown, which are published under <b>ENG</b> root category.
