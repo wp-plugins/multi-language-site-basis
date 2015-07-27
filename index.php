@@ -2,8 +2,9 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.61
+ * Version: 1.62
  */
+define('version__MLSS', 1.62);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
@@ -24,6 +25,7 @@ define('STYLESHEETURL__MLSS',			plugin_dir_url(__FILE__).'flags/stylesheet.css')
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('EnableAlternativePosts__MLSS',	true);
+define('NewsPostTypeName__MLSS',		'news_mlss');
 define('OldTable1__MLSS',				$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
 define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'_mlss_translatedwords');
 define('TableGroupIDs__MLSS',			$GLOBALS['wpdb']->prefix.'_mlss_postgroups');
@@ -60,7 +62,23 @@ if (IS_ADMIN__MLSS) {
 
 	//ACTIVATION HOOK
 	register_activation_hook( __FILE__, 'activation__MLSS' );function activation__MLSS() { 	global $wpdb;
-		update_option( 'optMLSS__NeedFlush','okk'); 
+	
+		
+		// ============================  IF UPDATING OLD VERSION ===============================
+		//rename old tables 
+		$NewExists = $wpdb->query("show tables like '".Table1__MLSS."'") > 0 ;
+		$OldExists = $wpdb->query("show tables like '".OldTable1__MLSS."'") > 0 ;
+		if (!$NewExists && $OldExists)  {  $d = $wpdb->query("RENAME TABLE `" . OldTable1__MLSS . "` TO `" .  Table1__MLSS. "`");  } 
+
+		
+		//if updating from 1.61(or lower) version
+		if (get_option('optMLSS__Lngs') && !get_option('optMLSS__CP_permalinks'))	{update_option('optMLSS__CP_permalinks','n');}
+		// ============================ ### IF UPDATING OLD VERSION =============================
+		
+		
+		
+		
+		// Defaults
 		$InitialArray = array( 
 			'optMLSS__installed'		=> 'y',
 			'optMLSS__Lngs'				=> 'English{eng},Русский{rus},Japan{jpn},Dutch{nld}',
@@ -70,7 +88,8 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__DefForOthers'		=> 'dropdownn' ,
 			'optMLSS__FirstMethod'		=> 'dropddd' ,
 			'optMLSS__BuildType'		=> 'custom_p' ,
-			'optMLSS__CP_builtin_type'	=> 'y',
+			'optMLSS__CP_permalinks'	=> 'y',
+			'optMLSS__NewsCPenabled'	=> 'n',
 			'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
 			'optMLSS__Target_'.'default'=> 'eng' ,
 			'optMLSS__DropdHeader'		=> 'ddropdown' ,
@@ -87,26 +106,25 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__EnableCustCat'	=> 'n' ,
 			'optMLSS__CatBaseRemoved'	=> 'y' ,
 			);
-			
-		//if updating from 1.61(or lower) version
-		if (get_option('optMLSS__Lngs') && !get_option('optMLSS__CP_builtin_type'))	{update_option('optMLSS__CP_builtin_type','n');}
-		
 		foreach($InitialArray as $name=>$value){	if (!get_option($name)){update_option($name,$value);}	}	
 
+		
+		// Essentials
+		$MustHaveArray = array( 
+			'optMLSS__NeedFlush'		=> 'okk',
+			'optMLSS__version'			=> version__MLSS,
+			);
+		foreach($MustHaveArray as $name=>$value){ update_option($name,$value);}	
+		
+		
+				//backup category base slug
 				if (REMOVE_CAT_BASE_WpOption__MLSS) {
 					update_option('optMLSS__Cat_base_BACKUP', CatBaseWpOpt__MLSS );  $GLOBALS['wp_rewrite']->set_category_base('/.'); MyFlush__MLSS(false);  
 					//update_option('category_base',				'/.'); 	MyFlush__MLSS(false);  
 					//$wp_rewrite->set_permalink_structure('/%postname%/' );
 					//do_action ( 'permalink_structure_changed',$old_permalink_structure,$permalink_structure );
 				}
-				
-				
-		// ============================  IF UPDATING OLD VERSION ===============================
-		//rename old tables 
-		$NewExists = $wpdb->query("show tables like '".Table1__MLSS."'") > 0 ;
-		$OldExists = $wpdb->query("show tables like '".OldTable1__MLSS."'") > 0 ;
-		if (!$NewExists && $OldExists)  {  $d = $wpdb->query("RENAME TABLE `" . OldTable1__MLSS . "` TO `" .  Table1__MLSS. "`");  } 
-		// ============================ ### IF UPDATING OLD VERSION =============================
+		
 
 		
 		
@@ -209,7 +227,7 @@ if (IS_ADMIN__MLSS) {
 						//categories
 						if (!term_exists( $EachLng.$slug, 'category')){  // https://codex.wordpress.org/Function_Reference/wp_insert_term
 							$parentt= wp_insert_term( $EachLng.$slug,'category', array());		$PT= get_term_by('slug',  $EachLng.$slug, 'category');
-							$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));	$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id)); 
+							$subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));	     $subb= wp_insert_term('samplecategoryyyy_'.rand(1,1111111),	'category', array('parent'=>$PT->term_id));         $subb= wp_insert_term('NEWS-'.$EachLng,	'category', array('parent'=>$PT->term_id)); 
 						}	
 					}
 				}
@@ -547,8 +565,8 @@ if (FullMode__MLSS){ add_action( 'init', 'registPTyps__MLSS',MLSS_initNumb); }
 function registPTyps__MLSS($FullFlushAllowed=true) {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
-		//$builtin_or_not =    "y"==get_option('optMLSS__CP_builtin_type') ? true : false ;
-		
+		//$builtin_or_not =    "y"==get_option('optMLSS__CP_permalinks') ? true : false ;
+		$cust_text_enabled = get_option('optMLSS__EnableCustCat')=='y' ? true : false;
 		foreach (LANGS__MLSS() as $name=>$value) {
 			// http://codex.wordpress.org/Function_Reference/register_post_type
 			register_post_type($value, array( 	'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
@@ -581,7 +599,7 @@ function registPTyps__MLSS($FullFlushAllowed=true) {
 			//maybe better to register TAXONOMIES using this:
 			register_taxonomy_for_object_type( 'category', $value );
 			register_taxonomy_for_object_type( 'post_tag', $value );
-									if (get_option('optMLSS__EnableCustCat')=='y') {
+									if ($cust_text_enabled){
 			register_taxonomy_for_object_type(  $value.C_CategPrefix__MLSS, $value );
 									}
 		}
@@ -947,6 +965,104 @@ if (FullMode__MLSS){
 		}
 	}
 }	
+	
+	
+// Make pretty, categorized permalinks ( http://wordpress.stackexchange.com/a/167992/33667 )
+if (FullMode__MLSS){ add_action('init', 'make_prety_categ_links__MLSS',MLSS_initNumb); }	
+function make_prety_categ_links__MLSS(){
+	if ('y' == get_option('optMLSS__CP_permalinks')){
+		
+		//===STEP 1 (affect only these CUSTOM POST TYPES)
+		$GLOBALS['my_post_typesss__MLSS'] = LANGS__MLSS();
+		if ('y' == get_option('optMLSS__NewsCPenabled')){$GLOBALS['my_post_typesss__MLSS'][] = NewsPostTypeName__MLSS;	}
+		
+		//===STEP 2  (create desired PERMALINKS)
+		add_filter('post_type_link',	'my_func444__MLSS', 6, 4 );
+		if (!function_exists('my_func444__MLSS')) { function my_func444__MLSS( $post_link, $post, $sdsd){
+				if (!empty($post->post_type) && in_array($post->post_type, $GLOBALS['my_post_typesss__MLSS']) ) {  
+					$SLUGG = $post->post_name;
+					$post_cats = get_the_category($id);		
+					if (!empty($post_cats[0])){	$target_CAT= $post_cats[0];
+						while(!empty($target_CAT->slug)){
+							$SLUGG =  $target_CAT->slug .'/'.$SLUGG; 
+							if	(!empty($target_CAT->parent)) {$target_CAT = get_term( $target_CAT->parent, 'category');} 	else {break;}
+						}
+						$post_link= get_option('home').'/'. urldecode($SLUGG);
+					}
+				}
+				return  $post_link;
+			}
+		}
+	
+	
+		// STEP 3  (by default, while accessing:  "EXAMPLE.COM/category/postname"     WP thinks, that a standard post is requested. So, we are adding CUSTOM POST TYPE into that query.
+		add_action('pre_get_posts',	'my_func888__MLSS',	12); 
+		if (!function_exists('my_func888__MLSS')) { function my_func888__MLSS($q){     
+				if ($q->is_main_query() && !is_admin() && $q->is_single){
+					$q->set( 'post_type',  array_merge(array('post'), $GLOBALS['my_post_typesss__MLSS'] )   );
+				}
+				return $q;
+			}
+		}
+
+	
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// Add "NEWS" post type
+add_action('init', 'NewsPostType__MLSS',MLSS_initNumb);	
+function NewsPostType__MLSS(){
+	if ('y' == get_option('optMLSS__NewsCPenabled')){
+		
+		// if MLSS disabled, then manual check
+		if (!FullMode__MLSS)  { make_prety_categ_links__MLSS(); }
+		
+		$name= '_ NEWS _';
+		// https://codex.wordpress.org/Function_Reference/register_post_type 
+		register_post_type( NewsPostTypeName__MLSS, array(
+			'label'	  => __( $name),	'description'         => __( 'News'),
+			'labels'	 =>  array('name' => $name, 'singular_name' => 'news'.' '.'page'),
+			'supports'		=> array('title','editor', 'thumbnail', 'excerpt', 'post_tag', 'revisions','comments','post-formats'  ),
+			'taxonomies'	=> array('category', 'post_tag'),  
+			'public'			=> true,	'query_var'=> true,				'publicly_queryable'=>true,	'show_ui'=> true,	'show_in_menu'	=> true,
+			'show_in_nav_menus'	=> true,	'show_in_admin_bar'	=> true,	'menu_position'	=> 18,
+			'menu_icon'			=> '',		'can_export'		=> true,	'hierarchical' => true, 'has_archive'	=> true, 'menu_icon' => 'dashicons-megaphone', //PLUGIN_URL_nodomain__MLSS ."/flags/news.png",
+			'exclude_from_search' => false,	'publicly_queryable'=> true,	'capability_type'=> 'page',
+			'rewrite' => array('with_front'=>true,   ), 
+		) );
+		
+		//resize icon size within Dashboard sidebar
+		add_action('admin_head','my635__MLSS'); function my635__MLSS() {echo '<style>li#menu-posts-'.NewsPostTypeName__MLSS.' div.wp-menu-name { background-color: #90008E; } </style>';}
+	}
+}
+	
+	
+	
+	
+	
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

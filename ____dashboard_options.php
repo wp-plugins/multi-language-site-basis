@@ -54,8 +54,10 @@ if ( IS_ADMIN__MLSS ){
 								UpdateNewLangsColumns__MLSS();
 									if(get_option('optMLSS__BuildType') != $_POST['lang_rebuild'])		 { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__BuildType', $_POST['lang_rebuild']);
-								//	if(get_option('optMLSS__CP_builtin_type') != $_POST['cpost_build'])	 { $NEEDS_FLUSH_REDIRECT=true;}
-								//update_option('optMLSS__CP_builtin_type', $_POST['cpost_build']);
+									if(get_option('optMLSS__CP_permalinks') != $_POST['cpost_build'])	 { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__CP_permalinks', $_POST['cpost_build']);
+									if(get_option('optMLSS__NewsCPenabled') != $_POST['enable_News_CP']) { $NEEDS_FLUSH_REDIRECT=true;}
+								update_option('optMLSS__NewsCPenabled', $_POST['enable_News_CP']);
 									if(get_option('optMLSS__EnableCustCat') != $_POST['EnableCustCats']) { $NEEDS_FLUSH_REDIRECT=true;}
 								update_option('optMLSS__EnableCustCat', $_POST['EnableCustCats']);
 									if(get_option('optMLSS__CatBaseRemoved') != $_POST['RemoveCatBase']) { $NEEDS_FLUSH_REDIRECT=true;}
@@ -65,7 +67,11 @@ if ( IS_ADMIN__MLSS ){
 						}
 					}
 	function my_submenu1__MLSS() { 
-		if (isset($_GET['update_d'])) {die('<script type="text/javascript">window.location="'.admin_url('plugins.php').'";</script>');}
+		if (isset($_GET['update_d'])) {
+			if (version__MLSS< 1.63) {echo '<script type="text/javascript">alert("Added New Features:\r\n1) Post Alternatives! ( you will see it on post editor page) \r\n2)Pretty Categorized Permalinks (see the 4th paragraph on this page) ");</script>'; }
+			die('<script type="text/javascript">window.location="'.admin_url('plugins.php').'";</script>');
+		
+		}
 		//update options are in separate function,because they needed flush inside INIT
 		$ChosenSelectorType = get_option('optMLSS__FirstMethod');
 		$PluginOnOffMode = get_option('optMLSS__OnOffMode');
@@ -214,7 +220,7 @@ if ( IS_ADMIN__MLSS ){
 			<br/><input type="radio" name="lang_rebuild" value="custom_p" <?php if ('custom_p'==get_option('optMLSS__BuildType')) {echo 'checked="checked"';} ?> /><b>Custom Post Types </b>
 				(<a href="javascript:show_my_popup('#buildtypeCpost');" class="readpopp">Read popup!</a>)
 							<div id="buildtypeCpost" style="display:none;">
-								maybe you are already familiar with CUSTOM POST TYPES (It's an additional instance of like Wordpress default "posts/pages". <a href="http://goo.gl/oQkTVv" style="font-size:0.8em" target="_blank">here tutorials</a>)... If you choose this option,then you will see buttons for each language (in the left sidebar).
+								maybe you are already familiar with CUSTOM POST TYPES (It's an additional instance of Wordpress, like  default "posts/pages". <a href="http://goo.gl/oQkTVv" style="font-size:0.8em" target="_blank">here tutorials</a>)... If you choose this option,then you will see buttons for each language (in the left sidebar).
 								<br/>Then, whenever  <b>YOURSITE.COM/<span style="color:red;">eng</span></b>/ is opened, all <b>eng</b>(English) CUSTOM POSTS will be shown.  
 								<br/>
 								<br/>p.s.1) During the installation of this plugin, some sample pages/categories/posts were published. See carefully their structure, to understand the idea of structure. (especially note, that the root page/category slugs are only 3 chars (<b>eng</b> or etc.) 
@@ -227,17 +233,20 @@ if ( IS_ADMIN__MLSS ){
 							</div>
 							
 				
-						<?php /* 
+						
 						
 						<span class="cpost_others" style="margin:0 0 0 20px;">
-							[default their permalinks <i>(<a href="javascript:show_my_popup('#cp_buildin_type');" class="readpopp">Read popup!</a>)</i>
+							[categorized permalinks <i>(<a href="javascript:show_my_popup('#cp_buildin_type');" class="readpopp">Read popup!</a>)</i>
 							<div id="cp_buildin_type" style="display:none;">
-								Maybe you dont know what is "_buildin" parameter:   If you enable this checkbox, then CUSTOM POST's permalink will be:  i.e.<span class="codee">site.com/eng/main_category/subcategory/POST-NAME</span> instead of <span class="codee">site.com/eng/POST-NAME</span>
-							</div> <input type="hidden" name="cpost_build" value="n" /> <input type="checkbox" name="cpost_build" value="y" <?php if ('y'==get_option('optMLSS__CP_builtin_type')) {echo 'checked="checked"';} ?> />] 
+								<div  style="font-size:9px; font-style:italic;text-align:right;"> a href="http://wordpress.stackexchange.com/a/167992/33667" target="_blank">( source )</a></div><br/><br/>
+								If you enable this checkbox, then CUSTOM POST's permalink will be: i.e.
+								<br/><span class="codee">site.com/eng/main_category/subcategory/POST-NAME</span> instead of 
+								<br/><span class="codee">site.com/eng/POST-NAME</span> 
+								
+								<br/><br/> !!! NOTE !!! To use this feature, you should have  <b>/%category%/%postname%</b> in <b>permalink</b> settings, instead of <b>/%postname%</b>.
+							</div> <input type="hidden" name="cpost_build" value="n" /> <input type="checkbox" name="cpost_build" value="y" <?php if ('y'==get_option('optMLSS__CP_permalinks')) {echo 'checked="checked"';} ?> />] 
 						</span>
 						
-						*/ ?>
-				
 				
 				<span class="cpost_others" style="margin:0 0 0 20px;">
 					[enable CUSTOM CATEGORIES too <i>(<a href="javascript:show_my_popup('#EnableCustomCatsss');" class="readpopp">Read popup!</a>)</i>
@@ -257,9 +266,9 @@ if ( IS_ADMIN__MLSS ){
 					</div>
 			
 				<br/><br/><span class="cpost_others" style="margin:0 0 0 20px;">
-					*<span class="cpost_othersxx"> [add query strings to post links <i>(<a href="javascript:show_my_popup('#buildtypeSpost');" class="readpopp">Read popup!</a>)</i>
-					<div id="buildtypeSpost" style="display:none;">
-						If you've chosen CUSTOM_POST Types as BUILDING_TYPE of the site, then you may forget standard posts and never need them. 
+					*<span class="cpost_othersxx"> [add query strings to post links <i>(<a href="javascript:show_my_popup('#PostQueryString');" class="readpopp">Read popup!</a>)</i>
+					<div id="PostQueryString" style="display:none;">
+						If you've chosen CUSTOM_POST Types as BUILDING_TYPE of the site, then you can forget standard posts and never need them. 
 						<br/>... Anyway,this plugin leaves you that opportunities too:
 						<br/>For example, when you publish any post: Wordpress's default <b>post</b> (OR if you use other CUSTOM POST TYPEs, <b>expect</b> our LANGUAGE POST TYPEs) under specific language CATEGORY(i.e. <b>eng</b>), then this plugin automatically determines the language for such post (according to that CATEGORY's language slug). That post's URL will be like this:
 						<br/>SITE.COM/<b>my-standard-post</b>  *while permalinks is set to:  /%postname%
@@ -288,6 +297,7 @@ if ( IS_ADMIN__MLSS ){
 				[enabled? <input type="hidden" name="EnableHideOtherCtypeEntri" value="n" /> <input type="checkbox" name="EnableHideOtherCtypeEntri" value="y" <?php //if ('y'==get_option('optMLSS__ShowHideOtherCats')) {echo 'checked="checked"';} ?> />;  &nbsp;&nbsp;&nbsp;&nbsp; If so, enter start-slug:<input type="text" name="SlugofHidenEntriesId" value="<?php //echo get_option('optMLSS__HidenEntriesIdSlug');?>" />] 
 				</span> 
 			-->
+			
 		</div>
 		
 		<div class="eachBlock">
@@ -296,6 +306,7 @@ if ( IS_ADMIN__MLSS ){
 	
 		<div class="eachBlock">
 			<span class="fakeH22">6) NAVIGATIONS, MENUS, WIDGETS.</span>
+						
 			<br/>*<b>Show Widgets only for Certain Languages</b> - <a href="javascript:alert('From now, you will see a Dropdown in the top of any Widget(inside ADMIN SIDEBARS). Then, you can choose on which Language the individual widget should be shown. ( If it appears not to work on a certain widget, that widget probably breaks WordPress Widgets API rules somehow). \r\n\r\n\r\n (p.s. I have integrated a functionality from plugin \u0022Hide any widget temporarily\u0022.) ');" class="readpopp">Read popup</a>!
 			<!-- <br/> -B) Another good solution is to use one of these plugins: <span class="codee">Dynamic-Widgets</span>,&nbsp;&nbsp; <span class="codee">Simple-Widgets (<a href="javascript:alert('This plugin allows PHP conditions checking too. You can use condition for individual widgets:  LNG==\u0022eng\u0022  , and similarly for other widgets...');" class="readpopp">Read popup</a>!) </span>, &nbsp;&nbsp; <span class="codee">Restrict-Widgets</span>,.. -->
 			
@@ -358,6 +369,13 @@ if ( IS_ADMIN__MLSS ){
 					For example,If you have a page and a post, and both's slug links are the same (i.e. site.com/eng/<b>mypage</b>), then you may need to delete one of the (even from TRASH), otherwise, you cant open one of them.
 					</div>				
 				<br/>D) <b>REDIRECTIONS</b> - <i><a href="javascript:alert('please note, if your website has already been established some time ago, and your pages are already indexed in google, and want to use this plugin, then redirect old pages to new pages (using \u0022301 redirect plugin\u0022 or etc..)');" class="readpopp">Read popup!</a></i>
+				<br/>E)  Add "NEWS" type CUSTOM POST.<i>(<a href="javascript:show_my_popup('#news_CP_popup');" class="readpopp">Read popup!</a>)</i>
+					<div id="news_CP_popup" style="display:none;">
+						If you plan to build a large site, with hundreds or thousands of "news", then it will be good, if you enable a separate CUSTOM POST TYPE for news. So, instead of publishing a new post using i.e.  <b>ENGLISH -&gt; New Post</b> you'd will click <b>NEWS-&gt; New Post</b> and choose "news" category. 
+						<br/> This will be better!
+					</div> <input type="hidden" name="enable_News_CP" value="n" /> <input type="checkbox" name="enable_News_CP" value="y" <?php if ('y'==get_option('optMLSS__NewsCPenabled')) {echo 'checked="checked"';} ?> />] 
+
+				
 		</div>
 		
 		<br/><br/><br/><br/>*<b>If you have found bugs or etc, <a href="http://j.mp/wordpressthemestt" target="_blank">CONTACT ME</b></a>! Check if there are UPDATES from time to time!!

@@ -3,7 +3,7 @@ Contributors: selnomeria
 Tags: wordpress,multi,language,multilanguage,site,plugin,website,
 Requires at least: 3.7
 Tested up to: 4.2.1
-Stable tag: 1.61
+Stable tag: 1.62
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,8 +35,12 @@ NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I 
 
 == Changelog ==
 
-= 1.61 =
-* Added Alternate Posts opportunity
+
+= 1.62 =
+* Added "Alternate Posts" possibility for language posts!!!
+* Added ability to make such permalinks:  site.com/**`eng/category/subcategory/my-post-slug`**
+
+= 1.60 =
 * fixed some bugs
 
 = 1.39 =
