@@ -1032,7 +1032,7 @@ function NewsPostType__MLSS(){
 		$name= '_ NEWS _';
 		// https://codex.wordpress.org/Function_Reference/register_post_type 
 		register_post_type( NewsPostTypeName__MLSS, array(
-			'label'	  => __( $name),	'description'         => __( 'News'),
+			'label'	  => __('fff'),	'description'         => __( 'News'),
 			'labels'	 =>  array('name' => $name, 'singular_name' => 'news'.' '.'page'),
 			'supports'		=> array('title','editor', 'thumbnail', 'excerpt', 'post_tag', 'revisions','comments','post-formats'  ),
 			'taxonomies'	=> array('category', 'post_tag'),  
