@@ -1376,7 +1376,7 @@ if (is_admin()){
 			if (!$last_checktime || (is_numeric($last_checktime) && $last_checktime<time()-5*86400)  ){	update_option($OPTNAME_checktimee,time()); 
 				$VPattern='/plugin name(.*?)version\:(.*?)(\r\n|\r|\n)/si';
 				preg_match($VPattern,file_get_contents(__FILE__),$A); preg_match($VPattern,get_remote_data__MLSS(PluginUrl__MLSS),$B);
-				if (trim($B[2]) && trim($B[2])!=trim($A[2])){ 
+				if (!empty($B[2]) && trim($B[2]) && trim($B[2])!=trim($A[2])){ 
 					echo '<div style="position: fixed; width: 100%; padding: 10px; background-color: #FFC0CB; z-index: 7777; border: 15px solid;">'.PluginName__MLSS.' has updated version('.$B[2].') already! Please, read <a href="'.PluginDown__MLSS.'" target="_blank">CHANGELOGS</a> page and <a href="'.admin_url("plugins.php").'" target="_blank">update</a> on your site too</a>!</div>'; return true;
 	}}}}
 	//=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================
