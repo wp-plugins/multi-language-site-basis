@@ -17,7 +17,7 @@ It's better to read Full explanations on plugin's page, after activation.
 >  (P.S. This is a <a href="http://codesphpjs.blogspot.com/2014/10/nsp-non-slowing-plugins-for-wordpress.html" target="_blank">Non-Slowing</a> Plugin.  See OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
 
 
-NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I can keep this plugin maintained.. So, if someone interested, assist me to maintain this plugin (<a href="http://j.mp/wordpressthemestt" target="_blank">Contact Details</a>)
+NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I can keep this plugin maintained.. So, if someone interested, assist me to maintain this plugin (<a href="http://j.mp/contactmewordpresspluginstt" target="_blank">Contact Details</a>)
 
 == Installation ==
 
