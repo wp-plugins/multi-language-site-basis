@@ -692,7 +692,7 @@ function querymodify__MLSS($query) { $q=$query;
 			else{
 				//if CUSTOM POSTS   (is chosen as structure type by admin), then HOMEPAGE should display CUSTOM CATEGORY/TAXONOMY
 				if (get_option('optMLSS__BuildType') == 'custom_p'){ 	
-					$q->init(); $q->parse_query(array('post_type'=>array(LNG), 'post__not_in'=>array($excluded_posts) )); 
+					$q->init(); $q->parse_query(array('post_type'=>array(LNG), 'post__not_in'=>$excluded_posts )); 
 					$q->is_home=true;  $q->is_page = false;  $q->is_archive = true; 
 					//$q->is_tax = false; $q->is_post_type_archive = true; 
 					return $q;
@@ -700,7 +700,7 @@ function querymodify__MLSS($query) { $q=$query;
 				//if STANDARD POSTS (is chosen as structure type by admin), then HOMEPAGE should display STANDARD CATEGORY
 				elseif($tr = get_term_by('slug', basename(currentURL__MLSS) , 'category')){
 					$q->init();	
-					$q->parse_query(array('post_type' => array('post'), 'post__not_in'=>array($excluded_posts),
+					$q->parse_query(array('post_type' => array('post'), 'post__not_in'=>$excluded_posts,
 										'tax_query' =>array(array('taxonomy' => 'category','terms' => $tr->term_id,'field' => 'term_id'))));
 					$q->is_home=true;	$q->is_page = false; $q->is_archive = true;
 					$q->is_category=false; //$q->set('cat', $tr->term_id);	
@@ -768,7 +768,7 @@ function querymodify__MLSS($query) { $q=$query;
 						//$taxonomyName = get_query_var( 'taxonomy' );
 						//$current_term = get_term_by( 'slug', $term_slug, $taxonomyName );
 						$tr = get_term_by('slug', $BaseSLUG , LNG); if ($tr){  
-							$q->init();	$q->parse_query(array('post_type'=> array(LNG) ,'post__not_in'=>array($excluded_posts),
+							$q->init();	$q->parse_query(array('post_type'=> array(LNG) ,'post__not_in'=>$excluded_posts,
 															  'tax_query'=>array(array('taxonomy' => LNG,'terms' => $tr->term_id,'field' => 'term_id'))));
 							$q->is_home = false;	$q->is_single = false;	$q->is_archive = true;	$q->is_tax = true;	$q->is_post_type_archive=false;
 							return $q;
@@ -788,7 +788,7 @@ function querymodify__MLSS($query) { $q=$query;
 							}
 				// term_exists($BaseSLUG, 'category'); <-- this bugs, because  basename from /eng/mylink/smth is "smth", and "smth" may be categoryy too, so, post may become  overrided in this case..
 				$tr= get_category_by_path( $catPath, true ); if ($tr){   
-					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG : '') ) ,'post__not_in'=>array($excluded_posts),
+					$q->init();	$q->parse_query(array( 'post_type'=>array('post', (CustPostsIsChosenBuildType ? LNG : '') ) ,'post__not_in'=>$excluded_posts,
 													   'tax_query'=>array(array('taxonomy'=>'category','terms'=>$tr->term_id, 'field'=>'term_id'))) );
 					$q->is_home = false;	$q->is_single = false;	$q->is_archive = true;	$q->is_tax = true;	$q->is_post_type_archive=false;
 					return $q;	
