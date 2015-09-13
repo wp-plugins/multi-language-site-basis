@@ -235,10 +235,10 @@ if ( IS_ADMIN__MLSS ){
 				
 						
 						
-						<span class="cpost_others" style="margin:0 0 0 20px;">
+						<span class="cpost_others" style="margin:0 0 0 20px; display:none;">
 							[categorized permalinks <i>(<a href="javascript:show_my_popup('#cp_buildin_type');" class="readpopp">Read popup!</a>)</i>
 							<div id="cp_buildin_type" style="display:none;">
-								<div  style="font-size:9px; font-style:italic;text-align:right;"> a href="http://wordpress.stackexchange.com/a/167992/33667" target="_blank">( source )</a></div><br/><br/>
+								<div  style="font-size:9px; font-style:italic;text-align:right;"> <a href="http://wordpress.stackexchange.com/a/167992/33667" target="_blank">( source )</a></div><br/><br/>
 								If you enable this checkbox, then CUSTOM POST's permalink will be: i.e.
 								<br/><span class="codee">site.com/eng/main_category/subcategory/POST-NAME</span> instead of 
 								<br/><span class="codee">site.com/eng/POST-NAME</span> 

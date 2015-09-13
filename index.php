@@ -88,7 +88,7 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__DefForOthers'		=> 'dropdownn' ,
 			'optMLSS__FirstMethod'		=> 'dropddd' ,
 			'optMLSS__BuildType'		=> 'custom_p' ,
-			'optMLSS__CP_permalinks'	=> 'y',
+			'optMLSS__CP_permalinks'	=> 'n',
 			'optMLSS__NewsCPenabled'	=> 'n',
 			'optMLSS__Target_'.'rus'	=> 'Russian Federation,Belarus,Ukraine,Kyrgyzstan,' ,
 			'optMLSS__Target_'.'default'=> 'eng' ,
