@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.62
+ * Version: 1.66
  */
 define('version__MLSS', 1.62);
 
@@ -566,7 +566,7 @@ function registPTyps__MLSS($FullFlushAllowed=true) {
 	//if CUSTOM_POST_TYPES is chosen by administrator,  for LANGUAGE STRUCTURE
 	if (get_option('optMLSS__BuildType') == 'custom_p'){
 		//$builtin_or_not =    "y"==get_option('optMLSS__CP_permalinks') ? true : false ;
-		$cust_text_enabled = get_option('optMLSS__EnableCustCat')=='y' ? true : false;
+		$cust_tax_enabled = get_option('optMLSS__EnableCustCat')=='y' ? true : false;
 		foreach (LANGS__MLSS() as $name=>$value) {
 			// http://codex.wordpress.org/Function_Reference/register_post_type
 			register_post_type($value, array( 	'label'=>$value, 'labels' => array('name' => $name, 'singular_name' => $value.' '.'page'),
@@ -588,20 +588,21 @@ function registPTyps__MLSS($FullFlushAllowed=true) {
 					//'permalink_epmask'=>EP_PERMALINK, 
 			));
 
-			// http://codex.wordpress.org/Function_Reference/register_taxonomy
+			//maybe better to register TAXONOMIES using this function:
+			register_taxonomy_for_object_type( 'category', $value );
+			register_taxonomy_for_object_type( 'post_tag', $value );
+			
+			
+			// Register CUSTOM TAXONOMIES  ( http://codex.wordpress.org/Function_Reference/register_taxonomy )
+					if ($cust_tax_enabled){			
 			register_taxonomy( $value.C_CategPrefix__MLSS, array(), array(
 				'public'	=> true,	'query_var'=>true,	'hierarchical'=>true, 'show_in_nav_menus'=>true, 'show_admin_column'=>true,
 				'labels'	=> array('name'=> "Custom Categories ($value)", 'singular_name' => $value.C_CategPrefix__MLSS,  ),
 				'rewrite'	=> array('slug' => $value.C_CategPrefix__MLSS)
 																			)
 			);
-			
-			//maybe better to register TAXONOMIES using this:
-			register_taxonomy_for_object_type( 'category', $value );
-			register_taxonomy_for_object_type( 'post_tag', $value );
-									if ($cust_text_enabled){
 			register_taxonomy_for_object_type(  $value.C_CategPrefix__MLSS, $value );
-									}
+					}
 		}
 		//resize icon size within Dashboard sidebar
 		add_action('admin_head','my633__MLSS'); function my633__MLSS() {echo '<style>li[id*=menu-posts-] .wp-menu-image img{height:20px;} </style>';}
