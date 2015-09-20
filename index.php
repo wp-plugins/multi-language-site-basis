@@ -2,9 +2,9 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.66
+ * Version: 1.67
  */
-define('version__MLSS', 1.62);
+define('version__MLSS', 1.67);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
@@ -101,6 +101,7 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__CategSlugname'	=> '' ,
 			'optMLSS__PageSlugname'		=> '' ,
 			'optMLSS__EnableQueryStrPosts'=> 'n' ,
+			'optMLSS__CatPaginationFix'	=> 'y' ,
 			//'optMLSS__ShowHideOtherCats'=> 'n' ,
 			//'optMLSS__HidenEntriesIdSlug'=> 'post-' ,
 			'optMLSS__EnableCustCat'	=> 'n' ,
@@ -1010,8 +1011,16 @@ function make_prety_categ_links__MLSS(){
 	}
 }
 	
-	
-	
+
+//fix category pagination problem with post_types (i.e. site.com/categoy/page/2 )
+if (FullMode__MLSS){ add_action('pre_get_posts', 'my_func351__MLSS',MLSS_initNumb); }
+function my_func351__MLSS($query){
+	if ('y' == get_option('optMLSS__CatPaginationFix') ){
+		if( is_category() && !is_admin() ) {    $query->set( 'post_type', get_post_types( array()) );  	}
+	}
+	return $query;
+}	
+
 	
 	
 	

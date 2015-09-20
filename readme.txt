@@ -3,7 +3,7 @@ Contributors: selnomeria
 Tags: wordpress,multi,language,multilanguage,site,plugin,website,
 Requires at least: 3.7
 Tested up to: 4.2.1
-Stable tag: 1.66
+Stable tag: 1.67
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I 
 1. sample dropdown
 
 == Changelog ==
+
+= 1.67 =
+* fixed pagination of category
 
 
 = 1.62 =

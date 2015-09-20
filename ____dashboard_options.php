@@ -38,6 +38,7 @@ if ( IS_ADMIN__MLSS ){
 								update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
 								update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
 								update_option('optMLSS__IncludeNamesDropd',	$_POST['drd_includeName']);
+								update_option('optMLSS__CatPaginationFix',	$_POST['CatPaginationFixxx']);
 								
 								//update_option('optMLSS__CategSlugname',		$_POST['category_slugname']);
 								//update_option('optMLSS__PageSlugname',		$_POST['page_slugname']);
@@ -282,10 +283,14 @@ if ( IS_ADMIN__MLSS ){
 							<br/><b>But, by default, website functions normally without them of course.</b>)
 					</div><input type="hidden" name="EnablePostQueryStr" value="n" /> <input type="checkbox" name="EnablePostQueryStr" value="y" <?php if ('y'==get_option('optMLSS__EnableQueryStrPosts')) {echo 'checked="checked"';} ?> />] 
 					</span>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<span class="cpost_othersxx" style="font-size:0.9">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="cpost_othersxx" style="font-size:0.9">
 					[remove fixed CATEGORY_BASE word from URLS: <i>(<a href="javascript:alert('As mentioned in previous popup, this feature removes the fixed CATEGORY_BASE word(\u0022/category/\u0022) from category links.');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="RemoveCatBase" value="n" /> <input type="checkbox" name="RemoveCatBase" value="y" <?php if ('y'==get_option('optMLSS__CatBaseRemoved')) {echo 'checked="checked"';} ?> />] 
 					</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="cpost_othersxx" style="font-size:0.9">
+					[fix category pagination: <i>(<a href="javascript:alert('While visiting i.e. site.com/category_name/page/3 , wordpress will display the custom_posts too, in the query. ');" class="readpopp">Read popup!</a>)</i><input type="hidden" name="CatPaginationFixxx" value="n" /> <input type="checkbox" name="CatPaginationFixxx" value="y" <?php if ('y'==get_option('optMLSS__CatPaginationFix')) {echo 'checked="checked"';} ?> />] 
+					</span>
+					
+					
 				</span>
 			<br/><br/><b>-START PAGES </b>(<a href="javascript:alert('<?php echo DefaulHomeMsg__MLSS;?>');" class="readpopp">Read popup!</a>) :
 			<?php foreach(LANGS__MLSS() as $each){
