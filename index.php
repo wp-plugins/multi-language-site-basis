@@ -1015,7 +1015,7 @@ function make_prety_categ_links__MLSS(){
 //fix category pagination problem with post_types (i.e. site.com/categoy/page/2 )
 if (FullMode__MLSS){ add_action('pre_get_posts', 'my_func351__MLSS',MLSS_initNumb); }
 function my_func351__MLSS($query){
-	if ('y' == get_option('optMLSS__CatPaginationFix') ){
+	if ('n' != get_option('optMLSS__CatPaginationFix') ){
 		if( is_category() && !is_admin() ) {    $query->set( 'post_type', get_post_types( array()) );  	}
 	}
 	return $query;
