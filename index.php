@@ -2,9 +2,9 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.67
+ * Version: 1.68
  */
-define('version__MLSS', 1.67);
+define('version__MLSS', 1.68);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
@@ -134,6 +134,7 @@ if (IS_ADMIN__MLSS) {
 
 		//=================================== create tables		===============================
 							 $bla55555 = $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'");
+							 $engine = ''; //'ENGINE='. ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM'  );
 		//1 (for phrazes)
 		$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".Table1__MLSS."` (
 			`IDD` int(11) NOT NULL AUTO_INCREMENT,
@@ -143,7 +144,7 @@ if (IS_ADMIN__MLSS) {
 			`mycolumn3` LONGTEXT CHARACTER SET latin1 NOT NULL DEFAULT '',
 			PRIMARY KEY (`IDD`),
 			UNIQUE KEY `IDD` (`IDD`)
-			) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM'  ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+			) ".$engine." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 		);
 		
 		
@@ -162,7 +163,7 @@ if (IS_ADMIN__MLSS) {
 			`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
 			PRIMARY KEY (`IDD`),
 			UNIQUE KEY `IDD` (`IDD`)
-			) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+			) ".$engine." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 		);
 		//If updating, check if some languages dont exist.. if so, insert new column
 		UpdateNewLangsColumns__MLSS();
@@ -183,7 +184,7 @@ if (IS_ADMIN__MLSS) {
 				`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
 				PRIMARY KEY (`IDD`),
 				UNIQUE KEY `IDD` (`IDD`)
-				) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+				) ".$engine." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 			);		
 			//4 (for post IDS)
 			$x= $wpdb->query("CREATE TABLE IF NOT EXISTS `".TablePostsRel__MLSS."` (
@@ -195,7 +196,7 @@ if (IS_ADMIN__MLSS) {
 				`extra3_` MEDIUMTEXT  NOT NULL DEFAULT '',
 				PRIMARY KEY (`IDD`),
 				UNIQUE KEY `IDD` (`IDD`)
-				) ENGINE=". ( !empty($bla55555[0]->SUPPORT) ? 'InnoDB' : 'MyISAM' ) ." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
+				) ".$engine." DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;"
 			);
 		}
 		
@@ -331,7 +332,14 @@ if (IS_ADMIN__MLSS) {
 		if($RedirectFlushToo) {echo '<form name="mlss_frForm" method="POST" action="" style="display:none;"><input type="text" name="mlss_FRRULES_AGAIN" value="ok" /> <input type="submit"></form><script type="text/javascript">document.forms["mlss_frForm"].submit();</script>';}
 	}
 
-	
+// Function to die (with alert) when LNG is called, but it is not defined.
+	function Check_Lng_defined__MLSS(){
+		if (!defined('LNG')) { 
+			$message = '<div class="mlss_5921" style="font-size:0.8em;text-align:center;background-color:red;">(LNG parameter was not defined. So, on this page, there may be problems. (Error_5921 from MLSS plugin))</div>';
+			//echo '<script type="text/javascript">alert("'.$message.'");</script>';
+			echo $message."<br/>";
+		}
+	}
 // WHEN INSERTING a NEW COLUMN in POST_RELATION table
 	function UpdateNewLangsColumns__MLSS(){ global $wpdb;
 		$langs = GetLanguagesFromBase__MLSS();
@@ -422,9 +430,9 @@ function GetLanguagesFromBase__MLSS(){
 	add_action('init','Defines_MLSS',MLSS_initNumb);
 	
 	//RETURN TRANSLATION OF ANY INDEX_PHRASE, according to visitor's detected language
-	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; 
-		$res = $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx`= '$variable' AND `lang` = '".($lang ? $lang : LNG)."'");
-		return ( !empty($res[0]) ? stripslashes($res[0]->translation) : '_____'.$variable.'_____') ;
+	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; if ($lang) {$x= $lang;} else{Check_Lng_defined__MLSS(); $x= (defined("LNG")? LNG : '');}
+		$res = $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx`= '$variable' AND `lang` = '".$x."'");
+		return ( !empty($res[0]->translation) ? stripslashes($res[0]->translation) : '_____'.$variable.'_____') ;
 	} add_filter('MLSS','MLSS_PHRAZE',10,3);  //you can pass additional variables into this filter too.
 	
 	//DETERMINE TEMPORARY HIDDEN LANGUAGES
