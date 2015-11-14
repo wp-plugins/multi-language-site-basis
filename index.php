@@ -2,29 +2,30 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.68
+ * Version: 1.69
  */
-define('version__MLSS', 1.68);
+define('version__MLSS', 1.69);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
  //define essentials
 define('domainURL__MLSS',				(((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off') || $_SERVER['SERVER_PORT']==443) ? 'https://':'http://' ).$_SERVER['HTTP_HOST']);
 define('homeURL__MLSS',					home_url());
-define('homeFOLD__MLSS',				str_replace(domainURL__MLSS,'',	homeURL__MLSS));
-define('requestURI__MLSS',				$_SERVER["REQUEST_URI"]); 				define('requestURIfromHome__MLSS', str_replace(homeFOLD__MLSS, '',requestURI__MLSS) ); 	define('requestURIfromHomeWithoutParameters__MLSS',parse_url(requestURIfromHome__MLSS, PHP_URL_PATH));
+define('homeFOLD__MLSS',				str_ireplace(domainURL__MLSS,'',	homeURL__MLSS));
+define('requestURI__MLSS',				$_SERVER["REQUEST_URI"]); 				define('requestURIfromHome__MLSS', str_ireplace(homeFOLD__MLSS, '',requestURI__MLSS) ); 	define('requestURIfromHomeWithoutParameters__MLSS',parse_url(requestURIfromHome__MLSS, PHP_URL_PATH));
 define('currentURL__MLSS',				domainURL__MLSS.requestURI__MLSS);
-define('THEME_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', get_template_directory_uri()) );
-define('PLUGIN_URL_nodomain__MLSS',		str_replace(domainURL__MLSS, '', plugin_dir_url(__FILE__)) );
+define('THEME_URL_nodomain__MLSS',		str_ireplace(domainURL__MLSS, '', get_template_directory_uri()) ); 
+define('PLUGIN_URL_nodomain__MLSS',		str_ireplace(domainURL__MLSS, '', plugin_dir_url(__FILE__)) );
 define('THEME_DIR__MLSS',				get_stylesheet_directory() );
 define('PLUGIN_DIR__MLSS',				plugin_dir_path(__FILE__) );
 	
 	//option names
-define('SITESLUG__MLSS',				str_replace('.','_',$_SERVER['HTTP_HOST'])  );
-define('STYLESHEETURL__MLSS',			plugin_dir_url(__FILE__).'flags/stylesheet.css');
+define('SITESLUG__MLSS',				str_ireplace('.','_',$_SERVER['HTTP_HOST'])  );
+define('STYLESHEETURL__MLSS',			PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css');
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('EnableAlternativePosts__MLSS',	true);
+define('DisableTranslationWarning__MLSS',(get_option('optMLSS__DisableTranslateError', 'n') == 'y' ? true :false));
 define('NewsPostTypeName__MLSS',		'news_mlss');
 define('OldTable1__MLSS',				$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
 define('Table1__MLSS',					$GLOBALS['wpdb']->prefix.'_mlss_translatedwords');
@@ -100,6 +101,7 @@ if (IS_ADMIN__MLSS) {
 			'optMLSS__IncludeNamesDropd'=> 'y' ,
 			'optMLSS__CategSlugname'	=> '' ,
 			'optMLSS__PageSlugname'		=> '' ,
+			'optMLSS__DisableTranslateError'=> 'n' ,
 			'optMLSS__EnableQueryStrPosts'=> 'n' ,
 			'optMLSS__CatPaginationFix'	=> 'y' ,
 			//'optMLSS__ShowHideOtherCats'=> 'n' ,
@@ -334,11 +336,14 @@ if (IS_ADMIN__MLSS) {
 
 // Function to die (with alert) when LNG is called, but it is not defined.
 	function Check_Lng_defined__MLSS(){
-		if (!defined('LNG')) { 
-			$message = '<div class="mlss_5921" style="font-size:0.8em;text-align:center;background-color:red;">(LNG parameter was not defined. So, on this page, there may be problems. (Error_5921 from MLSS plugin))</div>';
-			//echo '<script type="text/javascript">alert("'.$message.'");</script>';
-			echo $message."<br/>";
+		if (defined('LNG') ) {  $res = LNG; }
+		elseif (!empty($_COOKIE[cookienameLngs__MLSS])) {  $res = $_COOKIE[cookienameLngs__MLSS]; }
+		else { do_action('your_desired_func444');
+			$message= '<div class="mlss_5921" style="font-size:0.8em;text-align:center;background-color:red;">(LNG parameter was not defined. So, on this page, there may be problems. (Error_5921 from MLSS plugin))</div>'."<br/>";   //echo '<script type="text/javascript">alert("'.$message.'");</script>';
+			if (!DisableTranslationWarning__MLSS) {echo $message;}
+			$res = Get_Default_Lang__MLSS();
 		}
+		return $res;
 	}
 // WHEN INSERTING a NEW COLUMN in POST_RELATION table
 	function UpdateNewLangsColumns__MLSS(){ global $wpdb;
@@ -359,14 +364,15 @@ if (IS_ADMIN__MLSS) {
 		}
 		return false;
 	}
-
+	
+	function Get_Default_Lang__MLSS(){   $ls=  LANGS__MLSS();  return (isset($ls[0]) ? $ls[0] : '') ; }
 	
 
 //REDIRECT function (301,302 or 404)
 	function  REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (!empty($_COOKIE['MLSS_cstRedirect']) || defined('MLSS_cstRedirect')) {return;}
 		header("Cache-Control: no-store, no-cache, must-revalidate"); header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); $RedirCodee = $RedirCodee ? $RedirCodee:301;   header("location:" . $url, true, $RedirCodee ) or die('File:'.dirname(__file__).'['.($SomethingWord ? $SomethingWord : '' ) .']  (FROM:'.$_SERVER['REQUEST_URI'].'  TO:'.$url .') BACKTRACE:<br/>'.debug_print_backtrace()); exit; //echo '<script> window.location="'.homeURL__MLSS.'/'.LNG'"; </script> '; exit; 
 	} //FIX for WP BUG,, w hile site loaded in: Appearence>customize.php:
-		if (stripos(currentURL__MLSS, str_replace(home_url(),'',admin_url('customize.php'))) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);} else {setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
+		if (stripos(currentURL__MLSS, str_ireplace(home_url(),'',admin_url('customize.php'))) !== false)	{define('MLSS_cstRedirect',true); setcookie('MLSS_cstRedirect', 'hii', time()+100000000, homeFOLD__MLSS);} else {setcookie('MLSS_cstRedirect', 'hii', time()-100000000, homeFOLD__MLSS);}
 	//Children of above
 	function TRIGGERR_REDIRECTTT__MLSS($url,$SomethingWord=false, $RedirCodee=false){ if (FullMode__MLSS) {REDIRECTTT__MLSS($url,$SomethingWord,$RedirCodee);} }
 	
@@ -430,7 +436,7 @@ function GetLanguagesFromBase__MLSS(){
 	add_action('init','Defines_MLSS',MLSS_initNumb);
 	
 	//RETURN TRANSLATION OF ANY INDEX_PHRASE, according to visitor's detected language
-	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb; if ($lang) {$x= $lang;} else{Check_Lng_defined__MLSS(); $x= (defined("LNG")? LNG : '');}
+	function MLSS_PHRAZE($variable,$lang=false){ global $wpdb;  $x=$lang ? $lang : Check_Lng_defined__MLSS();
 		$res = $wpdb->get_results("SELECT * from `".Table1__MLSS."` WHERE `title_indx`= '$variable' AND `lang` = '".$x."'");
 		return ( !empty($res[0]->translation) ? stripslashes($res[0]->translation) : '_____'.$variable.'_____') ;
 	} add_filter('MLSS','MLSS_PHRAZE',10,3);  //you can pass additional variables into this filter too.
@@ -1096,22 +1102,35 @@ function NewsPostType__MLSS(){
 //register style for default front-page	
 if (FullMode__MLSS){ 
 	add_action( 'wp_enqueue_scripts', 'stylesht__MLSS',1,98 ); function stylesht__MLSS() {
-		wp_enqueue_style( 'custom_styles__MLSS', STYLESHEETURL__MLSS );
+		wp_enqueue_style( 'custom_styles__MLSS', domainURL__MLSS.STYLESHEETURL__MLSS );
 	}
 }
 
+function ReturnLangsWithFlags__MLSS(){   $array=array();
+	foreach (LANGS__MLSS() as $keyname => $value){		
+		//if (!isHiddenLang__MLSS($value) ) {  //not included in "HIDDEN LANGS"
+			$array[$value]['name']	= $keyname;
+			$array[$value]['url']	= homeURL__MLSS.'/'.$value.'/';
+			$array[$value]['image']	= GetFlagUrl__MLSS($value);									
+		//}
+	}
+	return $array;
+}
+
+
 //POPUP TO CHOOSE LANGUAGE -  ONLY FOR FIRST TIME VISITOR!
-add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function OutputFirstTimePopup__MLSS($cont){   $out = 
+add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function OutputFirstTimePopup__MLSS($cont=''){   $out = 
 				//$smth = . '<title></title>';do_action("wp_head");echo '<title></title>';  
 		'<!-- To add your styles, read the MLSS_SETTINGS page -->
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" id="mlsss_css"  href="'.STYLESHEETURL__MLSS.'" type="text/css" media="all" />'. //'<script type="text/javascript"  src="'.PLUGIN_URL_nodomain__MLSS.'flags/javascript_functions.php?jstypee"></script>
 		  '<div id="my_black_bck_24141"></div>'.
 		  '<div id="FirstTimeLanguage1__MLSS"  class="css_reset__MLSS">'.
 			 '<div id="popup_CHOOSER2__MLSS"><div class="lnmenu__MLSS">';
 				foreach (LANGS__MLSS() as $keyname => $value){		if (!isHiddenLang__MLSS($value) ) {  //not included in "HIDDEN LANGS"
-				$out .= '<div class="LineHolder2__MLSS">'.
+				$out .= '<div class="LineHolder2__MLSS '.$value.'">'.
 								'<a class="ImgHolder2__MLSS"  href="'.homeURL__MLSS.'/'.$value.'">'.
-									'<img class="FlagImg2__MLSS '.$value.'_flagg2__MLSS" src="'. GetFlagUrl__MLSS($value).'" alt="'. $keyname .'" />'.
+									'<img class="FlagImg2__MLSS" src="'. GetFlagUrl__MLSS($value).'" alt="'. $keyname .'" />'.
 									'<span class="lnmenuSpn2__MLSS">'. $keyname.'</span>'.
 								'</a>'.
 						'</div>';										}
@@ -1126,7 +1145,7 @@ add_filter("MLSS__firsttimeselector","OutputFirstTimePopup__MLSS",9,1); function
 
 
 //DEFAULT LANGUAGE SELECTOR, WHICH IS SEEN ON THE TOP OF PAGE	
-add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont){  global $wpdb,$post;
+add_filter("MLSS__dropdownselector","OutputDropdown__MLSS",9,1); function OutputDropdown__MLSS($cont=''){  global $wpdb,$post;
 
 	$out = 
 	'<!-- LanguageSelector__MLSS --><style>#LanguageSelector__MLSS {top:'.get_option('optMLSS__DropdDistanceTop').'px; '.get_option('optMLSS__DropdSidePos').':'.get_option('optMLSS__DropdDistanceSide').'px; position:'.get_option('optMLSS__DropdDFixedOrAbs').';}</style>'.

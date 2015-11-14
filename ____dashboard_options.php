@@ -35,6 +35,7 @@ if ( IS_ADMIN__MLSS ){
 								update_option('optMLSS__DropdHeader',		$_POST['drp_in_header']);
 								update_option('optMLSS__DropdSidePos',		$_POST['drdn_aside']);
 								update_option('optMLSS__DropdDistanceTop',	$_POST['fromtop']);
+								update_option('optMLSS__DisableTranslateError',	$_POST['disable_phraze_error']);
 								update_option('optMLSS__DropdDistanceSide',	$_POST['fromside']);
 								update_option('optMLSS__DropdDFixedOrAbs',	$_POST['drd_fixed_rel']);
 								update_option('optMLSS__IncludeNamesDropd',	$_POST['drd_includeName']);
@@ -126,7 +127,9 @@ if ( IS_ADMIN__MLSS ){
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">GetFlagUrl('eng')</span> [Returns Flag url for desired language]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">STYLESHEETURL__MLSS</span> [Returns plugin's stylesheet url]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">DetectedPostLang__MLSS($GLOBALS['post']-&gt;ID);</span> [Returns language slug for current post]
-							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">apply_filters('MLSS__firsttimeselector',0);</span> [Returns output of "Select FirstTime Language" popup's list]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">ReturnLangsWithFlags__MLSS()</span> [Returns array of All Languages,with their flags and URLs]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">apply_filters('MLSS__firsttimeselector','');&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; OutputFirstTimePopup__MLSS()</span> [Returns styled output of "Select FirstTime Language" popup's list]
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">apply_filters('MLSS__dropdownselector','');&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; OutputDropdown__MLSS()</span> [Returns styled output of "Select Language DROPDOWN"]
 							<br/>&nbsp;&nbsp;&nbsp;&nbsp;- <span class="codee">[MLSS_navigation name="<span style="color:red;">your_menu_slug</span>"]</span> [read the 6th paragraph on this page]
 						</div>
 					</div>
@@ -307,8 +310,10 @@ if ( IS_ADMIN__MLSS ){
 		
 		<div class="eachBlock">
 			<span class="fakeH22"> 5) Translation of Phrases for TEMPLATES FILES</span> - <i><a href="javascript:alert('In addition to the LANGUAGE specific pages/posts, you can utilize auto-translated PHRASES(which can be used in theme PHP files). For this, on the left side, under \u0022MLSS\u0022 menu button, enter \u0022TRANSLATED WORDS\u0022, where you will see the examples..');" class="readpopp">Read popup</a>!</i>
+			<br/>* Disable Error when translating phrazes (<a href="javascript:alert('when using MLSS filter to translate words, if it is called too early, and if it cant find user\u0027s LNG parameter,then it cant translate the phraze... and should it output warning?');" class="readpopp">Read popup</a>): <input type="hidden" name="disable_phraze_error" value="n" /> <input type="checkbox" name="disable_phraze_error" value="y" <?php if ('y'==get_option('optMLSS__DisableTranslateError')) {echo 'checked="checked"';} ?> />
 		</div>
-	
+		
+		
 		<div class="eachBlock">
 			<span class="fakeH22">6) NAVIGATIONS, MENUS, WIDGETS.</span>
 						

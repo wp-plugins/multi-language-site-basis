@@ -3,7 +3,7 @@ Contributors: selnomeria
 Tags: wordpress,multi,language,multilanguage,site,plugin,website,
 Requires at least: 3.7
 Tested up to: 4.2.1
-Stable tag: 1.68
+Stable tag: 1.69
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Build a Multi-Language Website.
 **For building a Multi-Language Site!** 
 It's better to read Full explanations on plugin's page, after activation.
 
->  (P.S. This is a <a href="http://codesphpjs.blogspot.com/2014/10/nsp-non-slowing-plugins-for-wordpress.html" target="_blank">Non-Slowing</a> Plugin.  See OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  )
+>  (P.S. Note! This is a NON-SLOWING Plugin.  See other <a href="http://bitly.com/MWPLUGINS" target="_blank" alt="http://codesphpjs.blogspot.com/2014/10/nsp-non-slowing-plugins-for-wordpress.html">MUST-HAVE PLUGINS</a> for everyone. )
 
 
 NOTE!!!!!!!  Plugin is maintained by ONLY ME, so , I dont know how many years I can keep this plugin maintained.. So, if someone interested, assist me to maintain this plugin (<a href="http://j.mp/contactmewordpresspluginstt" target="_blank">Contact Details</a>)
