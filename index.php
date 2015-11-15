@@ -2,9 +2,9 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.69
+ * Version: 1.70
  */
-define('version__MLSS', 1.69);
+define('version__MLSS', 1.70);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
@@ -51,7 +51,7 @@ $GLOBALS['MLSS_VARS'] =array();
 		
 		
 //==================================================== ACTIVATION commands ===============================	
-if (IS_ADMIN__MLSS) {
+
 	
 	//REDIRECT SETTINGS PAGE (after activation)
 	add_action( 'activated_plugin', 'activat_redirect__MLSS' ); function activat_redirect__MLSS( $plugin ) { if( $plugin == plugin_basename( __FILE__ ) ) { 
@@ -281,7 +281,6 @@ if (IS_ADMIN__MLSS) {
 		}		
 		return $actions;		
 	}
-}
 //=================================================== ### ACTIVATION commands===============================
 
 
