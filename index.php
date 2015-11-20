@@ -2,9 +2,9 @@
 /**
  * Plugin Name: MultiLanguage Site
  * Description: Build a Multi-Language Site. This plugin gives you a good framework. After activation, read the explanation.  (P.S.  OTHER MUST-HAVE PLUGINS FOR EVERYONE: http://bitly.com/MWPLUGINS  ) 
- * Version: 1.70
+ * Version: 1.71
  */
-define('version__MLSS', 1.70);
+define('version__MLSS', 1.71);
 
 if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 //echo "plugin will be updated near the end of April. please, deactivate&delete the current 1.2 version... sorry..";return;
@@ -25,6 +25,7 @@ define('STYLESHEETURL__MLSS',			PLUGIN_URL_nodomain__MLSS.'flags/stylesheet.css'
 define('FullMode__MLSS',				(get_option('optMLSS__OnOffMode', 'oon') == 'oon' ? true :false)   );
 define('cookienameLngs__MLSS',			SITESLUG__MLSS.'_lang');
 define('EnableAlternativePosts__MLSS',	true);
+define('MyEmailAddress__MLSS',			'selnomeria<<a>>yahoo.com' );
 define('DisableTranslationWarning__MLSS',(get_option('optMLSS__DisableTranslateError', 'n') == 'y' ? true :false));
 define('NewsPostTypeName__MLSS',		'news_mlss');
 define('OldTable1__MLSS',				$GLOBALS['wpdb']->prefix.'translatedwords__mlss');
