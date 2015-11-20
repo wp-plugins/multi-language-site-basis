@@ -152,6 +152,20 @@ function serialize (form) { 'use strict'; // http://kevin.vanzonneveld.net
 
 
 
+// =================================== getElementById from parent_node  =============== http://stackoverflow.com/a/5683184/2377343 ==========
+Element.prototype.getElementById_FROM_PARENT = function(req) {
+  var elem = this, children = elem.childNodes, i, len, id;
+  for (i = 0, len = children.length; i < len; i++) {
+	elem = children[i];										// current element
+	if (elem.nodeType !== 1 )  continue;					// we only want real elements
+	id = elem.id || elem.getAttribute('id');				// get ID
+	if (id === req) {  return elem;  }						// If it was found, then return 
+	else {id=elem.getElementById_FROM_PARENT(req); if(id) return id;}	// otherwise, search recursively within the child				
+  }
+  return null;												// if no match found
+}
+// =========================================================================================================
+
 
 
 

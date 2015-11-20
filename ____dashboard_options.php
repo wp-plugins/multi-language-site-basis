@@ -584,8 +584,6 @@ if ( IS_ADMIN__MLSS ){
 	//=======================================================================================================
 	// SHOW OR HIDE other language's categories from categories checkbox list (while opening NEW CUSTOM POST)
 	//========================================================================================================
-		
-	//  "POST ALTERNATIVE TRANSLATION"  MetaBoxes( for CUSTOM POSTS)
 	add_action( 'add_meta_boxes','show_hide_other_cats__MLSS'); function show_hide_other_cats__MLSS() {
 		$AllLangs = GetLanguagesFromBase__MLSS(); foreach($AllLangs as $each) {  add_meta_box('html_MLSSid14','Show/Hide other categories','ShowOrHideOtherLangCategs__MLSS', $each,'normal');  } 
 	}
@@ -605,7 +603,6 @@ if ( IS_ADMIN__MLSS ){
 				* hide other Language Categories  <input type="hidden" name="showhidcat__MLSS" value="no" /><input type="checkbox" onclick="show_hide_cats(this);" name="showhidcat__MLSS" id="showhidcat__MLSS"  value="yes" <?php if ('yes'== $hide_other_language_cats ){echo 'checked="checked"';};?> id="showhidecatID" onclick=""  /> (<a href="javascript:alert('This checkbox works only if you are on a custom post type. If so, then this checkbox will hide other language\u0027s categories from the categories list,so you wont spend energy to scroll to desired language categories... because there will be displayed only current post-category language');">read more</a>)
 			</div>
 		</div>
-		
 		<?php 
 		$all_root_category_IDs =  LANGS__MLSS(); // get_categories(array('parent'=>0)); 
 		$hide_ids = array();  
@@ -613,27 +610,12 @@ if ( IS_ADMIN__MLSS ){
 			if ($each != $GLOBALS['post']->post_type) { $ct=  get_category_by_path($each,true); echo $ct->term_id.',' ; $hide_ids[] = $ct->term_id;}   
 		} 
 		?>
-		
 		<script type="text/javascript">
 			// =====my generic functions=====
 			// notify error
 				function Error_notifyy(codee) {  console.log("MLSS ERROR code: "+codee+"-<?php echo (!empty($GLOBALS['wp_version']) ? $GLOBALS['wp_version'] : '') ;?> !!!!!   PLEASE,  notify plugin author!!!  <?php echo MyEmailAddress__MLSS;?> "); }
-			//getElementById  inside parent_node
-				Element.prototype.getElementById_FROM_PARENT = function(req) {
-					var elem = this, children = elem.childNodes, i, len, id;
-					for (i = 0, len = children.length; i < len; i++) { elem = children[i]; 
-						if (elem.nodeType !== 1 )  continue;
-						id = elem.id || elem.getAttribute('id');
-						if (id === req) {  return elem;   }
-						//recursion within the child node
-						id = elem.getElementById_FROM_PARENT(req); if (id) return id;
-					}
-					return null;
-				}
+		
 
-
-
-				
 			function insert_messageblock_in_categories(){
 				if (document.getElementById('taxonomy-category')){
 					//Show Black Background + make CATEGORY WINDOW like a POPUP
@@ -648,9 +630,7 @@ if ( IS_ADMIN__MLSS ){
 						var my_Element = document.getElementById('CatDrHeader');
 					var xDiv = document.getElementById('taxonomy-category'); xDiv.insertBefore(my_Element , xDiv.childNodes[0]); 	
 				}
-			}
-			//on page first load, execute automatically
-				insert_messageblock_in_categories(); 
+			}    insert_messageblock_in_categories(); 	//on page first load, execute automatically
 			
 			
 			function show_hide_cats(element){
@@ -665,9 +645,7 @@ if ( IS_ADMIN__MLSS ){
 						else {Error_notifyy(5361288);}
 					}	
 				}  	else { Error_notifyy(5423521); }
-			}
-			//on page first load, execute automatically
-				show_hide_cats(document.getElementById("showhidcat__MLSS"));	
+			}    show_hide_cats(document.getElementById("showhidcat__MLSS"));	 //on page first load, execute automatically
 			
 			//hide this parent metabox at all
 			document.getElementById("html_MLSSid14").style.display="none";
@@ -675,32 +653,36 @@ if ( IS_ADMIN__MLSS ){
 		<?php  //PHP function (in case JS doesnt work) to hide all other categories
 				if ('yes'==$hide_other_language_cats) {   	$out = '<style type="text/css">';  foreach ($hide_ids as $each_id) {  $out .= '#categorychecklist li#category-'. $each_id.' {display:none;}';	} $out .= '</style>';  echo $out;  }  
 		
-		
 	} 	add_action('save_post', 'save_ShowOrHideCats__MLSS');	function save_ShowOrHideCats__MLSS() 	{
 			if (isset($_POST['showhidcat__MLSS'])) { update_option('optMLSS__ShowHideOtherCats', $_POST['showhidcat__MLSS']); } 
 			if (isset($_POST['showhidNotic__MLSS'])) { update_option('optMLSS__DisableShowHideCatNotice', $_POST['showhidNotic__MLSS']); }
 		}
-	// =================================### Show/Hide other cats=================
-	// =========================================================================
+	// ===========================================### Show/Hide other cats from checklist==========================
+	// ============================================================================================================
 
-	// Hide this post from query
-	add_action('admin_footer','hidepostfromquery__MLSS'); function hidepostfromquery__MLSS(){ global $post;
-		if (!empty($post)) {
-			if (in_array($post->post_type, LANGS__MLSS())){
-				$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
-				?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
-					</div></div>
-				<script type="text/javascript">
-					window.onload=function(){ myShowPostCheckbox(); };
-					function myShowPostCheckbox(){
-						if (document.getElementById('submitpost')){
-							var bEl= document.getElementById("HideThisPostFromQuery");	var tEl=document.getElementById('submitpost');	tEl.appendChild(bEl);
-						}
-					}
-				</script>
-			<?php 
-			}
-		}
+	
+	
+	
+	
+	
+	
+
+	//=======================================================================================================
+	// checkbox for Hide this post from ARCHIVE query
+	//========================================================================================================	
+	add_action( 'add_meta_boxes','hide_post_from_queryy__MLSS'); function hide_post_from_queryy__MLSS() {
+		$AllLangs = GetLanguagesFromBase__MLSS(); foreach($AllLangs as $each) {  add_meta_box('html_MLSSid17','Hide this post from query','HideThePostFromQuery__MLSS', $each,'normal');  } 
+	}
+	function HideThePostFromQuery__MLSS(){ global $post;
+		$hiddenarray= get_option('optMLSS__HiddenFromQuery1');
+		?><div id="HideThisPostFromQuery"> <div style="margin:0 0 0 1px;"> Dont show this post in Archive/List query <input type="hidden" name="HideTpstq__MLSS" value="no" /><input type="checkbox" name="HideTpstq__MLSS" value="yes" <?php if (in_array($post->ID , $hiddenarray)){echo 'checked="checked"';};?> onclick=""  />
+			</div></div>
+		<script type="text/javascript">
+			if (document.getElementById('submitpost')){    document.getElementById('submitpost').appendChild(document.getElementById("HideThisPostFromQuery"));    }
+			//hide this parent metabox at all
+			document.getElementById("html_MLSSid17").style.display="none";
+		</script>
+	<?php 
 	} 	add_action('save_post', 'save_hidepostfromquery__MLSS');	function save_hidepostfromquery__MLSS($post_id) 	{
 			if (isset($_POST['HideTpstq__MLSS'])) {
 				$ar= get_option("optMLSS__HiddenFromQuery1"); 
